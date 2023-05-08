@@ -4,7 +4,11 @@ import fs from 'fs';
 import mime from 'mime-types';
 import {mongooseConnect} from "@/lib/mongoose";
 import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
-const bucketName = 'dawid-next-ecommerce';
+import EasyYandexS3 from "easy-yandex-s3";
+
+const bucketName = process.env.YANDEX_BUCKET_NAME;
+const REGION = 'ru-central1';
+const ENDPOINT = 'https://storage.yandexcloud.net';
 
 export default async function handle(req,res) {
   await mongooseConnect();
@@ -17,26 +21,46 @@ export default async function handle(req,res) {
       resolve({fields,files});
     });
   });
-  console.log('length:', files.file.length);
-  const client = new S3Client({
-    region: 'us-east-1',
+
+ /* const client = new S3Client({
+    region: REGION,
     credentials: {
-      accessKeyId: process.env.S3_ACCESS_KEY,
-      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+      accessKeyId: process.env.S3_YANDEX_ID,
+      secretAccessKey: process.env.S3_YANDEX_SECRET,
     },
+    endpoint: ENDPOINT,
+  });*/
+
+  const client = new EasyYandexS3({
+    auth: {
+      accessKeyId: process.env.S3_YANDEX_ID,
+      secretAccessKey: process.env.S3_YANDEX_SECRET,
+    },
+    Bucket: bucketName,
+    debug: true
   });
   const links = [];
   for (const file of files.file) {
     const ext = file.originalFilename.split('.').pop();
     const newFilename = Date.now() + '.' + ext;
-    await client.send(new PutObjectCommand({
+    console.log('newFilename =',newFilename);
+
+    /*await client.send(new PutObjectCommand({
       Bucket: bucketName,
       Key: newFilename,
       Body: fs.readFileSync(file.path),
       ACL: 'public-read',
       ContentType: mime.lookup(file.path),
-    }));
-    const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
+    }));*/
+
+    const uploadedFile = await client.Upload({
+      path: file.path,
+      name: newFilename,
+    }, '');
+    console.log('uploadedFile =', uploadedFile);
+    //const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
+    const link = `https://storage.yandexcloud.net/${bucketName}/${newFilename}`;
+    console.log('link ', link)
     links.push(link);
   }
   return res.json({links});
