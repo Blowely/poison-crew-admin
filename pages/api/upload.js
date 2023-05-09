@@ -22,43 +22,30 @@ export default async function handle(req,res) {
     });
   });
 
- /* const client = new S3Client({
+  const client = new S3Client({
     region: REGION,
     credentials: {
       accessKeyId: process.env.S3_YANDEX_ID,
       secretAccessKey: process.env.S3_YANDEX_SECRET,
     },
     endpoint: ENDPOINT,
-  });*/
-
-  const client = new EasyYandexS3({
-    auth: {
-      accessKeyId: process.env.S3_YANDEX_ID,
-      secretAccessKey: process.env.S3_YANDEX_SECRET,
-    },
-    Bucket: bucketName,
-    debug: true
   });
+
+
   const links = [];
   for (const file of files.file) {
     const ext = file.originalFilename.split('.').pop();
     const newFilename = Date.now() + '.' + ext;
-    console.log('newFilename =',newFilename);
 
-    /*await client.send(new PutObjectCommand({
+    await client.send(new PutObjectCommand({
       Bucket: bucketName,
       Key: newFilename,
       Body: fs.readFileSync(file.path),
       ACL: 'public-read',
       ContentType: mime.lookup(file.path),
-    }));*/
+    }));
 
-    const uploadedFile = await client.Upload({
-      path: file.path,
-      name: newFilename,
-    }, '');
-    console.log('uploadedFile =', uploadedFile);
-    //const link = `https://${bucketName}.s3.amazonaws.com/${newFilename}`;
+
     const link = `https://storage.yandexcloud.net/${bucketName}/${newFilename}`;
     console.log('link ', link)
     links.push(link);
