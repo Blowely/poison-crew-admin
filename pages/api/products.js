@@ -5,16 +5,24 @@ import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
 export default async function handle(req, res) {
   const {method} = req;
   await mongooseConnect();
-  await isAdminRequest(req,res);
+  console.log('req =', req);
 
   if (method === 'GET') {
+    let items = [];
+    let totalCount = undefined;
+
     if (req.query?.id) {
-      res.json(await Product.findOne({_id:req.query.id}));
+      items = await Product.findOne({_id:req.query.id});
     } else {
-      res.json(await Product.find());
+      totalCount = await Product.count();
+      items = await Product.find().limit(req.query.limit);
     }
+
+    const result = {items: [...items], total_count: totalCount };
+    res.json(result);
   }
 
+  await isAdminRequest(req,res);
   if (method === 'POST') {
     const {title,description,price,images,category,properties} = req.body;
     const productDoc = await Product.create({
