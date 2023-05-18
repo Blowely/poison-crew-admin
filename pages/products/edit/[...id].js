@@ -13,7 +13,7 @@ export default function EditProductPage() {
       return;
     }
     axios.get('/api/products?id='+id).then(response => {
-      setProductInfo(response.data);
+      setProductInfo(response.data.items[0]);
     });
   }, [id]);
   return (
