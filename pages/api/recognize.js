@@ -74,6 +74,7 @@ export default async function handle(req,res) {
   let lastEntity = 'prices';
 
   for (let i = 0; i < resultBlocks.length; i++) {
+    let elPosX = resultBlocks[i].boundingBox.vertices[0].x;
     let elPosY = resultBlocks[i].boundingBox.vertices[0].y;
 
     if (elPosY >= 2208) {
@@ -91,20 +92,56 @@ export default async function handle(req,res) {
     }
 
     const text = resultBlocks[i].lines[0].words[0].text;
-    const handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
+    let handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
+    handledText = handledText.replace('¥', '').replace('Y', '');
+
+    if (handledText.length === 1) {
+      handledText += '0';
+    }
 
     if (Math.abs(elPosY - linePositionY) <= 10 && Math.abs(elPosY - linePositionY) >= -10) {
-      entities[lastEntity].push(handledText);
+      entities[lastEntity].push({text: handledText, x: elPosX, y: elPosY });
     } else {
       lastEntity = lastEntity === 'prices' ? 'sizes' : 'prices';
-      entities[lastEntity].push(handledText);
+      entities[lastEntity].push({text: handledText, x: elPosX, y: elPosY });
       linePositionY = elPosY;
     }
   }
 
-  console.log('entities =', entities);
 
-  return res.json({entities});
+  // clean sizes
+  const numReg =  /[\d.]/;
+  let prevPosY = entities.sizes[0].y;
+  entities.sizes = entities.sizes.filter((el) => {
+    if (!numReg.test(el.text) || el.text.length < 2) {
+      return false;
+    }
+    const isDiff = el.y - prevPosY > -400;
+    prevPosY = el.y;
+    return isDiff ;
+  });
+
+  // clean prices
+  entities.prices = entities.prices.filter((el) => el.text.length >= 3);
+
+  // fill empty prices
+  const sizes = [...entities.sizes];
+  const prices = JSON.parse(JSON.stringify(entities.prices));
+  for (let i = 0; i < sizes.length; i++) {
+    if (
+      prices[i]?.x &&
+      Math.abs(sizes[i].x - prices[i].x) <= 70 &&
+      Math.abs(prices[i].x - sizes[i].x) >= -70)
+    {
+      continue;
+    } else {
+      prices.splice(i, 0, {text: '--', x: sizes[i].x, y: sizes[i].y});
+    }
+  }
+
+  console.log('entities =', {sizes, prices});
+
+  return res.json({sizes, prices});
 }
 
 export const config = {
