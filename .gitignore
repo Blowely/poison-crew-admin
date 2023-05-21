@@ -34,3 +34,6 @@ yarn-error.log*
 .vercel
 
 /.idea
+
+yandexService/privateKeyIMG2TXT.txt
+publicKeyIMG2TXT.txt

@@ -5,7 +5,6 @@ import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
 export default async function handle(req, res) {
   const {method} = req;
   await mongooseConnect();
-  console.log('req =', req);
 
   if (method === 'GET') {
     let items = [];

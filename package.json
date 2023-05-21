@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "webpack-dev": "webpack serve --open --config webpack.config.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -22,6 +23,7 @@
     "multiparty": "^4.2.3",
     "next": "13.2.3",
     "next-auth": "^4.20.1",
+    "node-jose": "^2.2.0",
     "postcss": "^8.4.21",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -30,6 +32,13 @@
     "react-sweetalert2": "^0.5.2",
     "sortablejs": "^1.15.0",
     "tailwindcss": "^3.2.7",
-    "typeorm": "0.2.28"
+    "typeorm": "0.2.28",
+    "webpack": "^5.83.1",
+    "webpack-cli": "^5.1.1"
+  },
+  "devDependencies": {
+    "json-loader": "^0.5.7",
+    "raw-loader": "^4.0.2",
+    "webpack-dev-server": "^4.15.0"
   }
 }
