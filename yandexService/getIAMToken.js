@@ -36,7 +36,7 @@ export const getIAM = async () => {
     },
     data: data
   });
-  console.log('result =', result);
+
   return result.data.iamToken;
 }
 

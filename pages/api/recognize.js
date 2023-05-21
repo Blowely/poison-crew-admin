@@ -61,9 +61,50 @@ export default async function handle(req,res) {
   };
 
   const response = await axios(options);
-  console.log('response =', response);
 
-  return res.json({links});
+  let start = undefined;
+  const resultBlocks = response.data.results[0].results[0].textDetection.pages[0].blocks.reverse();
+
+  const entities = {
+    sizes: [],
+    prices: []
+  }
+
+  let linePositionY = 0;
+  let lastEntity = 'prices';
+
+  for (let i = 0; i < resultBlocks.length; i++) {
+    let elPosY = resultBlocks[i].boundingBox.vertices[0].y;
+
+    if (elPosY >= 2208) {
+      continue;
+    } else {
+      start = i;
+    }
+
+    if (resultBlocks[i].lines[0].words[0].text.length > 4) {
+      break;
+    }
+
+    if (!linePositionY) {
+      linePositionY = elPosY;
+    }
+
+    const text = resultBlocks[i].lines[0].words[0].text;
+    const handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
+
+    if (Math.abs(elPosY - linePositionY) <= 10 && Math.abs(elPosY - linePositionY) >= -10) {
+      entities[lastEntity].push(handledText);
+    } else {
+      lastEntity = lastEntity === 'prices' ? 'sizes' : 'prices';
+      entities[lastEntity].push(handledText);
+      linePositionY = elPosY;
+    }
+  }
+
+  console.log('entities =', entities);
+
+  return res.json({entities});
 }
 
 export const config = {
