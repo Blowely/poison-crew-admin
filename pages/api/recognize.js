@@ -73,9 +73,12 @@ export default async function handle(req,res) {
   let linePositionY = 0;
   let lastEntity = 'prices';
 
+  let prevSizesText = '';
+
   for (let i = 0; i < resultBlocks.length; i++) {
     let elPosX = resultBlocks[i].boundingBox.vertices[0].x;
     let elPosY = resultBlocks[i].boundingBox.vertices[0].y;
+    const text = resultBlocks[i].lines[0].words[0].text;
 
     if (elPosY >= 2208) {
       continue;
@@ -83,7 +86,7 @@ export default async function handle(req,res) {
       start = i;
     }
 
-    if (resultBlocks[i].lines[0].words[0].text.length > 4) {
+    if (text.length > 4) {
       break;
     }
 
@@ -91,8 +94,14 @@ export default async function handle(req,res) {
       linePositionY = elPosY;
     }
 
-    const text = resultBlocks[i].lines[0].words[0].text;
-    let handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
+    if (text.includes('要') || text.includes('中') || text.includes('款')) {
+      continue;
+    }
+    /*if (lastEntity === 'sizes' && text >= prevSizesText) {
+      entities.sizes.pop();
+    }*/
+
+      let handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
     handledText = handledText.replace('¥', '').replace('Y', '');
 
     if (handledText.length === 1) {
@@ -105,6 +114,10 @@ export default async function handle(req,res) {
       lastEntity = lastEntity === 'prices' ? 'sizes' : 'prices';
       entities[lastEntity].push({text: handledText, x: elPosX, y: elPosY });
       linePositionY = elPosY;
+    }
+
+    if (lastEntity === 'sizes') {
+      prevSizesText = text;
     }
   }
 
