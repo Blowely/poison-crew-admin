@@ -117,7 +117,6 @@ export default async function handle(req,res) {
     if (!linePositionY) {
       linePositionY = elPosY;
     }
-    console.log('text =', text);
     let handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
     handledText = handledText.replace('¥', '').replace('Y', '').replace('羊', '');
 
@@ -125,12 +124,13 @@ export default async function handle(req,res) {
       handledText += '5'
     }
 
-    if (handledText.length === 1) {
-      handledText += '0';
+    if (handledText.length === 1 && !text.endsWith('¥')) {
+      entities.prices.pop();
+      continue;
     }
-    console.log('handledText =', handledText);
-    const newObj = {text: handledText, x: elPosX, y: elPosY };
-    const notHandledNewObj = {text: text, x: elPosX, y: elPosY };
+
+    const newObj = {text: handledText + i, x: elPosX, y: elPosY };
+    const notHandledNewObj = {text: text + i, x: elPosX, y: elPosY };
 
     if (Math.abs(elPosY - linePositionY) <= 15 && Math.abs(elPosY - linePositionY) >= -15) {
       entities[lastEntity].push(newObj);
