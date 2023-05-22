@@ -82,7 +82,7 @@ export default async function handle(req,res) {
     let elPosX = resultBlocks[i].boundingBox.vertices[0].x;
     let elPosY = resultBlocks[i].boundingBox.vertices[0].y;
     const text = resultBlocks[i].lines[0].words[0].text;
-
+    console.log('text =', text);
     if (elPosY >= 2208) {
       continue;
     } else {
@@ -117,20 +117,35 @@ export default async function handle(req,res) {
     if (!linePositionY) {
       linePositionY = elPosY;
     }
-    let handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
-    handledText = handledText.replace('¥', '').replace('Y', '').replace('羊', '');
 
-    if (handledText.length === 3 && handledText.endsWith('.')) {
-      handledText += '5'
+    let confidence = 1;
+
+    const handleText = (text) => {
+      let handledText = text.includes('%') ? text.replace('%', '.5') : text;
+      handledText = handledText.replace('¥', '').replace('Y', '').replace('羊', '');
+
+      if (handledText.length === 3 && handledText.endsWith('.')) {
+        handledText += '5'
+      }
+
+      if (handledText.length === 1 && !text.startsWith('¥')
+      ) {
+        confidence = 0;
+        handledText += '0';
+      }
+
+      return handledText;
     }
 
-    if (handledText.length === 1 && !text.endsWith('¥')) {
-      entities.prices.pop();
-      continue;
-    }
+    let handledText = handleText(text);
 
-    const newObj = {text: handledText + i, x: elPosX, y: elPosY };
-    const notHandledNewObj = {text: text + i, x: elPosX, y: elPosY };
+    let newObj = {text: handledText, x: elPosX, y: elPosY };
+    let notHandledNewObj = {text: text, x: elPosX, y: elPosY };
+
+    if (!confidence) {
+      newObj = {...newObj, confidence}
+      notHandledNewObj = {...notHandledNewObj, confidence}
+    }
 
     if (Math.abs(elPosY - linePositionY) <= 15 && Math.abs(elPosY - linePositionY) >= -15) {
       entities[lastEntity].push(newObj);
@@ -177,6 +192,22 @@ export default async function handle(req,res) {
     prevPosY = el.y;
     return isDiff ;
   });
+
+  //check not confidence sizes
+  for (let i = 0; i < handledEntitySizes.length; i++) {
+    if (handledEntitySizes[i]?.confidence === 0) {
+      const currentValue = Number(handledEntitySizes[i].text);
+      const prevSizeValue = Math.floor(handledEntitySizes[i-1]?.text);
+      const nextSizeValue = Math.floor(handledEntitySizes[i+1]?.text);
+
+      if (
+        currentValue + 1 === prevSizeValue &&
+        currentValue - 1 === nextSizeValue
+      ) {
+        handledEntitySizes[i].confidence = 1;
+      }
+    }
+  }
 
   // clean prices
   entities.prices = entities.prices.filter((el, index) => {
