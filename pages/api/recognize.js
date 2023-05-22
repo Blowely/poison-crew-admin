@@ -64,7 +64,7 @@ export default async function handle(req,res) {
 
   let start = undefined;
   const resultBlocks = response.data.results[0].results[0].textDetection.pages[0].blocks.reverse();
-
+  //fs.writeFileSync('./output.json', JSON.stringify(resultBlocks));
   const entities = {
     sizes: [],
     prices: []
@@ -84,35 +84,43 @@ export default async function handle(req,res) {
       start = i;
     }
 
-    if (text.length > 4) {
+    if (entities.sizes.length &&
+      Math.abs(entities.sizes[entities.sizes.length-1].y - elPosY) >= 330)
+    {
       break;
+    }
+
+    if (text.length > 4 && !text.startsWith('¥')) {
+      break;
+    }
+
+    if (
+      text.includes('要') ||
+      text.includes('中') ||
+      text.includes('款') ||
+      text.includes('|'))
+    {
+      continue;
     }
 
     if (!linePositionY) {
       linePositionY = elPosY;
     }
 
-    if (text.includes('要') || text.includes('中') || text.includes('款')) {
-      continue;
-    }
-
-   /* */
-
     let handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
-    handledText = handledText.replace('¥', '').replace('Y', '');
+    handledText = handledText.replace('¥', '').replace('Y', '').replace('羊', '');
 
     if (handledText.length === 1) {
-
       handledText += '0';
     }
 
-    /**/
+    const newObj = {text: handledText, x: elPosX, y: elPosY };
 
     if (Math.abs(elPosY - linePositionY) <= 10 && Math.abs(elPosY - linePositionY) >= -10) {
-      entities[lastEntity].push({text: handledText, x: elPosX, y: elPosY });
+      entities[lastEntity].push(newObj);
     } else {
       lastEntity = lastEntity === 'prices' ? 'sizes' : 'prices';
-      entities[lastEntity].push({text: handledText, x: elPosX, y: elPosY });
+      entities[lastEntity].push(newObj);
       linePositionY = elPosY;
     }
   }
