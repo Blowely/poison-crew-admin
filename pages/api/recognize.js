@@ -95,7 +95,9 @@ export default async function handle(req,res) {
       break;
     }
 
-    if (text.length > 4 && !text.startsWith('¥')) {
+    if (text.length > 4 && !text.startsWith('¥') &&
+      !(Math.abs(elPosY - linePositionY) <= 110 && Math.abs(elPosY - linePositionY) >= -110))
+    {
       break;
     }
 
