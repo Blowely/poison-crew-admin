@@ -70,6 +70,11 @@ export default async function handle(req,res) {
     prices: []
   }
 
+  const notHandleEntities = {
+    sizes: [],
+    prices: []
+  }
+
   let linePositionY = 0;
   let lastEntity = 'prices';
 
@@ -94,6 +99,10 @@ export default async function handle(req,res) {
       break;
     }
 
+    if (text.includes('码')) {
+      break;
+    }
+
     if (
       text.includes('要') ||
       text.includes('中') ||
@@ -106,7 +115,7 @@ export default async function handle(req,res) {
     if (!linePositionY) {
       linePositionY = elPosY;
     }
-
+    console.log('text =', text);
     let handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
     handledText = handledText.replace('¥', '').replace('Y', '').replace('羊', '');
 
@@ -117,17 +126,22 @@ export default async function handle(req,res) {
     if (handledText.length === 1) {
       handledText += '0';
     }
-
+    console.log('handledText =', handledText);
     const newObj = {text: handledText, x: elPosX, y: elPosY };
+    const notHandledNewObj = {text: text, x: elPosX, y: elPosY };
 
-    if (Math.abs(elPosY - linePositionY) <= 10 && Math.abs(elPosY - linePositionY) >= -10) {
+    if (Math.abs(elPosY - linePositionY) <= 15 && Math.abs(elPosY - linePositionY) >= -15) {
       entities[lastEntity].push(newObj);
+      notHandleEntities[lastEntity].push(notHandledNewObj);
     } else {
       lastEntity = lastEntity === 'prices' ? 'sizes' : 'prices';
       entities[lastEntity].push(newObj);
+      notHandleEntities[lastEntity].push(notHandledNewObj);
       linePositionY = elPosY;
     }
   }
+
+  console.log('notHandleEntities =', notHandleEntities);
 
   let handledEntitySizes = JSON.parse((JSON.stringify(entities.sizes)));
 
@@ -163,7 +177,15 @@ export default async function handle(req,res) {
   });
 
   // clean prices
-  entities.prices = entities.prices.filter((el) => el.text.length >= 3);
+  entities.prices = entities.prices.filter((el, index) => {
+    if (el.text.length <= 3 &&
+      (notHandleEntities.prices[index].text.startsWith('¥') ||
+        notHandleEntities.prices[index].text.startsWith('Y')))
+    {
+      return true;
+    }
+    return el.text.length >= 3;
+  });
 
   // fill empty prices
   const sizes = [...handledEntitySizes];
