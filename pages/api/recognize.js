@@ -108,7 +108,12 @@ export default async function handle(req,res) {
     }
 
     let handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
+    console.log('handledText =', handledText);
     handledText = handledText.replace('¥', '').replace('Y', '').replace('羊', '');
+
+    if (handledText.length === 3 && handledText.endsWith('.')) {
+      handledText += '5'
+    }
 
     if (handledText.length === 1) {
       handledText += '0';
