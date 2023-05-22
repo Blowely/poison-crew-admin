@@ -73,8 +73,6 @@ export default async function handle(req,res) {
   let linePositionY = 0;
   let lastEntity = 'prices';
 
-  let prevSizesText = '';
-
   for (let i = 0; i < resultBlocks.length; i++) {
     let elPosX = resultBlocks[i].boundingBox.vertices[0].x;
     let elPosY = resultBlocks[i].boundingBox.vertices[0].y;
@@ -97,16 +95,18 @@ export default async function handle(req,res) {
     if (text.includes('要') || text.includes('中') || text.includes('款')) {
       continue;
     }
-    /*if (lastEntity === 'sizes' && text >= prevSizesText) {
-      entities.sizes.pop();
-    }*/
 
-      let handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
+   /* */
+
+    let handledText = text.includes('%') ?  resultBlocks[i].lines[0].words[0].text.replace('%', '.5') : text;
     handledText = handledText.replace('¥', '').replace('Y', '');
 
     if (handledText.length === 1) {
+
       handledText += '0';
     }
+
+    /**/
 
     if (Math.abs(elPosY - linePositionY) <= 10 && Math.abs(elPosY - linePositionY) >= -10) {
       entities[lastEntity].push({text: handledText, x: elPosX, y: elPosY });
@@ -115,17 +115,33 @@ export default async function handle(req,res) {
       entities[lastEntity].push({text: handledText, x: elPosX, y: elPosY });
       linePositionY = elPosY;
     }
-
-    if (lastEntity === 'sizes') {
-      prevSizesText = text;
-    }
   }
 
+  let handledEntitySizes = JSON.parse((JSON.stringify(entities.sizes)));
+
+  // refactoring sizes
+  let prevSizesText = '';
+  for (let i = 0; i < entities.sizes.length; i++) {
+    let text = JSON.parse(JSON.stringify(entities.sizes[i].text));
+
+    if (i !== 0 && text >= prevSizesText ) {
+      handledEntitySizes[i - 1].text = (Math.floor(text) + 1).toString();
+    }
+
+    if (text.length === 3) {
+      const strArr = text.split('')
+      strArr.splice(2, 0, '.');
+      text = strArr.join('');
+      handledEntitySizes[i].text = text;
+    }
+
+    prevSizesText = text;
+  }
 
   // clean sizes
   const numReg =  /[\d.]/;
-  let prevPosY = entities.sizes[0].y;
-  entities.sizes = entities.sizes.filter((el) => {
+  let prevPosY = handledEntitySizes[0].y;
+  handledEntitySizes = handledEntitySizes.filter((el) => {
     if (!numReg.test(el.text) || el.text.length < 2) {
       return false;
     }
@@ -138,7 +154,7 @@ export default async function handle(req,res) {
   entities.prices = entities.prices.filter((el) => el.text.length >= 3);
 
   // fill empty prices
-  const sizes = [...entities.sizes];
+  const sizes = [...handledEntitySizes];
   const prices = JSON.parse(JSON.stringify(entities.prices));
   for (let i = 0; i < sizes.length; i++) {
     if (
@@ -152,9 +168,9 @@ export default async function handle(req,res) {
     }
   }
 
-  console.log('entities =', {sizes, prices});
+  console.log('entities =', {handledEntitySizes, prices});
 
-  return res.json({sizes, prices});
+  return res.json({handledEntitySizes, prices});
 }
 
 export const config = {
