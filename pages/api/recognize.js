@@ -114,6 +114,11 @@ export default async function handle(req,res) {
       continue;
     }
 
+    if (!entities.sizes.length && !entities.prices.length &&
+      elPosY - resultBlocks[i + 1].boundingBox.vertices[0].y >= 120) {
+      lastEntity = 'sizes';
+    }
+
     if (!linePositionY) {
       linePositionY = elPosY;
     }
@@ -181,6 +186,8 @@ export default async function handle(req,res) {
     prevSizesText = text;
   }
 
+  console.log('handledEntitySizes ==', handledEntitySizes);
+  console.log('handlePrices ==', entities.prices);
   // clean sizes
   const numReg =  /[\d.]/;
   let prevPosY = handledEntitySizes[0].y;
@@ -197,7 +204,7 @@ export default async function handle(req,res) {
   for (let i = 0; i < handledEntitySizes.length; i++) {
     if (handledEntitySizes[i]?.confidence === 0) {
       const currentValue = Number(handledEntitySizes[i].text);
-      const prevSizeValue = Math.floor(handledEntitySizes[i-1]?.text);
+      const prevSizeValue = Math.ceil(handledEntitySizes[i-1]?.text);
       const nextSizeValue = Math.floor(handledEntitySizes[i+1]?.text);
 
       if (
@@ -208,6 +215,7 @@ export default async function handle(req,res) {
       }
     }
   }
+
 
   // clean prices
   entities.prices = entities.prices.filter((el, index) => {
