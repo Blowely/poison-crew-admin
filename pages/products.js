@@ -3,10 +3,13 @@ import Link from "next/link";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {CopyOutlined} from "@ant-design/icons";
-import {notification} from "antd";
+import {Modal, notification} from "antd";
 
 export default function Products() {
   const [products,setProducts] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [sizes, setSizes] = useState([]);
+
   useEffect(() => {
     axios.get('/api/products?limit=20').then(response => {
       setProducts(response.data);
@@ -17,14 +20,19 @@ export default function Products() {
     console.log('234')
     const files = ev.target?.files;
     if (files?.length > 0) {
-      setIsUploading(true);
       const data = new FormData();
       for (const file of files) {
         data.append('file', file);
       }
       const res = await axios.post('/api/recognize', data);
 
-      setIsUploading(false);
+      if (res.statusText !== 'OK' && res.status !== 200) {
+        return null;
+      }
+
+      setModalOpen(true);
+      setSizes(res?.data);
+      console.log('res =', res);
     }
   }
 
@@ -35,6 +43,17 @@ export default function Products() {
 
   return (
     <Layout>
+      <Modal
+        title=""
+        centered
+        open={modalOpen}
+        onOk={() => setModalOpen(false)}
+        onCancel={() => setModalOpen(false)}
+      >
+        {sizes.map((el, index) => (
+          <p key={index}>{el.size}: {el.price}</p>
+        ))}
+      </Modal>
       <Link className="btn-primary" href={'/products/new'}>Add new product</Link>
       <table className="basic mt-2">
         <thead>

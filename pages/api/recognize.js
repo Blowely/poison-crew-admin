@@ -246,8 +246,14 @@ export default async function handle(req,res) {
   }
 
   console.log('entities =', {handledEntitySizes, prices});
+  const items = handledEntitySizes.map((el, index) => {
+    return {
+      size: el.text,
+      price: prices[index].text
+    }
+  })
 
-  return res.json({handledEntitySizes, prices});
+  return res.json(items);
 }
 
 export const config = {
