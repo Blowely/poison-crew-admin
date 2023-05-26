@@ -101,7 +101,7 @@ export default async function handle(req,res) {
       break;
     }
 
-    if (text.includes('码')) {
+    if (text.includes('码') || text.includes('已') || text.includes('选') || text.includes(']')) {
       break;
     }
 
