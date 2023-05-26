@@ -6,10 +6,26 @@ import axios from "axios";
 export default function Products() {
   const [products,setProducts] = useState([]);
   useEffect(() => {
-    axios.get('/api/products').then(response => {
+    axios.get('/api/products?limit=20').then(response => {
       setProducts(response.data);
     });
   }, []);
+
+  async function uploadPoisonImg(ev) {
+    console.log('234')
+    const files = ev.target?.files;
+    if (files?.length > 0) {
+      setIsUploading(true);
+      const data = new FormData();
+      for (const file of files) {
+        data.append('file', file);
+      }
+      const res = await axios.post('/api/recognize', data);
+
+      setIsUploading(false);
+    }
+  }
+
   return (
     <Layout>
       <Link className="btn-primary" href={'/products/new'}>Add new product</Link>
@@ -22,9 +38,19 @@ export default function Products() {
         </thead>
         <tbody>
           {products.items?.map(product => (
-            <tr key={product._id}>
-              <td>{product.title}</td>
-              <td>
+            <tr key={product._id} className="flex items-center justify-between">
+              <td><img style={{height: '240px', maxWidth: 'unset' }} src={product.images[0]}/></td>
+              <td style={{fontSize: '20px'}}>{product.title}</td>
+              <td className="flex">
+                <label className="w-24 h-20 cursor-pointer text-center flex items-center justify-center text-sm gap-1 text-primary rounded-sm bg-white shadow-sm border border-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                  </svg>
+                  <div>
+                    poizon
+                  </div>
+                  <input type="file" onChange={uploadPoisonImg} className="hidden"/>
+                </label>
                 <Link className="btn-default" href={'/products/edit/'+product._id}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
