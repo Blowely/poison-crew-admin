@@ -235,7 +235,9 @@ export default async function handle(req,res) {
     if (
       prices[i]?.x &&
       Math.abs(sizes[i].x - prices[i].x) <= 70 &&
-      Math.abs(prices[i].x - sizes[i].x) >= -70)
+      Math.abs(prices[i].x - sizes[i].x) >= -70 &&
+      Math.abs(sizes[i].y - prices[i].y) <= 100 &&
+      Math.abs(prices[i].y - sizes[i].y) >= -100)
     {
       continue;
     } else {
