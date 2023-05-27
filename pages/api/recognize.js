@@ -164,6 +164,7 @@ export default async function handle(req,res) {
   }
 
   console.log('notHandleEntities =', notHandleEntities);
+  console.log('handledSizesBeforeRef ==', entities.sizes);
 
   let handledEntitySizes = JSON.parse((JSON.stringify(entities.sizes)));
 
@@ -172,8 +173,8 @@ export default async function handle(req,res) {
   for (let i = 0; i < entities.sizes.length; i++) {
     let text = JSON.parse(JSON.stringify(entities.sizes[i].text));
 
-    if (i !== 0 && text >= prevSizesText ) {
-      handledEntitySizes[i - 1].text = (Math.floor(text) + 1).toString();
+    if (i !== 0 && text >= prevSizesText && entities.sizes[i]?.confidence ) {
+      handledEntitySizes[i - 1].text = (Math.floor(Number(text)) + 1).toString();
     }
 
     if (text.length === 3) {
@@ -213,6 +214,9 @@ export default async function handle(req,res) {
       ) {
         handledEntitySizes[i].confidence = 1;
       }
+    }
+    if (i > 0 && Math.ceil(handledEntitySizes[i].text) > Math.ceil(handledEntitySizes[i - 1].text)) {
+      handledEntitySizes[i].confidence = 0;
     }
   }
 

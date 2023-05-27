@@ -17,7 +17,6 @@ export default function Products() {
   }, []);
 
   async function uploadPoisonImg(ev) {
-    console.log('234')
     const files = ev.target?.files;
     if (files?.length > 0) {
       const data = new FormData();
@@ -51,7 +50,7 @@ export default function Products() {
         onCancel={() => setModalOpen(false)}
       >
         {sizes.map((el, index) => (
-          <p key={index}>{el.size}: {el.price}</p>
+          <p key={index} style={{fontSize:'35px'}}>{el.size}: {el.price}</p>
         ))}
       </Modal>
       <Link className="btn-primary" href={'/products/new'}>Add new product</Link>
