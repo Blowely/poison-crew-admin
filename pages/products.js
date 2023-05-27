@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import Link from "next/link";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {CopyOutlined} from "@ant-design/icons";
+import {CopyOutlined, LoadingOutlined} from "@ant-design/icons";
 import {Modal, notification} from "antd";
 
 export default function Products() {
@@ -97,8 +97,7 @@ export default function Products() {
       <Link className="btn-primary" href={'/products/new'}>Add new product</Link>
       {isLoading &&
         <div className="w-screen h-screen flex justify-center items-center absolute">
-          loading...
-          <img className="absolute" src="../public/Rolling-1s-200px.gif" alt=""/>
+          <LoadingOutlined style={{fontSize: '24px'}} spin />
         </div>
       }
 
