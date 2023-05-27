@@ -8,15 +8,45 @@ import {Modal, notification} from "antd";
 export default function Products() {
   const [products,setProducts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const [sizes, setSizes] = useState([]);
+  const [editedProduct, setEditedProduct] = useState({});
 
-  useEffect(() => {
+
+  useEffect(  () => {
     axios.get('/api/products?limit=20').then(response => {
       setProducts(response.data);
+      setLoading(false)
     });
   }, []);
 
-  async function uploadPoisonImg(ev) {
+  async function getProducts() {
+    await axios.get('/api/products?limit=20').then(response => {
+      setProducts(response.data);
+      setLoading(false)
+    });
+
+  }
+
+  async function saveProduct(product) {
+    if (product._id) {
+      //update
+      await axios.put('/api/products', {
+        ...product,
+        properties: {
+          ...product.properties,
+          sizes: sizes
+        }
+      }
+      );
+    } else {
+      //create
+      await axios.post('/api/products', data);
+    }
+  }
+
+  async function uploadPoisonImg(ev, product) {
+    setLoading(true);
     const files = ev.target?.files;
     if (files?.length > 0) {
       const data = new FormData();
@@ -30,9 +60,12 @@ export default function Products() {
       }
 
       setModalOpen(true);
+      setEditedProduct(product);
       setSizes(res?.data);
+
       console.log('res =', res);
     }
+    setLoading(false);
   }
 
   const copyToClipboard = (title) => {
@@ -44,9 +77,14 @@ export default function Products() {
     <Layout>
       <Modal
         title=""
+        okText="Save"
         centered
         open={modalOpen}
-        onOk={() => setModalOpen(false)}
+        onOk={async () => {
+          await saveProduct(editedProduct);
+          setModalOpen(false)
+          await getProducts();
+        }}
         onCancel={() => setModalOpen(false)}
       >
         {sizes.map((el, index) => (
@@ -54,19 +92,36 @@ export default function Products() {
         ))}
       </Modal>
       <Link className="btn-primary" href={'/products/new'}>Add new product</Link>
-      <table className="basic mt-2">
-        <thead>
+      {isLoading &&
+        <div className="w-screen h-screen flex justify-center items-center absolute">
+          loading...
+          <img className="absolute" src="../public/Rolling-1s-200px.gif" alt=""/>
+        </div>
+      }
+
+      {!isLoading &&
+        <table className="basic mt-2">
+          <thead>
           <tr>
             <td>Product name</td>
             <td></td>
           </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
           {products.items?.map(product => (
             <tr key={product._id} className="flex items-center justify-between">
               <td style={{paddingLeft: '0px'}}><img style={{height: '350px', maxWidth: 'unset' }} src={product.images[0]}/></td>
               <td className="h-auto">
                 <tr><td style={{fontSize: '20px'}}>{product.title}</td></tr>
+                <tr><td style={{fontSize: '20px', gap: '1px'}}>
+                  {product?.properties?.sizes?.map((s, i) => {
+                    if (s.size?.confidence === 0) {return null}
+                    return <span key={i} className="bg-blue-400 text-white p-1 mr-1">
+                        {s.size}: <span className="bg-cyan-600 text-white">{s.price}</span>
+                       </span>
+                  })}
+                </td>
+                </tr>
                 <tr>
                   <td className="flex h-20" >
                     <Link className="btn-red" href={'/products/delete/'+product._id}>
@@ -92,7 +147,7 @@ export default function Products() {
                       <div>
                         Poizon
                       </div>
-                      <input type="file" onChange={uploadPoisonImg} className="hidden"/>
+                      <input type="file" onChange={(ev) => uploadPoisonImg(ev, product)} className="hidden"/>
                     </label>
                   </td>
                 </tr>
@@ -102,8 +157,9 @@ export default function Products() {
 
             </tr>
           ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      }
     </Layout>
   );
 }

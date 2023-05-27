@@ -251,6 +251,13 @@ export default async function handle(req,res) {
 
   console.log('entities =', {handledEntitySizes, prices});
   const items = handledEntitySizes.map((el, index) => {
+    if (el?.confidence === 0) {
+      return {
+        size: el.text,
+        price: prices[index].text,
+        confidence: el.confidence
+      }
+    }
     return {
       size: el.text,
       price: prices[index].text
