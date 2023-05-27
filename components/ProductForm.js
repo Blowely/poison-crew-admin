@@ -79,10 +79,15 @@ export default function ProductForm({
   function updateImagesOrder(images) {
     setImages(images);
   }
-  function setProductProp(propName,value) {
+  function setProductProp(propName,value, i, field) {
     setProductProperties(prev => {
       const newProductProps = {...prev};
-      newProductProps[propName] = value;
+      if (i >= 0) {
+        newProductProps[propName][i][field] = value;
+      } else {
+        newProductProps[propName] = value;
+      }
+
       return newProductProps;
     });
   }
@@ -114,22 +119,43 @@ export default function ProductForm({
             <option key={c._id} value={c._id}>{c.name}</option>
           ))}
         </select>
-        {propertiesToFill.length > 0 && propertiesToFill.map(p => (
-          <div key={p.name} className="">
-            <label>{p.name[0].toUpperCase()+p.name.substring(1)}</label>
-            <div>
-              <select value={productProperties[p.name]}
-                      onChange={ev =>
-                        setProductProp(p.name,ev.target.value)
-                      }
-              >
-                {p.values.map(v => (
-                  <option key={v} value={v}>{v}</option>
-                ))}
-              </select>
+        {propertiesToFill.length > 0 && propertiesToFill.map(p => {
+          if (p.name === 'sizes') {
+            return (
+              <div key={p.name} >
+                <label>{p.name[0].toUpperCase()+p.name.substring(1)}</label>
+                <div>
+                  <ul>
+                    {productProperties[p.name]?.map((el,i) => (
+                      <li key={i}>
+                        <span>{el.size}: <input type="text" style={{width: '100px'}} value={el.price} onChange={ev =>{
+                          setProductProp(p.name,ev.target.value, i, 'price')
+                        }}/> юаней</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )
+          }
+
+          return (
+            <div key={p.name} className="">
+              <label>{p.name[0].toUpperCase()+p.name.substring(1)}</label>
+              <div>
+                <select value={productProperties[p.name]}
+                        onChange={ev =>
+                          setProductProp(p.name,ev.target.value)
+                        }
+                >
+                  {p.values.map(v => (
+                    <option key={v} value={v}>{v}</option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
         <label>
           Photos
         </label>
