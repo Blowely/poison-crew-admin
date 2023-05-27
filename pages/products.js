@@ -61,7 +61,7 @@ export default function Products() {
 
       setModalOpen(true);
       setEditedProduct(product);
-      setSizes(res?.data);
+      setSizes(res?.data?.items);
 
       console.log('res =', res);
     }

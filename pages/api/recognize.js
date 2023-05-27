@@ -264,7 +264,24 @@ export default async function handle(req,res) {
     }
   })
 
-  return res.json(items);
+  const getCheapestPrice = () => {
+    const regex = /^\d+$/;
+    let cheapest = 0;
+    prices.map(p => {
+      if (!regex.test(p.text)) {
+        return null;
+      }
+
+      if (p.text < cheapest || cheapest === 0) {
+        return cheapest = p.text;
+      }
+    });
+    return cheapest;
+  }
+
+
+
+  return res.json({items, cheapest_price: getCheapestPrice()});
 }
 
 export const config = {
