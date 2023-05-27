@@ -9,16 +9,17 @@ export default async function handle(req, res) {
   if (method === 'GET') {
     let items = [];
     let totalCount = undefined;
+    let result = [];
 
     if (req.query?.id) {
       const res = await Product.findOne({_id:req.query.id});
-      items.push(res);
+      result = res;
     } else {
       totalCount = await Product.count();
       items = await Product.find().limit(req.query.limit);
+      result = {items: items, total_count: totalCount }
     }
 
-    const result = {items: [...items], total_count: totalCount };
     res.json(result);
   }
 
