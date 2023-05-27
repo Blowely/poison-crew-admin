@@ -10,6 +10,7 @@ export default function Products() {
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [sizes, setSizes] = useState([]);
+  const [cheapestPrice, setCheapestPrice] = useState(null);
   const [editedProduct, setEditedProduct] = useState({});
 
 
@@ -33,6 +34,7 @@ export default function Products() {
       //update
       await axios.put('/api/products', {
         ...product,
+        price: cheapestPrice,
         properties: {
           ...product.properties,
           sizes: sizes
@@ -62,6 +64,7 @@ export default function Products() {
       setModalOpen(true);
       setEditedProduct(product);
       setSizes(res?.data?.items);
+      setCheapestPrice(res?.data?.cheapest_price);
 
       console.log('res =', res);
     }
