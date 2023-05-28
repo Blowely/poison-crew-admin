@@ -46,6 +46,7 @@ export default function ProductForm({
       }
 
       notification.success({message: 'Updated', duration: 2});
+      router.push('/products');
     } catch (e) {
       notification.error({message: 'Error', duration: 2});
     }
