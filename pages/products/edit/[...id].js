@@ -3,6 +3,7 @@ import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import ProductForm from "@/components/ProductForm";
+import {Button} from "antd";
 
 export default function EditProductPage() {
   const [productInfo, setProductInfo] = useState(null);
@@ -16,8 +17,16 @@ export default function EditProductPage() {
       setProductInfo(response.data);
     });
   }, [id]);
+
+  const onBackClick = () => {
+    router.push('/products');
+  }
+
   return (
     <Layout>
+      <Button style={{fontSize: '17px'}} onClick={onBackClick} type="link" block>
+        <span style={{float:"right"}}>{'< Products'}</span>
+      </Button>
       <h1>Edit product</h1>
       {productInfo && (
         <ProductForm {...productInfo} />
