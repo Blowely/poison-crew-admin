@@ -3,6 +3,8 @@ import {useRouter} from "next/router";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import {ReactSortable} from "react-sortablejs";
+import {DeleteOutlined} from "@ant-design/icons";
+import {notification} from "antd";
 
 export default function ProductForm({
   _id,
@@ -29,19 +31,26 @@ export default function ProductForm({
     })
   }, []);
   async function saveProduct(ev) {
-    ev.preventDefault();
-    const data = {
-      title,description,price,images,category,
-      properties:productProperties
-    };
-    if (_id) {
-      //update
-      await axios.put('/api/products', {...data,_id});
-    } else {
-      //create
-      await axios.post('/api/products', data);
+    try {
+      ev.preventDefault();
+      const data = {
+        title,description,price,images,category,
+        properties:productProperties
+      };
+      if (_id) {
+        //update
+        await axios.put('/api/products', {...data,_id});
+      } else {
+        //create
+        await axios.post('/api/products', data);
+      }
+
+      notification.success({message: 'Updated', duration: 2});
+    } catch (e) {
+      notification.error({message: 'Error', duration: 2});
     }
-    setGoToProducts(true);
+
+
   }
   if (goToProducts) {
     router.push('/products');
@@ -79,6 +88,11 @@ export default function ProductForm({
   function updateImagesOrder(images) {
     setImages(images);
   }
+
+  function deleteImage(el,index) {
+    setImages((prev) => prev.filter((el, i) => i !== index));
+  }
+
   function setProductProp(propName,value, i, field) {
     setProductProperties(prev => {
       const newProductProps = {...prev};
@@ -164,10 +178,14 @@ export default function ProductForm({
             list={images}
             className="flex flex-wrap gap-1"
             setList={updateImagesOrder}>
-            {!!images?.length && images.map(link => (
-              <div key={link} className="h-24 bg-white p-4 shadow-sm rounded-sm border border-gray-200">
-                <img src={link} alt="" className="rounded-lg"/>
+            {!!images?.length && images.map((link,i) => (
+              <div key={i} className="flex flex-col">
+                <div key={link} className="h-24 bg-white relative p-4 shadow-sm rounded-sm border border-gray-200">
+                  <img src={link} alt="" className="rounded-lg z-10 relative"/>
+                </div>
+                <button className="bg-red-500" onClick={(el) => deleteImage(el, i)}><DeleteOutlined /></button>
               </div>
+
             ))}
           </ReactSortable>
           {isUploading && (

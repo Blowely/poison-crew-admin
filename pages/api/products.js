@@ -12,11 +12,11 @@ export default async function handle(req, res) {
     let result = [];
 
     if (req.query?.id) {
-      const res = await Product.findOne({_id:req.query.id});
-      result = res;
+      result = await Product.findOne({_id: req.query.id});
     } else {
       totalCount = await Product.count();
-      items = await Product.find().limit(req.query.limit);
+      items = await Product.find().skip(req.query?.offset)
+        .limit(req.query.limit);
       result = {items: items, total_count: totalCount }
     }
 
