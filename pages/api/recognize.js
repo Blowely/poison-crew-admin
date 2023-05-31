@@ -64,7 +64,7 @@ export default async function handle(req,res) {
 
   let start = undefined;
   const resultBlocks = response.data.results[0].results[0].textDetection.pages[0].blocks.reverse();
-  //fs.writeFileSync('./output.json', JSON.stringify(resultBlocks));
+  fs.writeFileSync('./output.json', JSON.stringify(resultBlocks));
   const entities = {
     sizes: [],
     prices: []
@@ -191,7 +191,7 @@ export default async function handle(req,res) {
   console.log('handlePrices ==', entities.prices);
   // clean sizes
   const numReg =  /[\d.]/;
-  let prevPosY = handledEntitySizes[0].y;
+  let prevPosY = handledEntitySizes[0]?.y;
   handledEntitySizes = handledEntitySizes.filter((el) => {
     if (!numReg.test(el.text) || el.text.length < 2) {
       return false;
