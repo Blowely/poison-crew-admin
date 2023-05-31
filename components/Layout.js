@@ -5,7 +5,7 @@ import Logo from "@/components/Logo";
 
 export default function Layout({children}) {
   const [showNav,setShowNav] = useState(false);
-  const { data: session } = useSession();
+  /*const { data: session } = useSession();
   if (!session) {
     return (
       <div className="bg-bgGray w-screen h-screen flex flex-col justify-center gap-4 items-center">
@@ -17,7 +17,7 @@ export default function Layout({children}) {
         </div>
       </div>
     );
-  }
+  }*/
 
   return (
     <div className="bg-bgGray min-h-screen ">
