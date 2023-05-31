@@ -12,9 +12,13 @@ export const authOptions = {
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
     }),
-    Yandex({
+    /*Yandex({
       clientId: process.env.YANDEX_ID,
       clientSecret: process.env.YANDEX_SECRET
+    })*/
+    Yandex({
+      clientId: 'c85c88b5fb70492f9e6e49c4146dd61f',
+      clientSecret: 'eedfca2f519948aaa82ee25ea6f834b8'
     }),
   ],
 
