@@ -4,7 +4,7 @@ const jose = require('node-jose');
 const fs = require('fs');
 const axios = require("axios");
 
-const key = fs.readFileSync(process.cwd() + '\\yandexService\\privateKeyIMG2TXT.txt', 'utf8');
+const key = fs.readFileSync(process.cwd() + '/yandexService/privateKeyIMG2TXT.txt', 'utf8');
 
 const serviceAccountId = process.env.YANDEX_IMG2TXT_ISS_ID;
 const keyId = process.env.YANDEX_IMG2TXT_KEY_ID;
