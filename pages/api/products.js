@@ -1,6 +1,6 @@
 import {Product} from "@/models/Product";
 import {mongooseConnect} from "@/lib/mongoose";
-import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
+//import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
 
 export default async function handle(req, res) {
   const {method} = req;
@@ -23,7 +23,7 @@ export default async function handle(req, res) {
     res.json(result);
   }
 
-  await isAdminRequest(req,res);
+  //await isAdminRequest(req,res);
   if (method === 'POST') {
     const {title,description,price,images,category,properties} = req.body;
     const productDoc = await Product.create({
