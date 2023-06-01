@@ -29,10 +29,11 @@ export default async function handle(req,res) {
   function base64_encode(file) {
     let bitmap = fs.readFileSync(file);
     const probeImg = probe.sync(bitmap);
-    console.log();
-    if (probeImg.height < 2530) {
+
+    if (probeImg?.height < 2530) {
       isIphone12 = false;
     }
+
     return new Buffer(bitmap).toString('base64');
   }
 
