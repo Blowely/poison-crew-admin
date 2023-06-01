@@ -83,7 +83,7 @@ export default async function handle(req,res) {
 
   let start = undefined;
   const resultBlocks = response.data.results[0].results[0].textDetection.pages[0].blocks.reverse();
-  fs.writeFileSync('./output.json', JSON.stringify(resultBlocks));
+  //fs.writeFileSync('./output.json', JSON.stringify(resultBlocks));
   const entities = {
     sizes: [],
     prices: []
@@ -102,20 +102,21 @@ export default async function handle(req,res) {
     let elPosY = resultBlocks[i].boundingBox.vertices[0].y;
     const text = resultBlocks[i].lines[0].words[0].text;
     console.log('text =', text);
-    if (elPosY >= 2208) {
+    if (elPosY >= getSize(2208)) {
       continue;
     } else {
       start = i;
     }
 
     if (entities.sizes.length &&
-      Math.abs(entities.sizes[entities.sizes.length-1].y - elPosY) >= 330)
+      Math.abs(entities.sizes[entities.sizes.length-1].y - elPosY) >= getSize(330))
     {
       break;
     }
 
     if (text.length > 4 && !text.startsWith('¥') &&
-      !(Math.abs(elPosY - linePositionY) <= 110 && Math.abs(elPosY - linePositionY) >= -110))
+      !(Math.abs(elPosY - linePositionY) <= getSize(110) &&
+        Math.abs(elPosY - linePositionY) >= getSize(-110)))
     {
       break;
     }
@@ -134,7 +135,7 @@ export default async function handle(req,res) {
     }
 
     if (!entities.sizes.length && !entities.prices.length &&
-      elPosY - resultBlocks[i + 1].boundingBox.vertices[0].y >= 120) {
+      elPosY - resultBlocks[i + 1].boundingBox.vertices[0].y >= getSize(120)) {
       lastEntity = 'sizes';
     }
 
@@ -171,7 +172,8 @@ export default async function handle(req,res) {
       notHandledNewObj = {...notHandledNewObj, confidence}
     }
 
-    if (Math.abs(elPosY - linePositionY) <= 15 && Math.abs(elPosY - linePositionY) >= -15) {
+    if (Math.abs(elPosY - linePositionY) <= getSize(15) &&
+      Math.abs(elPosY - linePositionY) >= getSize(-15)) {
       entities[lastEntity].push(newObj);
       notHandleEntities[lastEntity].push(notHandledNewObj);
     } else {
@@ -215,7 +217,7 @@ export default async function handle(req,res) {
     if (!numReg.test(el.text) || el.text.length < 2) {
       return false;
     }
-    const isDiff = el.y - prevPosY > -400;
+    const isDiff = el.y - prevPosY > getSize(-400);
     prevPosY = el.y;
     return isDiff ;
   });
@@ -257,10 +259,10 @@ export default async function handle(req,res) {
   for (let i = 0; i < sizes.length; i++) {
     if (
       prices[i]?.x &&
-      Math.abs(sizes[i].x - prices[i].x) <= 70 &&
-      Math.abs(prices[i].x - sizes[i].x) >= -70 &&
-      Math.abs(sizes[i].y - prices[i].y) <= 100 &&
-      Math.abs(prices[i].y - sizes[i].y) >= -100)
+      Math.abs(sizes[i].x - prices[i].x) <= getSize(70) &&
+      Math.abs(prices[i].x - sizes[i].x) >= getSize(-70) &&
+      Math.abs(sizes[i].y - prices[i].y) <= getSize(100) &&
+      Math.abs(prices[i].y - sizes[i].y) >= getSize(-100))
     {
       continue;
     } else {
