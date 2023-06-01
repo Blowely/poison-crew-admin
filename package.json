@@ -27,6 +27,7 @@
     "next-auth": "^4.20.1",
     "node-jose": "^2.2.0",
     "postcss": "^8.4.21",
+    "probe-image-size": "^7.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-sortablejs": "^6.1.4",

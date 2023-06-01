@@ -6,6 +6,7 @@ import {mongooseConnect} from "@/lib/mongoose";
 //import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
 import {getIAM} from "@/yandexService/getIAMToken";
 import axios from "axios";
+const probe = require('probe-image-size');
 
 
 const bucketName = process.env.YANDEX_BUCKET_NAME;
@@ -24,17 +25,34 @@ export default async function handle(req,res) {
     });
   });
 
+  let isIphone12 = true;
   function base64_encode(file) {
     let bitmap = fs.readFileSync(file);
+    const probeImg = probe.sync(bitmap);
+    console.log();
+    if (probeImg.height < 2530) {
+      isIphone12 = false;
+    }
     return new Buffer(bitmap).toString('base64');
   }
 
-  const links = [];
-  let initialBase64Img = '';
-  for (const file of files.file) {
-    initialBase64Img = base64_encode(file.path);
+  const getSize = (size) => {
+    if (!isIphone12) {
+      return size * 0.70774;
+    }
+    return size;
   }
 
+
+  const links = [];
+  let initialBase64Img = '';
+
+
+  for (const file of files.file) {
+    console.log('file =', file);
+
+    initialBase64Img = base64_encode(file.path);
+  }
   const IAM = await getIAM();
 
   const body = {
