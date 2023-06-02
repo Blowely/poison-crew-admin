@@ -72,7 +72,7 @@ export default async function handle(req,res) {
 
   let start = undefined;
   const resultBlocks = response.data.results[0].results[0].textDetection.pages[0].blocks.reverse();
-  fs.writeFileSync('./output.json', JSON.stringify(resultBlocks));
+  //fs.writeFileSync('./output.json', JSON.stringify(resultBlocks));
   const entities = {
     sizes: [],
     prices: []
