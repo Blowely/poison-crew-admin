@@ -6,6 +6,7 @@ import {mongooseConnect} from "@/lib/mongoose";
 //import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
 import {getIAM} from "@/yandexService/getIAMToken";
 import axios from "axios";
+import probe from "probe-image-size";
 
 
 const bucketName = process.env.YANDEX_BUCKET_NAME;
@@ -24,8 +25,15 @@ export default async function handle(req,res) {
     });
   });
 
+  let isIphone12 = true;
   function base64_encode(file) {
     let bitmap = fs.readFileSync(file);
+    const probeImg = probe.sync(bitmap);
+
+    if (probeImg?.height < 2530) {
+      isIphone12 = false;
+    }
+
     return new Buffer(bitmap).toString('base64');
   }
 
@@ -83,7 +91,7 @@ export default async function handle(req,res) {
     let elPosY = resultBlocks[i].boundingBox.vertices[0].y;
     const text = resultBlocks[i].lines[0].words[0].text;
     console.log('text =', text);
-    if (elPosY >= 1450) {
+    if (elPosY >= (isIphone12 ? 2208 : 1450)) {
       continue;
     } else {
       start = i;
@@ -155,8 +163,10 @@ export default async function handle(req,res) {
 
     if (
       (Math.abs(elPosY - linePositionY) <= 15 && Math.abs(elPosY - linePositionY) >= -15) ||
-      Math.abs(elPosY - linePositionY) >= 185 && Math.abs(elPosY - linePositionY) <= 215
-    ) {
+      (!isIphone12
+        ? Math.abs(elPosY - linePositionY) >= 185 && Math.abs(elPosY - linePositionY) <= 215
+        : Math.abs(elPosY - linePositionY) >= 365 && Math.abs(elPosY - linePositionY) <= 395)
+      ) {
       entities[lastEntity].push(newObj);
       notHandleEntities[lastEntity].push(notHandledNewObj);
     } else {
@@ -211,7 +221,6 @@ export default async function handle(req,res) {
     const prevSizeValue = Math.ceil(handledEntitySizes[i-1]?.text);
     const nextSizeValue = Math.floor(handledEntitySizes[i+1]?.text);
 
-
     if (handledEntitySizes[i]?.confidence === 0) {
       if (
         currentValue + 1 === prevSizeValue &&
@@ -220,6 +229,7 @@ export default async function handle(req,res) {
         handledEntitySizes[i].confidence = 1;
       }
     }
+
     if (i > 0 && Math.ceil(handledEntitySizes[i].text) > Math.ceil(handledEntitySizes[i - 1].text)) {
       handledEntitySizes[i].confidence = 0;
     }
@@ -263,7 +273,7 @@ export default async function handle(req,res) {
 
 
 
-  console.log('entities =', {handledEntitySizes, prices: entities.prices});
+  console.log('entities =', {handledEntitySizes, prices: prices});
 
   const items = handledEntitySizes.map((el, index) => {
     if (el?.confidence === 0) {
