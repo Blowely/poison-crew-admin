@@ -83,7 +83,7 @@ export default async function handle(req,res) {
     let elPosY = resultBlocks[i].boundingBox.vertices[0].y;
     const text = resultBlocks[i].lines[0].words[0].text;
     console.log('text =', text);
-    if (elPosY >= 2208) {
+    if (elPosY >= 1450) {
       continue;
     } else {
       start = i;
@@ -152,7 +152,11 @@ export default async function handle(req,res) {
       notHandledNewObj = {...notHandledNewObj, confidence}
     }
 
-    if (Math.abs(elPosY - linePositionY) <= 15 && Math.abs(elPosY - linePositionY) >= -15) {
+
+    if (
+      (Math.abs(elPosY - linePositionY) <= 15 && Math.abs(elPosY - linePositionY) >= -15) ||
+      Math.abs(elPosY - linePositionY) >= 185 && Math.abs(elPosY - linePositionY) <= 215
+    ) {
       entities[lastEntity].push(newObj);
       notHandleEntities[lastEntity].push(notHandledNewObj);
     } else {
@@ -203,11 +207,12 @@ export default async function handle(req,res) {
 
   //check not confidence sizes
   for (let i = 0; i < handledEntitySizes.length; i++) {
-    if (handledEntitySizes[i]?.confidence === 0) {
-      const currentValue = Number(handledEntitySizes[i].text);
-      const prevSizeValue = Math.ceil(handledEntitySizes[i-1]?.text);
-      const nextSizeValue = Math.floor(handledEntitySizes[i+1]?.text);
+    const currentValue = Number(handledEntitySizes[i].text);
+    const prevSizeValue = Math.ceil(handledEntitySizes[i-1]?.text);
+    const nextSizeValue = Math.floor(handledEntitySizes[i+1]?.text);
 
+
+    if (handledEntitySizes[i]?.confidence === 0) {
       if (
         currentValue + 1 === prevSizeValue &&
         currentValue - 1 === nextSizeValue
@@ -216,6 +221,13 @@ export default async function handle(req,res) {
       }
     }
     if (i > 0 && Math.ceil(handledEntitySizes[i].text) > Math.ceil(handledEntitySizes[i - 1].text)) {
+      handledEntitySizes[i].confidence = 0;
+    }
+
+    if (
+      prevSizeValue - 1 === nextSizeValue &&
+      handledEntitySizes[i+1]?.text.includes('.')
+    ) {
       handledEntitySizes[i].confidence = 0;
     }
   }
@@ -249,25 +261,28 @@ export default async function handle(req,res) {
     }
   }
 
-  console.log('entities =', {handledEntitySizes, prices});
+
+
+  console.log('entities =', {handledEntitySizes, prices: entities.prices});
+
   const items = handledEntitySizes.map((el, index) => {
     if (el?.confidence === 0) {
       return {
         size: el.text,
-        price: prices[index].text,
+        price: '--',
         confidence: el.confidence
       }
     }
     return {
       size: el.text,
-      price: prices[index].text
+      price: prices[index].text || '--'
     }
   })
 
   const getCheapestPrice = () => {
     const regex = /^\d+$/;
     let cheapest = 0;
-    prices.map(p => {
+    entities.prices.map(p => {
       if (!regex.test(p.text)) {
         return null;
       }
