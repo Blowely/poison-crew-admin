@@ -91,7 +91,8 @@ export default async function handle(req,res) {
     let elPosY = resultBlocks[i].boundingBox.vertices[0].y;
     const text = resultBlocks[i].lines[0].words[0].text;
     console.log('text =', text);
-    if (elPosY >= (isIphone12 ? 2208 : 1450)) {
+
+    if (elPosY >= (isIphone12 ? 2208 : 1494)) {
       continue;
     } else {
       start = i;
