@@ -6,6 +6,7 @@ import {mongooseConnect} from "@/lib/mongoose";
 //import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
 import {getIAM} from "@/yandexService/getIAMToken";
 import axios from "axios";
+import probe from "probe-image-size";
 
 
 const bucketName = process.env.YANDEX_BUCKET_NAME;
@@ -26,7 +27,7 @@ export default async function handle(req,res) {
 
   let isIphone12 = true;
   function base64_encode(file) {
-    let bitmap = fs.readFileSync(file);
+    let bitmap = fs.readFileSync(file.path);
     const probeImg = probe.sync(bitmap);
 
     if (probeImg?.height < 2530) {
@@ -43,7 +44,7 @@ export default async function handle(req,res) {
     initialBase64Img = base64_encode(file);
   }
 
-  fs.writeFileSync('./output.json', JSON.stringify(initialBase64Img));
+  //fs.writeFileSync('./output.json', JSON.stringify(initialBase64Img));
 
   const IAM = await getIAM();
 
@@ -74,7 +75,7 @@ export default async function handle(req,res) {
 
   let start = undefined;
   const resultBlocks = response.data.results[0].results[0].textDetection.pages[0].blocks.reverse();
-  //fs.writeFileSync('./output.json', JSON.stringify(resultBlocks));
+  fs.writeFileSync('./output.json', JSON.stringify(resultBlocks));
   const entities = {
     sizes: [],
     prices: []
