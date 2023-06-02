@@ -11,6 +11,7 @@ export default function ProductForm({
   title:existingTitle,
   description:existingDescription,
   price:existingPrice,
+  src: existingSrc,
   images:existingImages,
   category:assignedCategory,
   properties:assignedProperties,
@@ -20,6 +21,7 @@ export default function ProductForm({
   const [category,setCategory] = useState(assignedCategory || '');
   const [productProperties,setProductProperties] = useState(assignedProperties || {});
   const [price,setPrice] = useState(existingPrice || '');
+  const [src, setSrc] = useState(existingSrc || '');
   const [images,setImages] = useState(existingImages || []);
   const [goToProducts,setGoToProducts] = useState(false);
   const [isUploading,setIsUploading] = useState(false);
@@ -34,7 +36,7 @@ export default function ProductForm({
     try {
       ev.preventDefault();
       const data = {
-        title,description,price,images,category,
+        title,description,price,src,images,category,
         properties:productProperties
       };
       if (_id) {
@@ -224,6 +226,12 @@ export default function ProductForm({
           type="number" placeholder="price"
           value={price}
           onChange={ev => setPrice(ev.target.value)}
+        />
+        <label>Poizon src</label>
+        <input
+          placeholder="src"
+          value={src}
+          onChange={ev => setSrc(ev.target.value)}
         />
         <button
           type="submit"
