@@ -147,7 +147,7 @@ export default function ProductForm({
                       <li key={i}>
                         <span>{el.size}: <input type="text" style={{width: '100px'}} value={el.price} onChange={ev =>{
                           setProductProp(p.name,ev.target.value, i, 'price')
-                        }}/> юаней</span>
+                        }}/> CNY</span>
                       </li>
                     ))}
                   </ul>
@@ -221,7 +221,7 @@ export default function ProductForm({
           value={description}
           onChange={ev => setDescription(ev.target.value)}
         />
-        <label>Price (in USD)</label>
+        <label>Price (in CNY)</label>
         <input
           type="number" placeholder="price"
           value={price}

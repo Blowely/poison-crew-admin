@@ -103,7 +103,7 @@ export default function Products() {
   return (
     <Layout>
       <Modal
-        title="Размеры и цены"
+        title="Sizes and costs"
         okText="Save"
         centered
         open={modalOpen}
