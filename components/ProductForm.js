@@ -82,7 +82,7 @@ export default function ProductForm({
       price: cheapestPrice,
       properties: {
         ...productProperties,
-        sizes: sizes
+        sizes
       }
     }
     if (_id) {
@@ -167,7 +167,9 @@ export default function ProductForm({
 
   const onChangeSrc = (src) => {
     const arr = src.split(' ');
-    setSrc(arr[4]);
+    if (arr?.length !== 0) {
+      setSrc(arr[4]);
+    }
   }
 
   return (
@@ -184,7 +186,7 @@ export default function ProductForm({
         }}
         onCancel={() => setModalOpen(false)}
       >
-        {sizes.map((el, index) => (
+        {sizes?.map((el, index) => (
           <p key={index} style={{fontSize:'15px'}}>{el.size}: {el.price}</p>
         ))}
       </Modal>
@@ -217,7 +219,7 @@ export default function ProductForm({
                   <label>{p.name[0].toUpperCase()+p.name.substring(1)}</label>
                   <div>
                     <ul>
-                      {productProperties[p.name]?.map((el,i) => (
+                      {(productProperties?.[p.name])?.map((el,i) => (
                         <li key={i}>
                         <span>{el.size}: <input type="text" style={{width: '100px'}} value={el.price} onChange={ev =>{
                           setProductProp(p.name,ev.target.value, i, 'price')
