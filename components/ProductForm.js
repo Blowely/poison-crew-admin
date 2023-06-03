@@ -165,6 +165,11 @@ export default function ProductForm({
     }
   }
 
+  const onChangeSrc = (src) => {
+    const arr = src.split(' ');
+    setSrc(arr[4]);
+  }
+
   return (
     <Layout>
       <Modal
@@ -300,7 +305,7 @@ export default function ProductForm({
           <input
             placeholder="src"
             value={src}
-            onChange={ev => setSrc(ev.target.value)}
+            onChange={ev => onChangeSrc(ev.target.value)}
           />
           <div style={{width:'100%', textAlign: 'right'}}><button
             className="btn-primary">
