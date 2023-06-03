@@ -121,7 +121,7 @@ export default function Products() {
       <Link className="btn-primary" href={'/products/new'}>Add new product</Link>
       {isLoading &&
         <div className="w-screen h-screen flex justify-center items-center absolute">
-          <LoadingOutlined style={{fontSize: '24px'}} spin />
+          Sizes and costs recognizing... <LoadingOutlined style={{fontSize: '24px'}} spin />
         </div>
       }
 

@@ -7,6 +7,8 @@ import {Button} from "antd";
 
 export default function EditProductPage() {
   const [productInfo, setProductInfo] = useState(null);
+  const [isLoading, setLoading] = useState(true);
+
   const router = useRouter();
   const {id} = router.query;
   useEffect(() => {
@@ -15,8 +17,19 @@ export default function EditProductPage() {
     }
     axios.get('/api/products?id='+id).then(response => {
       setProductInfo(response.data);
+      setLoading(false);
     });
   }, [id]);
+
+  const getProduct = () => {
+    if (!id) {
+      return;
+    }
+    axios.get('/api/products?id='+id).then(response => {
+      setProductInfo(response.data);
+      setLoading(false);
+    });
+  }
 
   const onBackClick = () => {
     router.push('/products');
@@ -29,7 +42,7 @@ export default function EditProductPage() {
       </Button>
       <h1>Edit product</h1>
       {productInfo && (
-        <ProductForm {...productInfo} />
+        <ProductForm {...productInfo} isLoading={isLoading} setLoading={setLoading} getProduct={getProduct}/>
       )}
     </Layout>
   );
