@@ -8,25 +8,20 @@ import {Layout, Modal, notification} from "antd";
 import Link from "next/link";
 
 export default function ProductForm({
-  _id,
-  title:existingTitle,
-  description:existingDescription,
-  price:existingPrice,
-  src: existingSrc,
-  images:existingImages,
-  category:assignedCategory,
-  properties:assignedProperties,
   isLoading,
   setLoading,
-  getProduct
+  getProduct,
+  finalData
 }) {
-  const [title,setTitle] = useState(existingTitle || '');
-  const [description,setDescription] = useState(existingDescription || '');
-  const [category,setCategory] = useState(assignedCategory || '');
-  const [productProperties,setProductProperties] = useState(assignedProperties || {});
-  const [price,setPrice] = useState(existingPrice || '');
-  const [src, setSrc] = useState(existingSrc || '');
-  const [images,setImages] = useState(existingImages || []);
+
+  const [title,setTitle] = useState('');
+  const [_id,setId] = useState('');
+  const [description,setDescription] = useState('');
+  const [category,setCategory] = useState('');
+  const [productProperties,setProductProperties] = useState({});
+  const [price,setPrice] = useState('');
+  const [src, setSrc] = useState('');
+  const [images,setImages] = useState([]);
   const [goToProducts,setGoToProducts] = useState(false);
   const [isUploading,setIsUploading] = useState(false);
   const [categories,setCategories] = useState([]);
@@ -36,6 +31,18 @@ export default function ProductForm({
   const [cheapestPrice, setCheapestPrice] = useState(null);
 
   const router = useRouter();
+
+  useEffect(() => {
+    setId(finalData._id);
+    setTitle(finalData.title);
+    setDescription(finalData.description);
+    setCategory(finalData.category);
+    setPrice(finalData.price);
+    setSrc(finalData.src);
+    setImages(finalData.images);
+    setProductProperties(finalData.properties);
+    setLoading(false);
+  },[finalData])
 
   useEffect(() => {
     axios.get('/api/categories').then(result => {
@@ -80,7 +87,6 @@ export default function ProductForm({
     }
     if (_id) {
       //update
-      console.log('data =', data);
       await axios.put('/api/products', data);
     } else {
       //create
@@ -273,7 +279,7 @@ export default function ProductForm({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
               </svg>
               <div>
-                Upload Poizon image
+                Poizon
               </div>
               <input type="file" onChange={uploadPoisonImg} className="hidden"/>
             </label>

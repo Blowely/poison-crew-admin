@@ -22,14 +22,19 @@ export default function EditProductPage() {
   }, [id]);
 
   const getProduct = () => {
+    setLoading(true);
     if (!id) {
       return;
     }
     axios.get('/api/products?id='+id).then(response => {
       setProductInfo(response.data);
-      setLoading(false);
     });
   }
+  const [finalData, setFinalData] = useState(null);
+
+  useEffect(() => {
+    setFinalData(productInfo)
+  },[productInfo])
 
   const onBackClick = () => {
     router.push('/products');
@@ -41,8 +46,8 @@ export default function EditProductPage() {
         <span style={{float:"right"}}>{'< Products'}</span>
       </Button>
       <h1>Edit product</h1>
-      {productInfo && (
-        <ProductForm {...productInfo} isLoading={isLoading} setLoading={setLoading} getProduct={getProduct}/>
+      {productInfo && finalData && (
+        <ProductForm {...productInfo} finalData={finalData} price={productInfo.price} isLoading={isLoading} setLoading={setLoading} getProduct={getProduct}/>
       )}
     </Layout>
   );
