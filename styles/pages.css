@@ -5,3 +5,7 @@
 .ant-pagination-options {
     display: unset!important;
 }
+
+.ant-btn-primary {
+    background-color: #1677ff;
+}

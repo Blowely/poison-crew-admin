@@ -192,6 +192,7 @@ export default function Products() {
           <Pagination
             current={Number(lsCurrentPage)}
             total={products.total_count}
+            defaultPageSize={20}
             showSizeChanger
             showQuickJumper
             showTotal={(total) => `Total ${total} items`}
