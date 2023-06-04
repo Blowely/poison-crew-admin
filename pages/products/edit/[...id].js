@@ -4,11 +4,9 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import ProductForm from "@/components/ProductForm";
 import {Button} from "antd";
-import {useSearchParams} from "next/navigation";
 
 export default function EditProductPage() {
   const [productInfo, setProductInfo] = useState(null);
-  const [products, setProducts] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
   const router = useRouter();

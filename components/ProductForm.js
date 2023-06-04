@@ -31,10 +31,13 @@ export default function ProductForm({
   const [sizes, setSizes] = useState([]);
   const [cheapestPrice, setCheapestPrice] = useState(null);
 
-  const lsProductList = localStorage.getItem('productsList');
-  const productList = lsProductList.split(',');
-  const currentElIndex = productList.indexOf(_id);
-  console.log('currentElIndex=',currentElIndex);
+  let productList;
+  let currentElIndex;
+  if (typeof window !== 'undefined') {
+    const lsProductList = localStorage.getItem('productsList');
+    productList = lsProductList.split(',');
+    currentElIndex = productList.indexOf(_id);
+  }
 
   const router = useRouter();
 
