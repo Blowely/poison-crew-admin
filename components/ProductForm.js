@@ -198,9 +198,6 @@ export default function ProductForm({
     }
   }
 
-  const titleRef = useRef(null);
-  console.log('titleRef=',titleRef);
-
   return (
     <Layout>
       <Modal
@@ -234,8 +231,6 @@ export default function ProductForm({
               type="text"
               placeholder="product name"
               value={title}
-              ref={titleRef}
-              contentEditable="true"
               onChange={ev => setTitle(ev.target.value)}
             />
             <Button onClick={() => {}}>Copy</Button>
