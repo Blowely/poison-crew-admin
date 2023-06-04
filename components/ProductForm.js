@@ -6,7 +6,6 @@ import {ReactSortable} from "react-sortablejs";
 import {DeleteOutlined, LoadingOutlined} from "@ant-design/icons";
 import {Button, Layout, Modal, notification} from "antd";
 import Link from "next/link";
-import {iosCopyToClipboard} from "@/common/utils";
 
 export default function ProductForm({
   isLoading,
@@ -33,7 +32,11 @@ export default function ProductForm({
 
   let productList;
   let currentElIndex;
+  const [isEditTitle, setEditTitle] = useState(false);
   if (typeof window !== 'undefined') {
+    if (window.location.href.includes('new')) {
+      setEditTitle(true);
+    }
     const lsProductList = localStorage.getItem('productsList');
     productList = lsProductList.split(',');
     currentElIndex = productList.indexOf(_id);
@@ -228,13 +231,17 @@ export default function ProductForm({
         <form onSubmit={saveProduct}>
           <label>Product name</label>
           <h2 style={{fontSize: '20px'}}>{title}</h2>
-          <input
-            id="titleInput"
-            type="text"
-            placeholder="product name"
-            value={title}
-            onChange={ev => setTitle(ev.target.value)}
-          />
+          <div className="flex">
+            <input
+              id="titleInput"
+              type="text"
+              placeholder="product name"
+              value={title}
+              disabled={!isEditTitle}
+              onChange={ev => setTitle(ev.target.value)}
+            />
+            <Button onClick={() => setEditTitle(true)}>edit</Button>
+          </div>
           <label>Category</label>
           <select value={category}
                   onChange={ev => setCategory(ev.target.value)}>
