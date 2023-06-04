@@ -66,7 +66,6 @@ export default function ProductForm({
   }, []);
   async function saveProduct(ev) {
     try {
-      console.log('ev=', ev);
       ev.preventDefault();
       const data = {
         title,description,price,src,images,category,
@@ -74,7 +73,7 @@ export default function ProductForm({
       };
       if (_id) {
         //update
-        await axios.put('/api/products', {...data,_id});
+        await axios.put('/api/products', {_id, ...data});
       } else {
         //create
         await axios.post('/api/products', data);
@@ -197,12 +196,12 @@ export default function ProductForm({
     }
   }
 
-  const onChangeSrc = (src) => {
-    if (!src) {
-      setSrc('');
+  const onChangeSrc = (_src) => {
+    if (_src?.length === 0) {
+      return setSrc('');
     }
 
-    const arr = src.split(' ');
+    const arr = _src.split(' ');
     if (arr?.length !== 0) {
       setSrc(arr[4]);
     }
