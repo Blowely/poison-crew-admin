@@ -1,11 +1,12 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import {ReactSortable} from "react-sortablejs";
 import {DeleteOutlined, LoadingOutlined} from "@ant-design/icons";
-import {Layout, Modal, notification} from "antd";
+import {Button, Layout, Modal, notification} from "antd";
 import Link from "next/link";
+import {iosCopyToClipboard} from "@/common/utils";
 
 export default function ProductForm({
   isLoading,
@@ -194,6 +195,9 @@ export default function ProductForm({
     }
   }
 
+  const titleRef = useRef(null);
+  console.log('titleRef=',titleRef);
+
   return (
     <Layout>
       <Modal
@@ -221,11 +225,18 @@ export default function ProductForm({
       {!isLoading &&
         <form onSubmit={saveProduct}>
           <label>Product name</label>
-          <input
-            type="text"
-            placeholder="product name"
-            value={title}
-            onChange={ev => setTitle(ev.target.value)}/>
+          <div className="flex">
+            <input
+              id="titleInput"
+              type="text"
+              placeholder="product name"
+              value={title}
+              ref={titleRef}
+              contentEditable="true"
+              onChange={ev => setTitle(ev.target.value)}
+            />
+            <Button onClick={iosCopyToClipboard(titleRef.current)}>Copy</Button>
+          </div>
           <label>Category</label>
           <select value={category}
                   onChange={ev => setCategory(ev.target.value)}>

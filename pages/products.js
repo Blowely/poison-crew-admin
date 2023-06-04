@@ -169,7 +169,7 @@ export default function Products() {
 
       {!isLoading &&
         <>
-          <Select options={handledMemoCollections} defaultValue="" onChange={onChangeCollection} />
+          <Select options={handledMemoCollections} defaultValue="" value={collName || ""} onChange={onChangeCollection} />
           <table className="basic mt-2">
             <tbody>
             {products.items?.map(product => (
