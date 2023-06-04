@@ -30,6 +30,11 @@ export default function ProductForm({
   const [sizes, setSizes] = useState([]);
   const [cheapestPrice, setCheapestPrice] = useState(null);
 
+  const lsProductList = localStorage.getItem('productsList');
+  const productList = lsProductList.split(',');
+  const currentElIndex = productList.indexOf(_id);
+  console.log('currentElIndex=',currentElIndex);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -51,6 +56,7 @@ export default function ProductForm({
   }, []);
   async function saveProduct(ev) {
     try {
+      console.log('ev=', ev);
       ev.preventDefault();
       const data = {
         title,description,price,src,images,category,
@@ -65,7 +71,23 @@ export default function ProductForm({
       }
 
       notification.success({message: 'Updated', duration: 2});
-      router.push('/products');
+
+      const submitterId = ev.nativeEvent.submitter.id
+      const query = localStorage.getItem('collName') || '';
+
+      let url = `/products${query}`;
+
+      if (submitterId === 'savePrev') {
+        const prevEl = productList[currentElIndex - 1] || null;
+        url = prevEl ? `/products/edit/${prevEl}` : `/products${query}`;
+      }
+
+      if (submitterId === 'saveNext') {
+        const nextEl = productList[currentElIndex + 1] || null;
+        url = nextEl ? `/products/edit/${nextEl}` : `/products${query}`;
+      }
+
+      await router.push(url);
     } catch (e) {
       notification.error({message: 'Error', duration: 2});
     }
@@ -309,10 +331,23 @@ export default function ProductForm({
             value={src}
             onChange={ev => onChangeSrc(ev.target.value)}
           />
-          <div style={{width:'100%', textAlign: 'right'}}><button
-            className="btn-primary">
-            Save
-          </button></div>
+          <div className="flex flex-unwrap gap-4 mt-5">
+            <div style={{width:'100%'}}>
+              <button className="btn-primary w-full" id="savePrev">
+                {'<- Save'}
+              </button>
+            </div>
+            <div style={{width:'100%'}}>
+              <button className="btn-primary w-full" id="save">
+                Save
+              </button>
+            </div>
+            <div style={{width:'100%'}}>
+              <button className="btn-primary w-full" id="saveNext">
+                {'Save ->'}
+              </button>
+            </div>
+          </div>
 
         </form>
       }

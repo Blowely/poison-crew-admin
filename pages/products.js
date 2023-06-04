@@ -33,18 +33,19 @@ export default function Products() {
 
   useEffect(() => {
     axios.get('/api/collections').then(response => {
-      console.log('response=',response);
       setCollections(response.data);
       setLoading(false)
     });
   },[]);
 
   const handledMemoCollections = useMemo(() => {
+    const elAllCollections = {label:"all collections", value: ''};
     const handledCollections = collections.map((el, i) => ({
       value: el.name,
       label: `${el.name} ${el.value}`
     }));
-    return [{label:"all collections", value: ''}, ...handledCollections]
+
+    return [elAllCollections, ...handledCollections]
   },[collections]);
 
 
@@ -63,6 +64,8 @@ export default function Products() {
 
   useEffect(() => {
     axios.get(customUrlBuilder('/api/products', buildRequest())).then(response => {
+      const data = response.data?.items.map(({_id}) => _id).join(',');
+      localStorage.setItem('productsList', data);
       setProducts(response.data);
       setLoading(false);
     });

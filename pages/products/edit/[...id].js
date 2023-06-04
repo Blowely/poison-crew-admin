@@ -8,6 +8,7 @@ import {useSearchParams} from "next/navigation";
 
 export default function EditProductPage() {
   const [productInfo, setProductInfo] = useState(null);
+  const [products, setProducts] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
   const router = useRouter();
