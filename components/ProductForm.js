@@ -33,6 +33,7 @@ export default function ProductForm({
   let productList;
   let currentElIndex;
   const [isEditTitle, setEditTitle] = useState(false);
+
   if (typeof window !== 'undefined') {
     if (window.location.href.includes('new')) {
       setEditTitle(true);
@@ -197,6 +198,10 @@ export default function ProductForm({
   }
 
   const onChangeSrc = (src) => {
+    if (!src) {
+      setSrc('');
+    }
+
     const arr = src.split(' ');
     if (arr?.length !== 0) {
       setSrc(arr[4]);
