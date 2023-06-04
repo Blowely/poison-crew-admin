@@ -19,6 +19,7 @@ export default function Products() {
   const [cheapestPrice, setCheapestPrice] = useState(null);
   const [editedProduct, setEditedProduct] = useState({});
   const [collections, setCollections] = useState([]);
+  const [modalImageOpen, setModalImageOpen] = useState(false);
 
   const collName = searchParams.get('collName');
 
@@ -158,6 +159,13 @@ export default function Products() {
           <p key={index} style={{fontSize:'15px'}}>{el.size}: {el.price}</p>
         ))}
       </Modal>
+      <Modal
+        centered
+        open={!!modalImageOpen}
+        onCancel={() => setModalImageOpen(false)}
+      >
+        <img src={modalImageOpen} alt=""/>
+      </Modal>
       <Link className="btn-primary" href={'/products/new'}>Add new product</Link>
       {isLoading &&
         <div className="w-screen h-screen flex justify-center items-center absolute">
@@ -173,7 +181,8 @@ export default function Products() {
             {products.items?.map(product => (
               <tr key={product._id} className="flex items-center justify-between">
                 <td style={{paddingLeft: '0px', paddingRight: 0}}>
-                  <img style={{height: 'auto', maxWidth: '150px' }} src={product.images[0]}/>
+                  <img style={{height: 'auto', maxWidth: '150px' }} onClick={() => setModalImageOpen(product.images[0])}
+                       src={product.images[0]}/>
                 </td>
                 <td className="h-auto" style={{padding: '0'}}>
                   <tr><td style={{fontSize: '13px'}}>{product.title}</td></tr>
