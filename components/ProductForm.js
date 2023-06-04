@@ -42,15 +42,17 @@ export default function ProductForm({
   const router = useRouter();
 
   useEffect(() => {
-    setId(finalData._id);
-    setTitle(finalData.title);
-    setDescription(finalData.description);
-    setCategory(finalData.category);
-    setPrice(finalData.price);
-    setSrc(finalData.src);
-    setImages(finalData.images);
-    setProductProperties(finalData.properties);
-    setLoading(false);
+    setId(finalData?._id || '');
+    setTitle(finalData?.title || '');
+    setDescription(finalData?.description || '');
+    setCategory(finalData?.category || '');
+    setPrice(finalData?.price || '');
+    setSrc(finalData?.src || '');
+    setImages(finalData?.images || '');
+    setProductProperties(finalData?.properties || {});
+    if (setLoading) {
+      setLoading(false);
+    }
   },[finalData])
 
   useEffect(() => {
@@ -225,16 +227,14 @@ export default function ProductForm({
       {!isLoading &&
         <form onSubmit={saveProduct}>
           <label>Product name</label>
-          <div className="flex">
-            <input
-              id="titleInput"
-              type="text"
-              placeholder="product name"
-              value={title}
-              onChange={ev => setTitle(ev.target.value)}
-            />
-            <Button onClick={() => {}}>Copy</Button>
-          </div>
+          <h2 style={{fontSize: '20px'}}>{title}</h2>
+          <input
+            id="titleInput"
+            type="text"
+            placeholder="product name"
+            value={title}
+            onChange={ev => setTitle(ev.target.value)}
+          />
           <label>Category</label>
           <select value={category}
                   onChange={ev => setCategory(ev.target.value)}>

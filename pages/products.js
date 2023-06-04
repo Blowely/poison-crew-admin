@@ -124,8 +124,6 @@ export default function Products() {
       setEditedProduct(product);
       setSizes(res?.data?.items);
       setCheapestPrice(res?.data?.cheapest_price);
-
-      console.log('res =', res);
     }
     setLoading(false);
   }
