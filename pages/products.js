@@ -11,7 +11,6 @@ export default function Products() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = new URLSearchParams(useSearchParams());
-  console.log('searchParams',searchParams);
 
   const [products,setProducts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -22,7 +21,6 @@ export default function Products() {
   const [collections, setCollections] = useState([]);
 
   const collName = searchParams.get('collName');
-
 
   let lsOffset = '';
   let lsCurrentPage = '';
@@ -79,10 +77,10 @@ export default function Products() {
   }
 
   const onChangeCollection = (name) => {
-    console.log('name =', name);
     searchParams.set('collName', name);
     const search = searchParams.toString();
     const query = search ? `?${search}` : "";
+    localStorage.setItem('collName', query);
 
     router.push(`${pathname}${query}`);
   }
@@ -136,7 +134,7 @@ export default function Products() {
 
   const onPaginationChange = (page) => {
     const value = page * 20 - 20;
-    //setOffset(value);
+    setOffset(value);
     localStorage.setItem('offset', value.toString());
     localStorage.setItem('page', page.toString());
   }

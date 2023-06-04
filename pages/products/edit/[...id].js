@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import ProductForm from "@/components/ProductForm";
 import {Button} from "antd";
+import {useSearchParams} from "next/navigation";
 
 export default function EditProductPage() {
   const [productInfo, setProductInfo] = useState(null);
@@ -11,6 +12,7 @@ export default function EditProductPage() {
 
   const router = useRouter();
   const {id} = router.query;
+
   useEffect(() => {
     if (!id) {
       return;
@@ -37,7 +39,8 @@ export default function EditProductPage() {
   },[productInfo])
 
   const onBackClick = () => {
-    router.push('/products');
+    const query = localStorage.getItem('collName');
+    router.push(`/products${query}`);
   }
 
   return (
