@@ -27,6 +27,7 @@ export default function ProductForm({
   const [categories,setCategories] = useState([]);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalImageOpen, setModalImageOpen] = useState(false);
   const [sizes, setSizes] = useState([]);
   const [cheapestPrice, setCheapestPrice] = useState(null);
 
@@ -225,6 +226,13 @@ export default function ProductForm({
           <p key={index} style={{fontSize:'15px'}}>{el.size}: {el.price}</p>
         ))}
       </Modal>
+      <Modal
+        centered
+        open={!!modalImageOpen}
+        onCancel={() => setModalImageOpen(false)}
+      >
+        <img src={modalImageOpen} alt=""/>
+      </Modal>
       <Link className="btn-primary" href={'/products/new'}>Add new product</Link>
       {isLoading &&
         <div className="w-screen h-screen flex justify-center items-center absolute">
@@ -302,7 +310,7 @@ export default function ProductForm({
               {!!images?.length && images.map((link,i) => (
                 <div key={i} className="flex flex-col">
                   <div key={link} className="h-24 bg-white relative p-4 shadow-sm rounded-sm border border-gray-200">
-                    <img src={link} alt="" className="rounded-lg z-10 relative"/>
+                    <img src={link} onClick={() => setModalImageOpen(link)} alt="" className="rounded-lg z-10 relative"/>
                   </div>
                   <button className="bg-red-500" onClick={(el) => deleteImage(el, i)}><DeleteOutlined /></button>
                 </div>
