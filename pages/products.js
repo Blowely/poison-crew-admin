@@ -1,18 +1,29 @@
 import Layout from "@/components/Layout";
 import Link from "next/link";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import {CopyOutlined, LoadingOutlined} from "@ant-design/icons";
-import {Modal, notification, Pagination} from "antd";
+import {Modal, notification, Pagination, Select} from "antd";
 import {customUrlBuilder} from "@/common/utils";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
 export default function Products() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = new URLSearchParams(useSearchParams());
+  console.log('searchParams',searchParams);
+
   const [products,setProducts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [sizes, setSizes] = useState([]);
   const [cheapestPrice, setCheapestPrice] = useState(null);
   const [editedProduct, setEditedProduct] = useState({});
+  const [collections, setCollections] = useState([]);
+
+  const collName = searchParams.get('collName');
+
+
   let lsOffset = '';
   let lsCurrentPage = '';
   if (typeof window !== 'undefined') {
@@ -22,21 +33,42 @@ export default function Products() {
 
   const [offset, setOffset] = useState(lsOffset || 0);
 
-  const buildRequest = () => {
+  useEffect(() => {
+    axios.get('/api/collections').then(response => {
+      console.log('response=',response);
+      setCollections(response.data);
+      setLoading(false)
+    });
+  },[]);
+
+  const handledMemoCollections = useMemo(() => {
+    const handledCollections = collections.map((el, i) => ({
+      value: el.name,
+      label: `${el.name} ${el.value}`
+    }));
+    return [{label:"all collections", value: ''}, ...handledCollections]
+  },[collections]);
+
+
+  const buildRequest = useCallback(() => {
     const obj = {
       limit: 20,
-      offset: offset
+      offset: offset,
     }
+
+    if (collName) {
+      obj.collName = collName
+    }
+
     return obj;
-  }
+  }, [offset, collName])
 
   useEffect(() => {
     axios.get(customUrlBuilder('/api/products', buildRequest())).then(response => {
       setProducts(response.data);
-      setLoading(false)
+      setLoading(false);
     });
-
-  }, [offset, lsOffset]);
+  }, [offset, lsOffset, collName]);
 
   async function getProducts() {
     await axios.get(customUrlBuilder('/api/products', buildRequest())).then(response => {
@@ -44,6 +76,15 @@ export default function Products() {
       setLoading(false)
     });
 
+  }
+
+  const onChangeCollection = (name) => {
+    console.log('name =', name);
+    searchParams.set('collName', name);
+    const search = searchParams.toString();
+    const query = search ? `?${search}` : "";
+
+    router.push(`${pathname}${query}`);
   }
 
   async function saveProduct(product) {
@@ -95,7 +136,7 @@ export default function Products() {
 
   const onPaginationChange = (page) => {
     const value = page * 20 - 20;
-    setOffset(value);
+    //setOffset(value);
     localStorage.setItem('offset', value.toString());
     localStorage.setItem('page', page.toString());
   }
@@ -127,13 +168,8 @@ export default function Products() {
 
       {!isLoading &&
         <>
+          <Select options={handledMemoCollections} defaultValue="" onChange={onChangeCollection} />
           <table className="basic mt-2">
-            <thead>
-            <tr>
-              <td>Product name</td>
-              <td></td>
-            </tr>
-            </thead>
             <tbody>
             {products.items?.map(product => (
               <tr key={product._id} className="flex items-center justify-between">

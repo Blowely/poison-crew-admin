@@ -35,6 +35,7 @@ export default async function handler(req,res) {
   }
 
   if (method === 'GET') {
-    res.json(await Collection.find().sort({value:-1}));
+    const response = await Collection.find().sort({value:-1});
+    res.json(response);
   }
 }
