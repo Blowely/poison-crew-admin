@@ -14,9 +14,17 @@ export default async function handle(req, res) {
     if (req.query?.id) {
       result = await Product.findOne({_id: req.query.id});
     } else {
-      totalCount = await Product.count();
-      items = await Product.find().skip(req.query?.offset)
+      const filterObj = {}
+
+      if (req.query?.collName) {
+        filterObj.title = req.query?.collName;
+      }
+
+      totalCount = await Product.count(filterObj);
+
+      items = await Product.find(filterObj).skip(req.query?.offset)
         .limit(req.query.limit);
+
       result = {items: items, total_count: totalCount }
     }
 
