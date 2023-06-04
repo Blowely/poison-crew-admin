@@ -238,7 +238,7 @@ export default function ProductForm({
               contentEditable="true"
               onChange={ev => setTitle(ev.target.value)}
             />
-            <Button onClick={iosCopyToClipboard(titleRef.current)}>Copy</Button>
+            <Button onClick={() => {}}>Copy</Button>
           </div>
           <label>Category</label>
           <select value={category}
