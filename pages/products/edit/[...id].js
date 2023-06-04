@@ -39,7 +39,7 @@ export default function EditProductPage() {
   },[productInfo])
 
   const onBackClick = () => {
-    const query = localStorage.getItem('collName');
+    const query = localStorage.getItem('collName') || '';
     router.push(`/products${query}`);
   }
 
