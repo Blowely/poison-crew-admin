@@ -11,33 +11,25 @@ export default async function handle(req, res) {
   await mongooseConnect();
 
   if (method === 'GET') {
-    const reqPhone = req.query.phone;
+    const phone = req.query.phone;
+
     const code = Math.floor(1000 + Math.random() * 9000);
-    phonesCodesList[reqPhone] = {phone: reqPhone,  code};
-    var phone = reqPhone; // номер телефона
-    var text = code; // текст
-    var from = '';
-    var apikey = '5uRZB7O0UstynQgbBeWNnMsn3nbK';
-    /*var uri = [
-      `https://maryashin.2014@yandex.ru:${apikey}@gate.smsaero.ru/v2/sms/send`,
-      '?text=', querystring.escape( text ),
-      '&number=', phone,
-      '&sign=', 're:poizon',*/
-    var uri = `https://maryashin.2014@yandex.ru:5uRZB7O0UstynQgbBeWNnMsn3nbK@gate.smsaero.ru/v2/auth`;
+    phonesCodesList[phone] = {phone,  code};
+
+    let uri = [
+        `https://localhost:3002/api/sms`,
+        '?text=', code,
+        '&number=', phone,
+        '&sign=', 're:poizon'
+    ].join('');
+
+    const test = `https://maryashin.2014@yandex.ru:5uRZB7O0UstynQgbBeWNnMsn3nbK@gate.smsaero.ru/v2/auth`;
 
 
-    axios.get(uri).then((result) => {
 
-      var parsedData = JSON.parse(result);
-
-      console.log('parsedData ='+parsedData);
-      res.json(parsedData);
-
-    }).catch(function(err) {
-      console.log('ошибка сети '+err);
-      res.json({err: err});
-    });
-
+    const response = await axios.get(test);
+    console.log('response =',response);
+    res.json(response);
 
   }
 
