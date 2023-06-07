@@ -271,9 +271,11 @@ export default function ProductForm({
                     <ul>
                       {(productProperties?.[p.name])?.map((el,i) => (
                         <li key={i}>
-                        <span>{el.size}: <input type="text" style={{width: '100px'}} value={el.price} onChange={ev =>{
-                          setProductProp(p.name,ev.target.value, i, 'price')
-                        }}/> CNY</span>
+                        <span>
+                          <input type="text" style={{width: '50px'}} value={el.size}
+                                 onChange={ev => setProductProp(p.name,ev.target.value, i, 'size')}/>:
+                          <input type="text" style={{width: '100px'}} value={el.price}
+                                 onChange={ev => setProductProp(p.name,ev.target.value, i, 'price')}/> CNY</span>
                         </li>
                       ))}
                     </ul>
@@ -298,7 +300,8 @@ export default function ProductForm({
                 </div>
               </div>
             )
-          })}
+            })
+          }
           <label>
             Photos
           </label>
