@@ -2,6 +2,7 @@ import {model, Schema, models} from "mongoose";
 
 const ClientSchema = new Schema({
   phone: {type:String, required:true},
+  token: String,
   city:String,
   postalCode:String,
   streetAddress:String,

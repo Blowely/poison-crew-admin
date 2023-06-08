@@ -1,8 +1,8 @@
-import {Product} from "@/models/Product";
+import {Client} from "@/models/Client";
 import {mongooseConnect} from "@/lib/mongoose";
 import axios from "axios";
-var querystring         = require('querystring');
-//import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
+import multiparty from "multiparty";
+import {Product} from "@/models/Product";
 
 const phonesCodesList = {}
 
@@ -16,31 +16,43 @@ export default async function handle(req, res) {
     const code = Math.floor(1000 + Math.random() * 9000);
     phonesCodesList[phone] = {phone,  code};
 
-    let uri = [
-        `https://localhost:3002/api/sms`,
-        '?text=', code,
-        '&number=', phone,
-        '&sign=', 're:poizon'
+    const email = 'moviefokll@gmail.com'
+    const apiKey = 'YHlsgo25Cs_zmFlRAyCuj8RMMauF8Za-'
+    const uri = `https://gate.smsaero.ru/v2/sms/send`;
+
+    let url = [
+      `${uri}`,
+      '?number=', phone,
+      '&text=', code,
+      '&sign=', 'SMS Aero'
     ].join('');
 
-    const test = `https://maryashin.2014@yandex.ru:5uRZB7O0UstynQgbBeWNnMsn3nbK@gate.smsaero.ru/v2/auth`;
+    const response = await axios({
+      method: 'GET',
+      url: url,
+      headers: {
+        'Authorization': `Basic ${btoa(email + ':' + apiKey)}`,
+      },
+    });
 
+    const token = btoa(`${phone}:${code}`);
+    await Client.create({phone, token});
 
-
-    const response = await axios.get(test);
-    console.log('response =',response);
     res.json(response);
-
   }
 
   if (method === 'POST') {
     const {phone, code} = req.body;
-    if (phonesCodesList?.[phone].code !== code) {
+
+    const result = await Client.findOne({phone: phone});
+    const token = btoa(`${phone}:${code}`);
+
+    if (result.token !== token) {
       console.log('неверный код');
       res.json({err: 'неверный код'});
+      return;
     }
 
-    const clientDoc = await Product.create({phone})
-    res.json(clientDoc);
+    res.json({token});
   }
 }
