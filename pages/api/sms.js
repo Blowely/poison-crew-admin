@@ -1,8 +1,6 @@
 import {Client} from "@/models/Client";
 import {mongooseConnect} from "@/lib/mongoose";
 import axios from "axios";
-import multiparty from "multiparty";
-import {Product} from "@/models/Product";
 
 const phonesCodesList = {}
 
@@ -48,8 +46,7 @@ export default async function handle(req, res) {
     const token = btoa(`${phone}:${code}`);
 
     if (result.token !== token) {
-      console.log('неверный код');
-      res.json({err: 'неверный код'});
+      res.json({code: 'invalidCode', message: 'неверный код'});
       return;
     }
 
