@@ -25,7 +25,7 @@ export default async function handle(req, res) {
       '&sign=', 'SMS Aero'
     ].join('');
 
-    const response = await axios({
+    await axios({
       method: 'GET',
       url: url,
       headers: {
@@ -34,22 +34,33 @@ export default async function handle(req, res) {
     });
 
     const token = btoa(`${phone}:${code}`);
-    await Client.create({phone, token});
 
-    res.json(response);
+    const isExist = await Client.findOne({phone: phone});
+
+    if (isExist) {
+      await Client.updateOne({phone}, {$set: {token}})
+    } else {
+      await Client.create({phone, token})
+    }
+
+
+    res.json({status: 'ok', message: 'код отправлен'});
+    res.status(200);
   }
 
   if (method === 'POST') {
-    const {phone, code} = req.body;
+    const {phone, code} = JSON.parse(req.body);
 
     const result = await Client.findOne({phone: phone});
     const token = btoa(`${phone}:${code}`);
 
-    if (result.token !== token) {
+    if (result?.token !== token) {
+      res.status(402);
       res.json({code: 'invalidCode', message: 'неверный код'});
       return;
     }
 
     res.json({token});
+    res.status(200);
   }
 }
