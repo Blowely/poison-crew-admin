@@ -9,44 +9,50 @@ export default async function handle(req, res) {
   await mongooseConnect();
 
   if (method === 'GET') {
-    const phone = req.query.phone;
-    const userAgent = req.query?.userAgent;
+    try {
+      const phone = req.query.phone;
+      const userAgent = req.query?.userAgent;
 
-    const code = Math.floor(1000 + Math.random() * 9000);
-    phonesCodesList[phone] = {phone,  code};
+      const code = Math.floor(1000 + Math.random() * 9000);
+      phonesCodesList[phone] = {phone,  code};
 
-    const email = 'moviefokll@gmail.com'
-    const apiKey = 'YHlsgo25Cs_zmFlRAyCuj8RMMauF8Za-'
-    const uri = `https://gate.smsaero.ru/v2/sms/send`;
+      const email = 'moviefokll@gmail.com'
+      const apiKey = 'YHlsgo25Cs_zmFlRAyCuj8RMMauF8Za-'
+      const uri = `https://gate.smsaero.ru/v2/sms/send`;
 
-    let url = [
-      `${uri}`,
-      '?number=', phone,
-      '&text=', code,
-      '&sign=', 'SMS Aero'
-    ].join('');
+      let url = [
+        `${uri}`,
+        '?number=', phone,
+        '&text=', code,
+        '&sign=', 'SMS Aero'
+      ].join('');
 
-    await axios({
-      method: 'GET',
-      url: url,
-      headers: {
-        'Authorization': `Basic ${btoa(email + ':' + apiKey)}`,
-      },
-    });
+      await axios({
+        method: 'GET',
+        url: url,
+        headers: {
+          'Authorization': `Basic ${btoa(email + ':' + apiKey)}`,
+        },
+      });
 
-    const token = btoa(`${phone}:${code}`);
+      const token = btoa(`${phone}:${code}`);
 
-    const client = await Client.findOne({phone: phone});
+      const client = await Client.findOne({phone: phone});
 
-    if (client || client?.userAgent === userAgent) {
-      await Client.updateOne({phone}, {$set: {token, userAgent}})
-    } else {
-      await Client.create({phone, token})
+      if (client || client?.userAgent === userAgent) {
+        await Client.updateOne({phone}, {$set: {token, userAgent}})
+      } else {
+        await Client.create({phone, token})
+      }
+
+      res.json({status: 'ok', message: 'код отправлен'});
+      res.status(200);
+    } catch (e) {
+      console.log('e= ', e);
+      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
+      res.status(500);
     }
 
-
-    res.json({status: 'ok', message: 'код отправлен'});
-    res.status(200);
   }
 
   if (method === 'POST') {
