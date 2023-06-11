@@ -10,6 +10,7 @@ export default async function handle(req, res) {
 
   if (method === 'GET') {
     const phone = req.query.phone;
+    const userAgent = req.query?.userAgent;
 
     const code = Math.floor(1000 + Math.random() * 9000);
     phonesCodesList[phone] = {phone,  code};
@@ -35,10 +36,10 @@ export default async function handle(req, res) {
 
     const token = btoa(`${phone}:${code}`);
 
-    const isExist = await Client.findOne({phone: phone});
+    const client = await Client.findOne({phone: phone});
 
-    if (isExist) {
-      await Client.updateOne({phone}, {$set: {token}})
+    if (client || client?.userAgent === userAgent) {
+      await Client.updateOne({phone}, {$set: {token, userAgent}})
     } else {
       await Client.create({phone, token})
     }
