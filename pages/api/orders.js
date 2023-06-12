@@ -14,15 +14,17 @@ export default async function handler(req,res) {
 
   if (method === 'POST') {
     try {
-      const {clientId, selectedProducts, address} = JSON.parse(req.body);
+      const {clientId, products, address} = JSON.parse(req.body);
 
       const client = await Client.findOne({_id: clientId});
-      const products = [];
+      const selectedProducts = [];
 
 
-      Promise.all(selectedProducts.map((el) => {
+      Promise.all(products.map((el) => {
         new Promise(async (resolve,reject) => {
-          const product = await Product.findOne({_id: el.id});
+          console.log('el=', el);
+          const product = await Product.findOne({_id: el._id});
+          console.log('dbproduct =', product)
           if (product) {
             resolve(product);
           } else {
@@ -30,10 +32,10 @@ export default async function handler(req,res) {
           }
         });
       })).then((response) => {
-        products.push(response);
+        selectedProducts.push(response);
         console.log('response =', response);
       }).catch((error) => {
-        products.push({id: error?.id,status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
+        selectedProducts.push({id: error?.id,status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
         console.log('Catch err =', error);
       })
 
@@ -42,14 +44,14 @@ export default async function handler(req,res) {
         return res.status(404);
       }
 
-      if (!products.length) {
+      if (!selectedProducts.length) {
         res.json({status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
         return res.status(404);
       }
 
       const postData = {
         clientId,
-        products,
+        products: selectedProducts,
         address,
         email: '',
         paid: true
