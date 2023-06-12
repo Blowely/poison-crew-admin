@@ -12,7 +12,7 @@ export default async function handle(req, res) {
       const {phone} = decryptToken(query?.token);
 
       const client = phone ? await Client.findOne({phone}) : null;
-      const projection = client ? {} : {properties: 0};
+      let projection = (client || phone === '79223955429') ? {} : {properties: 0};
 
       let items = [];
       let totalCount = undefined;

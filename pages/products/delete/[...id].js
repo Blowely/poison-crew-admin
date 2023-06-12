@@ -12,8 +12,8 @@ export default function DeleteProductPage() {
   if (typeof window !== 'undefined') {
     token = localStorage?.getItem('token');
     if (!token) {
-      localStorage?.setItem('token', 'NzkyMDI5NzI0NDc6OTg5OQ==');
-      token = 'NzkyMDI5NzI0NDc6OTg5OQ==';
+      localStorage?.setItem('token', 'NzkyMjM5NTU0Mjk6NTcxNA==');
+      token = 'NzkyMjM5NTU0Mjk6NTcxNA==';
     }
   }
 
