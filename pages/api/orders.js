@@ -28,14 +28,14 @@ export default async function handler(req,res) {
         return res.status(404);
       }
 
-      if (!selectedProducts.length) {
+      if (!selectedProducts.length || selectedProducts?.length !== products?.length) {
         res.json({status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
         return res.status(404);
       }
 
       const postData = {
         clientId,
-        products: selectedProducts,
+        products,
         address,
         email: '',
         paid: true
