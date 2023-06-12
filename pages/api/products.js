@@ -1,4 +1,5 @@
 import {Product} from "@/models/Product";
+import {Client} from "@/models/Client";
 import {mongooseConnect} from "@/lib/mongoose";
 import {decryptToken} from "@/utils/utils";
 
@@ -8,9 +9,9 @@ export default async function handle(req, res) {
 
   if (method === 'GET') {
     try {
-      const {phone} = decryptToken(query?.token)
+      const {phone} = decryptToken(query?.token);
+
       const client = phone ? await Client.findOne({phone}) : null;
-      console.log('client', client);
       const projection = client ? {} : {properties: 0};
 
       let items = [];
