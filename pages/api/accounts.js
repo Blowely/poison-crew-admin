@@ -1,5 +1,6 @@
 import {Client} from "@/models/Client";
 import {mongooseConnect} from "@/lib/mongoose";
+import {decryptToken} from "@/utils/utils";
 
 export default async function handle(req, res) {
   const {method, query} = req;
@@ -7,10 +8,7 @@ export default async function handle(req, res) {
 
 
   if (method === 'GET') {
-    const token = req.query.token;
-    const decryptedToken = atob(token);
-    const tokenData = decryptedToken.split(':');
-    const phone = tokenData[0];
+    const {phone} = decryptToken(query?.token);
 
     const account = await Client.findOne({phone: phone});
 
@@ -25,7 +23,7 @@ export default async function handle(req, res) {
 
   if (method === 'POST') {
     try {
-      const phone = req.query?.accPhone;
+      const phone = query?.accPhone;
       const {address} = JSON.parse(req.body);
 
       const account = await Client.findOne({phone: phone});

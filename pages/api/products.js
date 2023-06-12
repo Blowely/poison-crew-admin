@@ -1,34 +1,48 @@
 import {Product} from "@/models/Product";
 import {mongooseConnect} from "@/lib/mongoose";
+import {decryptToken} from "@/utils/utils";
 //import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
 
 export default async function handle(req, res) {
-  const {method} = req;
+  const {method, query} = req;
   await mongooseConnect();
 
   if (method === 'GET') {
-    let items = [];
-    let totalCount = undefined;
-    let result = [];
+    try {
+      const {phone} = decryptToken(query?.token)
+      const client = phone ? await Client.findOne({phone}) : null;
+      console.log('client', client);
+      const projection = client ? {} : {properties: 0};
 
-    if (req.query?.id) {
-      result = await Product.findOne({_id: req.query.id});
-    } else {
-      const filterObj = {}
+      let items = [];
+      let totalCount = undefined;
+      let result = [];
 
-      if (req.query?.collName) {
-        filterObj.title = req.query?.collName;
+      if (req.query?.id) {
+        result = await Product.findOne({_id: req.query.id}, projection);
+      } else {
+        const filterObj = {}
+
+        if (req.query?.collName) {
+          filterObj.title = req.query?.collName;
+        }
+
+        totalCount = await Product.count(filterObj);
+        items = await Product.find(filterObj, {properties: 0}).skip(req.query?.offset)
+          .limit(req.query.limit);
+
+        result = {items: items, total_count: totalCount }
       }
 
-      totalCount = await Product.count(filterObj);
+      res.status(200);
+      res.json(result);
+    } catch (e) {
+      console.log('e =', e);
+      res.status(500);
+      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
 
-      items = await Product.find(filterObj).skip(req.query?.offset)
-        .limit(req.query.limit);
-
-      result = {items: items, total_count: totalCount }
     }
 
-    res.json(result);
   }
 
   //await isAdminRequest(req,res);
