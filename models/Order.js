@@ -1,5 +1,5 @@
 import {model, models, Schema} from "mongoose";
-import {Address, AddressSchema} from "@/models/Address";
+import {AddressSchema} from "@/models/Address";
 import {OrderedProductSchema} from "@/models/OrderedProduct";
 
 const OrderSchema = new Schema({
