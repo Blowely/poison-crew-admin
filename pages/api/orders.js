@@ -2,7 +2,6 @@ import {mongooseConnect} from "@/lib/mongoose";
 import {Order} from "@/models/Order";
 import {Client} from "@/models/Client";
 import {Product} from "@/models/Product";
-import {Collection} from "@/models/Collection";
 
 export default async function handler(req,res) {
   const {method} = req;
@@ -17,24 +16,12 @@ export default async function handler(req,res) {
       const {clientId, products, address} = JSON.parse(req.body);
 
       const client = await Client.findOne({_id: clientId});
-      const selectedProducts = [];
+      const selectedProducts = await Product.find({
+        _id: {
+          $in: products.map(el => el._id)
+        }}
+      );
 
-
-      Promise.all(products.map((el) => {
-        new Promise(async (resolve,reject) => {
-          console.log('el=', el);
-          const product = await Product.findOne({_id: el._id});
-          console.log('dbproduct =', product)
-          resolve(product);
-         
-        });
-      })).then((response) => {
-        selectedProducts.push(response);
-        console.log('response =', response);
-      }).catch((error) => {
-        selectedProducts.push({id: error?.id,status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
-        console.log('Catch err =', error);
-      })
 
       if (!client) {
         res.json({status: 'clientNotFoundOrDeleted', message: 'Клент не найден или удален'});
@@ -53,8 +40,8 @@ export default async function handler(req,res) {
         email: '',
         paid: true
       }
+
       const response = await Order.create(postData)
-      console.log('FinishResponse =', response);
       res.json({status: 'ok', message: 'заказ оформлен'});
       res.status(200);
     } catch (e) {
