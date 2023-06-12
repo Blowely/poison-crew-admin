@@ -25,11 +25,8 @@ export default async function handler(req,res) {
           console.log('el=', el);
           const product = await Product.findOne({_id: el._id});
           console.log('dbproduct =', product)
-          if (product) {
-            resolve(product);
-          } else {
-            reject({id: el.id,status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'})
-          }
+          resolve(product);
+         
         });
       })).then((response) => {
         selectedProducts.push(response);
