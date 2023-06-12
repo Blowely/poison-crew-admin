@@ -1,10 +1,10 @@
 import {model, models, Schema} from "mongoose";
-import {ProductSchema} from "@/models/Product";
 import {Address, AddressSchema} from "@/models/Address";
+import {OrderedProductSchema} from "@/models/OrderedProduct";
 
 const OrderSchema = new Schema({
   clientId: {type: String, required: true},
-  products: [ProductSchema],
+  products: [OrderedProductSchema],
   address: {type: AddressSchema, required: true},
   email: String,
   paid: Boolean,
