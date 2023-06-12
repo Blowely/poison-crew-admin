@@ -12,11 +12,20 @@ export default function EditProductPage() {
   const router = useRouter();
   const {id} = router.query;
 
+  let token = ''
+  if (typeof window !== 'undefined') {
+    token = localStorage?.getItem('token');
+    if (!token) {
+      localStorage?.setItem('token', 'NzkyMDI5NzI0NDc6OTg5OQ==');
+      token = 'NzkyMDI5NzI0NDc6OTg5OQ==';
+    }
+  }
+
   useEffect(() => {
     if (!id) {
       return;
     }
-    axios.get('/api/products?id='+id).then(response => {
+    axios.get(`/api/products?id=${id}&token=${token}`).then(response => {
       setProductInfo(response.data);
       setLoading(false);
     });
@@ -27,7 +36,7 @@ export default function EditProductPage() {
     if (!id) {
       return;
     }
-    axios.get('/api/products?id='+id).then(response => {
+    axios.get(`/api/products?id=${id}&token=${token}`).then(response => {
       setProductInfo(response.data);
     });
   }

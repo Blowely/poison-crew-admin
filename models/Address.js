@@ -10,4 +10,4 @@ export const AddressSchema = new Schema({
   timestamps: true,
 });
 
-export const Address = models.AddressSchema || model('Address', AddressSchema);
+export const Address = models.Address || model('Address', AddressSchema);

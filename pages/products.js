@@ -25,9 +25,15 @@ export default function Products() {
 
   let lsOffset = '';
   let lsCurrentPage = '';
+  let token = ''
   if (typeof window !== 'undefined') {
     lsOffset = localStorage?.getItem('offset');
     lsCurrentPage = localStorage?.getItem('page');
+    token = localStorage?.getItem('token');
+    if (!token) {
+      localStorage?.setItem('token', 'NzkyMDI5NzI0NDc6OTg5OQ==');
+      token = 'NzkyMDI5NzI0NDc6OTg5OQ==';
+    }
   }
 
   const [offset, setOffset] = useState(lsOffset || 0);
@@ -54,6 +60,7 @@ export default function Products() {
     const obj = {
       limit: 20,
       offset: offset,
+      token,
     }
 
     if (collName) {
