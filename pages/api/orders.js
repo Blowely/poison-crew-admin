@@ -4,11 +4,26 @@ import {Client} from "@/models/Client";
 import {Product} from "@/models/Product";
 
 export default async function handler(req,res) {
-  const {method} = req;
+  const {method, query} = req;
   await mongooseConnect();
 
   if (method === 'GET') {
-    res.json(await Order.find().sort({createdAt:-1}));
+    try {
+      const clientId = query?.clientId;
+
+      if (!clientId) {
+        res.status(404);
+        return res.json({status: 'clientNotFoundOrDeleted', message: 'Клиент не найден или удален'});
+      }
+
+      res.status(200);
+      res.json(await Order.find({clientId}).sort({createdAt:-1}));
+    } catch (e) {
+      console.log('e =', e);
+      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
+      res.status(500);
+    }
+
   }
 
   if (method === 'POST') {
