@@ -24,18 +24,27 @@ export default async function handle(req, res) {
   if (method === 'POST') {
     try {
       const phone = query?.accPhone;
-      const {address} = JSON.parse(req.body);
+      const type = query?.type;
 
-      const account = await Client.findOne({phone: phone});
-      const result = await Client.updateOne({phone}, {$set: {addresses: [...account?.addresses, address]}})
+      if (type === 'address') {
+        const {address} = JSON.parse(req.body);
 
-      if (result) {
-        res.json({status: 'ok', message: 'Адрес успешно добавлен'});
-        res.status(200);
-      } else {
-        res.json({status: 'internalServerError', message: 'Ошибка сервера'});
-        res.status(500);
+        const account = await Client.findOne({phone: phone});
+        const result = await Client.updateOne({phone}, {$set: {addresses: [...account?.addresses, address]}})
+
+        if (result) {
+          res.json({status: 'ok', message: 'Адрес успешно добавлен'});
+          res.status(200);
+        } else {
+          res.json({status: 'internalServerError', message: 'Ошибка сервера'});
+          res.status(500);
+        }
       }
+
+      if (type === 'cart') {
+
+      }
+
     } catch (e) {
       res.json({status: 'internalServerError', message: 'Ошибка сервера'});
       res.status(500);

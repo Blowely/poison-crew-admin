@@ -40,9 +40,7 @@ export default async function handle(req, res) {
       console.log('e =', e);
       res.status(500);
       res.json({status: 'internalServerError', message: 'Ошибка сервера'});
-
     }
-
   }
 
   //await isAdminRequest(req,res);

@@ -23,7 +23,6 @@ export default async function handler(req,res) {
       res.json({status: 'internalServerError', message: 'Ошибка сервера'});
       res.status(500);
     }
-
   }
 
   if (method === 'POST') {
