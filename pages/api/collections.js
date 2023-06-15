@@ -6,6 +6,7 @@ export default async function handler(req,res) {
   await mongooseConnect();
   const {method, query} = req;
 
+  //update collections
   if (method === 'POST') {
     const products = await axios('http://localhost:3000/api/products');
 

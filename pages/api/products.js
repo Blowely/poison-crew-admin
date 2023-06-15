@@ -23,13 +23,27 @@ export default async function handle(req, res) {
       } else {
         const filterObj = {}
 
-        if (req.query?.collName) {
+        const collName = query?.collName;
+
+        if (collName && collName !== 'personal' && collName !== 'popular') {
           filterObj.title = req.query?.collName;
         }
 
+        let random;
+        console.log('collName',collName);
+        if (collName === 'personal' || collName === 'popular') {
+          //random = Math.floor(Math.random() * count)
+          items = await Product.aggregate([
+                { $sample: { size: 20 } }],
+          )
+          console.log('items',items);
+        } else {
+          items = await Product.find(filterObj, {properties: 0}).skip(req.query?.offset)
+              .limit(req.query.limit);
+        }
+
         totalCount = await Product.count(filterObj);
-        items = await Product.find(filterObj, {properties: 0}).skip(req.query?.offset)
-          .limit(req.query.limit);
+
 
         result = {items: items, total_count: totalCount }
       }
