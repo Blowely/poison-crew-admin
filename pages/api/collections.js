@@ -4,7 +4,7 @@ import axios from "axios";
 
 export default async function handler(req,res) {
   await mongooseConnect();
-  const {method} = req;
+  const {method, query} = req;
 
   if (method === 'POST') {
     const products = await axios('http://localhost:3000/api/products');
@@ -35,7 +35,9 @@ export default async function handler(req,res) {
   }
 
   if (method === 'GET') {
-    const response = await Collection.find().sort({value:-1});
+    const limit = query?.limit;
+
+    const response = await Collection.find().sort({value:-1}).limit(limit);
     res.json(response);
   }
 }
