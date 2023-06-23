@@ -21,29 +21,35 @@ export default async function handle(req, res) {
       if (req.query?.id) {
         result = await Product.findOne({_id: req.query.id}, projection);
       } else {
-        const filterObj = {}
 
         const collName = query?.collName;
+        const search = query?.search;
 
-        if (collName && collName !== 'personal' && collName !== 'popular') {
-          filterObj.title = req.query?.collName;
+        const buildRequest = () => {
+          const obj = {}
+
+          if (collName && collName !== 'personal' && collName !== 'popular') {
+            obj.title = req.query?.collName;
+          }
+
+          if (search) {
+            obj.title = new RegExp('.*' + search + '.*');
+          }
+
+          return obj;
         }
 
-        let random;
-        console.log('collName',collName);
-        if (collName === 'personal' || collName === 'popular') {
+        if ((collName === 'personal' || collName === 'popular') && !search) {
           //random = Math.floor(Math.random() * count)
-          items = await Product.aggregate([
-                { $sample: { size: 20 } }],
-          )
-          console.log('items',items);
+
+          items = await Product.aggregate([{ $sample: { size: 20 } }], buildRequest());
+
         } else {
-          items = await Product.find(filterObj, {properties: 0}).skip(req.query?.offset)
+          items = await Product.find(buildRequest(), {properties: 0}).skip(req.query?.offset)
               .limit(req.query.limit);
         }
 
-        totalCount = await Product.count(filterObj);
-
+        totalCount = await Product.count(buildRequest());
 
         result = {items: items, total_count: totalCount }
       }
