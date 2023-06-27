@@ -4,6 +4,7 @@ import {decryptToken} from "@/utils/utils";
 
 export default async function handle(req, res) {
   const {method, query} = req;
+  const methodType = query?.methodType;
   await mongooseConnect();
 
 
@@ -26,24 +27,36 @@ export default async function handle(req, res) {
       const {phone} = decryptToken(query?.token);
       //const type = query?.type;
 
-      const {address} = JSON.parse(req.body);
+      const {address, addressId} = JSON.parse(req.body);
 
       const account = await Client.findOne({phone: phone});
-      const result = await Client.updateOne({phone}, {$set: {addresses: [...account?.addresses, address]}})
 
-      if (result) {
-        res.json({status: 'ok', message: 'Адрес успешно добавлен'});
-        res.status(200);
-      } else {
-        res.json({status: 'internalServerError', message: 'Ошибка сервера'});
-        res.status(500);
+      if (methodType !== 'patchAccAddr') {
+        const result = await Client.updateOne({phone}, {$set: {addresses: [...account?.addresses, address]}})
+
+        if (result) {
+          res.status(200);
+          res.json({status: 'ok', message: 'Адрес успешно добавлен'});
+        } else {
+          res.status(500);
+          res.json({status: 'internalServerError', message: 'Ошибка сервера'});
+        }
       }
 
+      if (methodType === 'patchAccAddr') {
+        const result = await Client.updateOne({phone}, {$set: {activeAddressId: addressId }})
 
+        if (result) {
+          res.json({status: 'ok', message: 'Активный адрес успешно изменен'});
+          return res.status(200);
+        } else {
+          res.status(500);
+          return res.json({status: 'internalServerError', message: 'Ошибка сервера'});
+        }
+      }
     } catch (e) {
-      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
       res.status(500);
+      res.json({status: 'internalServerError', message: 'Ошибка сервера', text: e?.message});
     }
-
   }
 }
