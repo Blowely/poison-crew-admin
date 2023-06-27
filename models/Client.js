@@ -6,7 +6,7 @@ const ClientSchema = new Schema({
   token: String,
   userAgent: String,
   addresses: [AddressSchema],
-  activeAddress: Number,
+  activeAddressId: String,
   cart: [String],
 }, {
   timestamps: true,
