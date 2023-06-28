@@ -32,7 +32,10 @@ export default async function handle(req, res) {
       const account = await Client.findOne({phone: phone});
 
       if (methodType !== 'patchAccAddr') {
-        const result = await Client.updateOne({phone}, {$set: {addresses: [...account?.addresses, address]}})
+        const result = await Client.updateOne({phone}, {$set: {
+          addresses: [...account?.addresses, address]},
+          activeAddressId: address?._id
+        })
 
         if (result) {
           res.status(200);
