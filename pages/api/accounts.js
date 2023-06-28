@@ -36,9 +36,15 @@ export default async function handle(req, res) {
           addresses: [...account?.addresses, address]},
         })
 
-        if (result) {
+        const newClient = await Client.findOne({phone});
+
+        if (result && newClient) {
           res.status(200);
-          res.json({status: 'ok', message: 'Адрес успешно добавлен'});
+          res.json({
+            status: 'ok',
+            message: 'Адрес успешно добавлен',
+            addressId: newClient?.addresses[newClient?.addresses?.length - 1]?._id
+          });
         } else {
           res.status(500);
           res.json({status: 'internalServerError', message: 'Ошибка сервера'});
