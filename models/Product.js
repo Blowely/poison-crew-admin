@@ -3,6 +3,7 @@ import mongoose, {model, Schema, models} from "mongoose";
 export const ProductSchema = new Schema({
   title: {type:String, required:true},
   description: String,
+  country: String,
   price: {type: Number, required: true},
   src: [{type:String}],
   images: [{type:String}],

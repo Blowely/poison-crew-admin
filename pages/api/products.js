@@ -26,7 +26,9 @@ export default async function handle(req, res) {
         const search = query?.search;
 
         const buildRequest = () => {
-          const obj = {}
+          const obj = {
+            price: {$gte: 1}
+          }
 
           if (collName && collName !== 'personal' && collName !== 'popular') {
             obj.title = req.query?.collName;
@@ -35,14 +37,14 @@ export default async function handle(req, res) {
           if (search) {
             obj.title = new RegExp('.*' + search + '.*');
           }
-
+          console.log('obj',obj);
           return obj;
         }
 
         if ((collName === 'personal' || collName === 'popular') && !search) {
           //random = Math.floor(Math.random() * count)
 
-          items = await Product.aggregate([{ $sample: { size: 20 } }], buildRequest());
+          items = await Product.aggregate([{$match: buildRequest()},{ $sample: { size: 20 } }]);
 
         } else {
           items = await Product.find(buildRequest(), {properties: 0}).skip(req.query?.offset)
