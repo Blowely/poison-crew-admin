@@ -37,7 +37,7 @@ export default async function handle(req, res) {
           if (search) {
             obj.title = new RegExp('.*' + search + '.*');
           }
-          console.log('obj',obj);
+
           return obj;
         }
 
