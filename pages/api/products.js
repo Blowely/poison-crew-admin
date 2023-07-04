@@ -27,7 +27,7 @@ export default async function handle(req, res) {
 
         const buildRequest = () => {
           const obj = {
-            price: {$gte: 1}
+            //price: {$gte: 1}
           }
 
           if (collName && collName !== 'personal' && collName !== 'popular') {
