@@ -2,11 +2,12 @@ import {model, Schema, models} from "mongoose";
 
 export const AddressSchema = new Schema({
   id: String,
-  fio: {type:String, required:true},
-  phone: {type:String, required:true},
-  city: {type:String, required:true},
+  type: String,
+  fio: {type:String},
+  phone: {type:String},
+  city: {type:String},
   address: {type:String, required:true},
-  postalCode: {type:String, required:true},
+  postalCode: {type:String},
   workschedule: String,
 }, {
   timestamps: true,
