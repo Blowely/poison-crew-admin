@@ -1,5 +1,5 @@
 const {PHASE_DEVELOPMENT_SERVER} = require("next/constants");
-const { Centrifuge } = require('centrifuge');
+const { Centrifuge, Subscription } = require('centrifuge');
 global.WebSocket = require('ws');
 
 /** @type {import('next').NextConfig} */
@@ -36,34 +36,54 @@ module.exports = (phase, { defaultConfig }) => {
       // Создание экземпляра объекта Centrifuge
       console.log(123);
       const centrifuge = new Centrifuge('wss://centrifugo.donatepay.ru:43002/connection/websocket', {
-        subscribeEndpoint: 'https://donatepay.ru/api/v2/socket/token',
-        subscribeParams:   {
+        /*subscribeEndpoint: 'https://donatepay.ru/api/v2/socket/token',
+        subscribeParams: {
           access_token: 'fsYHWYth7k1xnB2xv8D0LqPEdiBXv59vY5qk1QkftlgEUTJaIK9Ky4yty6ds'
-        },
-        disableWithCredentials: true
+        },*/
+        emulationEndpoint: 'https://donatepay.ru/api/v2/socket/token',
+        token: 'fsYHWYth7k1xnB2xv8D0LqPEdiBXv59vY5qk1QkftlgEUTJaIK9Ky4yty6ds',
+        //disableWithCredentials: true
       });
 
       // Предоставляем токен подключения
       centrifuge.setToken(await getToken())
 
       // Подписываемся на канал пользователя $public:USER_ID
-      centrifuge.newSubscription("$public:1141948", function (message) {
+      /*centrifuge.newSubscription("$public:1141948", function (message) {
         // Выводим все новые сообщения, полученные с канала в консоль
         console.log('SUBSCs')
         console.log('message', message);
+      });*/
+      centrifuge.newSubscription("$public:1141948", {
+        token:'fsYHWYth7k1xnB2xv8D0LqPEdiBXv59vY5qk1QkftlgEUTJaIK9Ky4yty6ds',
       });
+
+      const sub = new Subscription(centrifuge, "$public:1141948")
+      sub.subscribe();
+
+      sub.on('subscribing', (e) => console.log('e=',e))
 
       centrifuge.on('error', (e) => {
         console.log('error', e)
       })
 
-      centrifuge.on('subscribe', (e) => {
+      centrifuge.on('subscribed', (e) => {
         console.log('SUBSCRIBED')
         console.log('subscribe', e)
       })
 
-      centrifuge.on('connect', (e) => {
-        console.log('CONNECTED')
+      centrifuge.on('subscribing', (e) => {
+        console.log('SUBSCRIBED')
+        console.log('subscribe', e)
+      })
+
+      centrifuge.on('connecting', (e) => {
+        console.log('connecting')
+        console.log(e)
+      })
+
+      centrifuge.on('connected', (e) => {
+        console.log('connected')
         console.log(e)
       })
 
