@@ -1,3 +1,7 @@
+const {PHASE_DEVELOPMENT_SERVER} = require("next/constants");
+const { Centrifuge } = require('centrifuge');
+global.WebSocket = require('ws');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
@@ -26,4 +30,64 @@ const nextConfig = {
   }
 }
 
-module.exports = nextConfig
+module.exports = (phase, { defaultConfig }) => {
+  if (phase === PHASE_DEVELOPMENT_SERVER) {
+    const start = async () => {
+      // Создание экземпляра объекта Centrifuge
+      console.log(123);
+      const centrifuge = new Centrifuge('wss://centrifugo.donatepay.ru:43002/connection/websocket', {
+        subscribeEndpoint: 'https://donatepay.ru/api/v2/socket/token',
+        subscribeParams:   {
+          access_token: 'fsYHWYth7k1xnB2xv8D0LqPEdiBXv59vY5qk1QkftlgEUTJaIK9Ky4yty6ds'
+        },
+        disableWithCredentials: true
+      });
+
+      // Предоставляем токен подключения
+      centrifuge.setToken(await getToken())
+
+      // Подписываемся на канал пользователя $public:USER_ID
+      centrifuge.newSubscription("$public:1141948", function (message) {
+        // Выводим все новые сообщения, полученные с канала в консоль
+        console.log('SUBSCs')
+        console.log('message', message);
+      });
+
+      centrifuge.on('error', (e) => {
+        console.log('error', e)
+      })
+
+      centrifuge.on('subscribe', (e) => {
+        console.log('SUBSCRIBED')
+        console.log('subscribe', e)
+      })
+
+      centrifuge.on('connect', (e) => {
+        console.log('CONNECTED')
+        console.log(e)
+      })
+
+      // Метод фактического подключения к серверу
+      centrifuge.connect();
+    }
+
+    // Request a token to connect to Centrifuge
+    async function getToken() {
+      var res = await fetch('https://donatepay.ru/api/v2/socket/token', {
+        method: 'post',
+        body: JSON.stringify({
+          access_token: 'fsYHWYth7k1xnB2xv8D0LqPEdiBXv59vY5qk1QkftlgEUTJaIK9Ky4yty6ds'
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+
+      return (await res.json()).token
+    }
+
+    start().catch((e) => console.log('e= ', e));
+  }
+
+  return nextConfig
+}
