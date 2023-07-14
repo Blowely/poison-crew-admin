@@ -1,5 +1,3 @@
-const {PHASE_DEVELOPMENT_SERVER} = require("next/constants");
-const { Centrifuge, Subscription } = require('centrifuge');
 global.WebSocket = require('ws');
 
 /** @type {import('next').NextConfig} */
