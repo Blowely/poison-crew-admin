@@ -8,7 +8,7 @@ const nextConfig = {
       {
         // matching all API routes
         source: "/api/:path*",
-        destination: 'http://77.91.126.217/:path*',
+        destination: 'http://77.91.126.217/api/:path*',
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
           { key: "Access-Control-Allow-Origin", value: "*" },
