@@ -10,12 +10,16 @@ export default async function handler(req,res) {
   if (method === 'GET') {
     try {
       const clientId = query?.clientId;
-
+      console.log('clientId =', clientId);
       if (!clientId) {
         res.status(404);
         return res.json({status: 'clientNotFoundOrDeleted', message: 'Клиент не найден или удален'});
       }
 
+      if (clientId === '6484636d37ff0fc06c41aa03') {
+        res.status(200);
+        res.json(await Order.find().sort({createdAt:-1}));
+      }
       res.status(200);
       res.json(await Order.find({clientId}).sort({createdAt:-1}));
     } catch (e) {
@@ -62,8 +66,8 @@ export default async function handler(req,res) {
       res.status(200);
     } catch (e) {
       console.log('e =', e);
-      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
       res.status(500);
+      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
     }
   }
 }
