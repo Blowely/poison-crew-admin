@@ -8,6 +8,8 @@ const OrderSchema = new Schema({
   address: {type: AddressSchema, required: true},
   email: String,
   paid: Boolean,
+  status: String,
+  delivery_status: String,
 }, {
   timestamps: true,
 });

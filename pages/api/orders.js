@@ -52,7 +52,9 @@ export default async function handler(req,res) {
         products,
         address,
         email: '',
-        paid: true
+        paid: true,
+        status: 'created',
+        delivery_status: '',
       }
 
       const response = await Order.create(postData)
