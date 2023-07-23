@@ -1,7 +1,4 @@
 import {mongooseConnect} from "@/lib/mongoose";
-import {Order} from "@/models/Order";
-import {Client} from "@/models/Client";
-import {Product} from "@/models/Product";
 import axios from "axios";
 
 export default async function handler(req,res) {
@@ -22,7 +19,7 @@ export default async function handler(req,res) {
             }
 
             await axios.post(TELEGRAM_URI, {
-                chat_id: chatId,
+                chat_id: process.env.TELEGRAM_CHAT_ID,
                 text: text || 'chatId = ' + chatId
             })
             res.send('Done')
