@@ -14,9 +14,9 @@ export default async function handler(req,res) {
             const messageText = message?.text;
             const chatId = message?.chat?.id
 
-            if (!messageText || !chatId) {
+            /*if (!messageText || !chatId) {
                 return res.sendStatus(400)
-            }
+            }*/
 
             await axios.post(TELEGRAM_URI, {
                 chat_id: 664687823,
