@@ -16,12 +16,12 @@ export default function OrdersPage() {
     key: i,
     value: s
   }))
-
+  const clientId = '6484636d37ff0fc06c41aa03'
   const onChangeStatus = (orderId, status) => {
-    axios.post('/api/updateStatus',{
-      orderId: orderId,
-      status,
-      clientId: '6484636d37ff0fc06c41aa03'
+    axios.post('/api/updateStatus', {
+        orderId,
+        status,
+        clientId
     })
         .then(response => {
           if (response?.data?.status === 'ok') {

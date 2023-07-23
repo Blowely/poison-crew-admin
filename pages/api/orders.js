@@ -10,7 +10,7 @@ export default async function handler(req,res) {
   if (method === 'GET') {
     try {
       const clientId = query?.clientId;
-      console.log('clientId =', clientId);
+
       if (!clientId) {
         res.status(404);
         return res.json({status: 'clientNotFoundOrDeleted', message: 'Клиент не найден или удален'});
@@ -42,13 +42,13 @@ export default async function handler(req,res) {
 
 
       if (!client) {
-        res.json({status: 'clientNotFoundOrDeleted', message: 'Клент не найден или удален'});
-        return res.status(404);
+        res.status(404);
+        return res.json({status: 'clientNotFoundOrDeleted', message: 'Клент не найден или удален'});
       }
 
       if (!selectedProducts.length || selectedProducts?.length !== products?.length) {
-        res.json({status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
-        return res.status(404);
+        res.status(404);
+        return res.json({status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
       }
 
       const postData = {
@@ -62,8 +62,8 @@ export default async function handler(req,res) {
       }
 
       const response = await Order.create(postData)
-      res.json({status: 'ok', message: 'заказ оформлен'});
       res.status(200);
+      res.json({status: 'ok', message: 'заказ оформлен'});
     } catch (e) {
       console.log('e =', e);
       res.status(500);

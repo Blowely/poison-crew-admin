@@ -9,12 +9,10 @@ export default async function handler(req,res) {
 
     if (method === 'POST') {
         try {
-            console.log('req.body',req.body);
-            const {clientId, orderId, status} = req.body;
+            const {clientId, orderId, status} = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
 
             const client = await Client.findOne({_id: clientId});
             const selectedOrder = await Order.find({_id: orderId});
-
 
             if (!client && clientId !== '6484636d37ff0fc06c41aa03') {
                 res.status(404);
