@@ -17,13 +17,13 @@ export default async function handler(req,res) {
 
 
             if (!client && clientId !== '6484636d37ff0fc06c41aa03') {
-                res.json({status: 'clientNotFoundOrDeleted', message: 'Клент не найден или удален'});
-                return res.status(404);
+                res.status(404);
+                return res.json({status: 'clientNotFoundOrDeleted', message: 'Клент не найден или удален'});
             }
 
             if (!selectedOrder) {
-                res.json({status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
-                return res.status(404);
+                res.status(404);
+                return res.json({status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
             }
 
 
