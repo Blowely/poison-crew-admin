@@ -8,14 +8,13 @@ export default async function handler(req,res) {
     const {method, query} = req;
     await mongooseConnect();
 
-    const TELEGRAM_URI = `https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage`
-
+    const TELEGRAM_URI = `${process.env.TELEGRAM_URI}/sendMessage`
 
     if (method === 'POST') {
         try {
-            const { message } = req.body;
+            const { message, text } = req.body;
 
-            const messageText = message?.text?.toLowerCase()?.trim()
+            const messageText = message?.text;
             const chatId = message?.chat?.id
 
             if (!messageText || !chatId) {
@@ -24,7 +23,7 @@ export default async function handler(req,res) {
 
             await axios.post(TELEGRAM_URI, {
                 chat_id: chatId,
-                text: 'new-order'
+                text: text || 'chatId = ' + chatId
             })
             res.send('Done')
         } catch (e) {
