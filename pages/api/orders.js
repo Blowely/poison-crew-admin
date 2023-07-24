@@ -72,13 +72,12 @@ export default async function handler(req,res) {
         text:`
         id: ${response._id}\n
         ${products.map(el => {
-          totalPrice += el?.price * 13.3;
+          totalPrice += Math.ceil(Number(el?.price) * 13.3 + 1000);
           return `${el?.title} (${el?.size}) - ${el?.price} CNY;\n
             ${el?.src[0]}\n
           `;
         })} 
         totalPrice(RUB): ${totalPrice + deliveryCost}\n
-        totalPrice(CNY): ${totalPrice}\n
         https://api.re-poizon.ru/orders\n`
       });
 
