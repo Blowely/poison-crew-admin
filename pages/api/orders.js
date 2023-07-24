@@ -67,19 +67,21 @@ export default async function handler(req,res) {
       let totalPrice = 0;
 
       const deliveryCost = 1399 * (products?.length || 1)
-
+      console.log('beforeMsg');
       const msg = await axios.post('https://api.re-poizon.ru/api/newBotMessage', JSON.stringify({
         text:`
         id: ${response._id}\n
         ${products.map(el => {
           totalPrice += el?.price * 13;
-          return `${el?.title} (${el?.size});\n`;
+          return `${el?.title} (${el?.size});\n
+            ${el?.src[0]}\n
+          `;
         })} 
         total: ${totalPrice + deliveryCost}\n
-        https://api.re-poizon.ru/orders\n
-        ${products?.src[0]}
-        `
+        https://api.re-poizon.ru/orders\n`
       }));
+
+      console.log('msg=',msg);
 
       res.status(200);
       res.json({status: 'ok', message: 'заказ оформлен'});
