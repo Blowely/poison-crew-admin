@@ -10,7 +10,7 @@ export default async function handler(req,res) {
     if (method === 'POST') {
         try {
             console.log('req.body=',req.body);
-            const { message, text } = JSON.parse(req.body);
+            const { message, text } = req.body;
 
             const messageText = message?.text;
             const chatId = message?.chat?.id
