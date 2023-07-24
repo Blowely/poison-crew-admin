@@ -72,12 +72,12 @@ export default async function handler(req,res) {
         text:`
         id: ${response._id}\n
         ${products.map(el => {
-          totalPrice += el.price * 13;
-          return `${el.title} (${el.size});\n`;
+          totalPrice += el?.price * 13;
+          return `${el?.title} (${el?.size});\n`;
         })} 
         total: ${totalPrice + deliveryCost}\n
         https://api.re-poizon.ru/orders\n
-        ${products.src[0]}
+        ${products?.src[0]}
         `
       }));
 
