@@ -2,6 +2,7 @@ import {mongooseConnect} from "@/lib/mongoose";
 import {Order} from "@/models/Order";
 import {Client} from "@/models/Client";
 import {Product} from "@/models/Product";
+import axios from "axios";
 
 export default async function handler(req,res) {
   const {method, query} = req;
@@ -61,7 +62,21 @@ export default async function handler(req,res) {
         delivery_status: '',
       }
 
-      const response = await Order.create(postData)
+      const response = await Order.create(postData);
+      console.log('response=', response);
+      let totalPrice = 0;
+
+      const msg = axios.post('https://api.re-poizon.ru/api/newBotMessage', {
+        text:`${products.map(el => {
+          totalPrice += el.price;
+          return `${el.title} (${el.size});\n`;
+        })} 
+        total: ${totalPrice + 1399}\n
+        https://api.re-poizon.ru/orders\n
+        ${products.src[0]}
+        `
+      });
+
       res.status(200);
       res.json({status: 'ok', message: 'заказ оформлен'});
     } catch (e) {
