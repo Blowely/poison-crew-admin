@@ -19,13 +19,16 @@ export default async function handler(req,res) {
                 return res.sendStatus(400)
             }*/
 
-            await axios.post(TELEGRAM_URI, {
+            axios.post(TELEGRAM_URI, {
                 chat_id: 664687823,
                 text: text || 'lol'
             })
+
+            res.status(200);
             res.send('Done')
         } catch (e) {
             console.log(e)
+            res.status(500);
             res.send(e)
         }
     }
