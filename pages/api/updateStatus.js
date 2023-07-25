@@ -33,7 +33,7 @@ export default async function handler(req,res) {
             let totalPrice = 0;
 
             if (status === PRODUCT_STATUS.PAYMENT_CHECK) {
-                axios.post('https://api.re-poizon.ru/api/newBotMessage', JSON.stringify({
+                axios.post('https://api.re-poizon.ru/api/newBotMessage', {
                     text:`
                 ---PAYMENT CHECK---\n
                 id: ${orderId}\n
@@ -45,7 +45,7 @@ export default async function handler(req,res) {
                     })} 
                 totalPrice(RUB): ${totalPrice + deliveryCost}\n
                 https://api.re-poizon.ru/orders\n`
-                }));
+                });
             }
 
             res.status(200);
