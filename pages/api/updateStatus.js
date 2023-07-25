@@ -37,7 +37,7 @@ export default async function handler(req,res) {
                     text:`
                 ---PAYMENT CHECK---\n
                 id: ${orderId}\n
-                ${selectedOrder?.products?.map(el => {
+                ${response?.products?.map(el => {
                         totalPrice += Math.ceil(Number(el?.price) * 13.3 + 1000);
                         return `${el?.title} (${el?.size}) - ${el?.price} CNY;\n
                     ${el?.src[0]}\n
