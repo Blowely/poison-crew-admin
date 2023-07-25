@@ -68,7 +68,8 @@ export default async function handler(req,res) {
 
       const deliveryCost = 1399 * (products?.length || 1)
 
-      axios.post('https://api.re-poizon.ru/api/newBotMessage', {
+      axios.post('https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage', {
+        chat_id: 664687823,
         text:`
         ---NEW ORDER---\n
         id: ${response._id}\n
