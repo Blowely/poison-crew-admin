@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {message, Select} from "antd";
-import {PRODUCT_STATUS} from "@/common/constants";
+import {PRODUCT_DELIVERY_STATUS, PRODUCT_STATUS} from "@/common/constants";
 import Link from "next/link";
 
 export default function OrdersPage() {
@@ -17,6 +17,12 @@ export default function OrdersPage() {
     key: i,
     value: s
   }))
+
+  const deliveryStatusOptions = Object.values(PRODUCT_DELIVERY_STATUS).map((s,i) => ({
+    key: i,
+    value: s
+  }))
+
   const clientId = '6484636d37ff0fc06c41aa03'
   const onChangeStatus = (orderId, status) => {
     axios.post('/api/updateStatus', {
@@ -34,6 +40,22 @@ export default function OrdersPage() {
     }).catch(err => console.log('err=',err));
   }
 
+  const onChangeDeliveryStatus = (orderId, status) => {
+    axios.post('/api/updateDeliveryStatus', {
+        orderId,
+        delivery_status: status,
+        clientId
+    })
+        .then(response => {
+          if (response?.data?.status === 'ok') {
+            axios.get('/api/orders?clientId=6484636d37ff0fc06c41aa03').then(response => {
+              setOrders(response.data);
+              message.success('Статус доставки изменен')
+            });
+          }
+    }).catch(err => console.log('err=',err));
+  }
+
   return (
     <Layout>
       <h1>Orders</h1>
@@ -46,6 +68,7 @@ export default function OrdersPage() {
             <th>Адрес</th>
             <th>Products</th>
             <th>Статус</th>
+            <th>Статус доставки</th>
           </tr>
         </thead>
         <tbody>
@@ -89,6 +112,13 @@ export default function OrdersPage() {
                       defaultValue={PRODUCT_STATUS.CREATED}
                       options={statusOptions}
                       onChange={(status) => onChangeStatus(order._id, status)}
+              ></Select>
+            </td>
+            <td>
+              <Select value={PRODUCT_DELIVERY_STATUS[order.delivery_status?.toUpperCase()]}
+                      defaultValue={PRODUCT_DELIVERY_STATUS.CREATED}
+                      options={deliveryStatusOptions}
+                      onChange={(status) => onChangeDeliveryStatus(order._id, status)}
               ></Select>
             </td>
           </tr>
