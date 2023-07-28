@@ -14,6 +14,8 @@ export default function ProductForm({
   finalData
 }) {
 
+  const router = useRouter();
+
   const [title,setTitle] = useState('');
   const [_id,setId] = useState('');
   const [description,setDescription] = useState('');
@@ -31,10 +33,12 @@ export default function ProductForm({
   const [sizes, setSizes] = useState([]);
   const [cheapestPrice, setCheapestPrice] = useState(null);
 
+  const orderId = router.query?.orderId || ''
+
   let productList;
   let currentElIndex;
-  const [isEditTitle, setEditTitle] = useState(false);
 
+  const [isEditTitle, setEditTitle] = useState(false);
 
 
   useEffect(() => {
@@ -47,8 +51,6 @@ export default function ProductForm({
       currentElIndex = productList.indexOf(_id);
     }
   }, [])
-
-  const router = useRouter();
 
   useEffect(() => {
     setId(finalData?._id || '');
@@ -79,6 +81,10 @@ export default function ProductForm({
       if (_id) {
         //update
         await axios.put('/api/products', {_id, ...data});
+
+        if (orderId) {
+          await axios.patch('/api/orders', data);
+        }
       } else {
         //create
         await axios.post('/api/products', data);
@@ -124,6 +130,10 @@ export default function ProductForm({
     if (_id) {
       //update
       await axios.put('/api/products', data);
+
+      if (orderId) {
+        await axios.patch('/api/orders', data);
+      }
     } else {
       //create
       await axios.post('/api/products', data);

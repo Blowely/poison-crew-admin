@@ -91,4 +91,20 @@ export default async function handler(req,res) {
       res.json({status: 'internalServerError', message: 'Ошибка сервера'});
     }
   }
+
+  if (method === 'PATCH') {
+    try {
+      const _id = query?.orderId;
+      const {title,description,price,src, images,category,properties} = req.body;
+
+      await Order.updateOne({_id}, {products: [title,description,price,src,images,category,properties]});
+
+      res.status(200);
+      res.json({status: 'ok', message: 'заказ изменен'});
+    } catch (e) {
+      console.log('e =', e);
+      res.status(500);
+      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
+    }
+  }
 }
