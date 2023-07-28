@@ -95,9 +95,14 @@ export default async function handler(req,res) {
   if (method === 'PATCH') {
     try {
       const _id = query?.orderId;
-      const {title,description,price,src, images,category,properties} = req.body;
 
-      await Order.updateOne({_id}, {products: [title,description,price,src,images,category,properties]});
+      const order = await Order.findOne({_id});
+      const products = order?.products;
+      const newProduct = await Product.findOne({_id: products[0]._id});
+      const copyNewProduct = JSON.parse(JSON.stringify(newProduct));
+      copyNewProduct.size = products[0]?.size
+
+      await Order.updateOne({_id}, {products: [copyNewProduct]});
 
       res.status(200);
       res.json({status: 'ok', message: 'заказ изменен'});

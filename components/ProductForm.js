@@ -83,7 +83,7 @@ export default function ProductForm({
         await axios.put('/api/products', {_id, ...data});
 
         if (orderId) {
-          await axios.patch('/api/orders', data);
+          await axios.patch('/api/orders?orderId=' + orderId);
         }
       } else {
         //create
@@ -132,7 +132,7 @@ export default function ProductForm({
       await axios.put('/api/products', data);
 
       if (orderId) {
-        await axios.patch('/api/orders', data);
+        await axios.patch('/api/orders?orderId=' + orderId);
       }
     } else {
       //create
