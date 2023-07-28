@@ -75,9 +75,17 @@ export default async function handle(req, res) {
   }
 
   if (method === 'PUT') {
-    const {title,description,price,src, images,category,properties,_id} = req.body;
-    await Product.updateOne({_id}, {title,description,price,src,images,category,properties});
-    res.json(true);
+    try {
+      const {title,description,price,src, images,category,properties,_id} = req.body;
+      await Product.updateOne({_id}, {title,description,price,src,images,category,properties});
+
+      res.status(200);
+      res.json(true);
+    } catch (e) {
+      console.log('e =', e);
+      res.status(500);
+      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
+    }
   }
 
   if (method === 'DELETE') {
