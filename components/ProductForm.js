@@ -35,14 +35,18 @@ export default function ProductForm({
   let currentElIndex;
   const [isEditTitle, setEditTitle] = useState(false);
 
-  if (typeof window !== 'undefined') {
-    if (window.location.href.includes('new')) {
-      setEditTitle(true);
+
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (window.location.href.includes('new')) {
+        setEditTitle(true);
+      }
+      const lsProductList = localStorage.getItem('productsList');
+      productList = lsProductList.split(',');
+      currentElIndex = productList.indexOf(_id);
     }
-    const lsProductList = localStorage.getItem('productsList');
-    productList = lsProductList.split(',');
-    currentElIndex = productList.indexOf(_id);
-  }
+  }, [])
 
   const router = useRouter();
 
@@ -146,7 +150,8 @@ export default function ProductForm({
   }
 
   async function uploadPoisonImg(ev) {
-    setLoading(true);
+    setIsUploading(true);
+
     const files = ev.target?.files;
     if (files?.length > 0) {
       const data = new FormData();
@@ -158,7 +163,9 @@ export default function ProductForm({
       if (res.statusText !== 'OK' && res.status !== 200) {
         return null;
       }
-      setLoading(false);
+
+      setIsUploading(false);
+
       setModalOpen(true);
       setSizes(res?.data?.items);
       setCheapestPrice(res?.data?.cheapest_price);
@@ -217,7 +224,10 @@ export default function ProductForm({
         open={modalOpen}
         onOk={async () => {
           await saveModalProduct();
-          await getProduct();
+          if (getProduct) {
+            await getProduct();
+          }
+
           setModalOpen(false)
         }}
         onCancel={() => setModalOpen(false)}

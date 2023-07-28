@@ -67,7 +67,7 @@ export default async function handle(req, res) {
 
   //await isAdminRequest(req,res);
   if (method === 'POST') {
-    const {title,description,price,src,category,properties} = req.body;
+    const {title,description,price,src, images, category,properties} = req.body;
     const productDoc = await Product.create({
       title,description,price,src,images,category,properties,
     })

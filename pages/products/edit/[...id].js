@@ -58,7 +58,8 @@ export default function EditProductPage() {
       </Button>
       <h1>Edit product</h1>
       {productInfo && finalData && (
-        <ProductForm {...productInfo} finalData={finalData} price={productInfo.price} isLoading={isLoading} setLoading={setLoading} getProduct={getProduct}/>
+        <ProductForm {...productInfo} finalData={finalData} price={productInfo.price} isLoading={isLoading}
+                     setLoading={setLoading} getProduct={getProduct}/>
       )}
     </Layout>
   );
