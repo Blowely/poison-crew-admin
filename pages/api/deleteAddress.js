@@ -19,16 +19,23 @@ export default async function handle(req, res) {
 
       console.log('addressId=',addressId);
       if (methodType === 'patchAccAddr') {
-        const newArr = account?.addresses.map((adr) => {
+        const newAddresses = account?.addresses.map((adr) => {
           if (adr._id.toString() === addressId) {
             adr.isArchived = true;
           }
           return adr;
         });
-        const result = await Client.updateOne({phone}, {addresses: newArr})
+
+        const findActive = newAddresses.findIndex((el) => el._id === account.activeAddressId);
+
+        if (findActive < 0) {
+          await Client.updateOne({phone}, {activeAddressId: ''})
+        }
+
+        const result = await Client.updateOne({phone}, {addresses: newAddresses})
 
         res.status(200);
-        return res.json({status: 'ok', message: 'Адрес успешно удален', newArr: newArr});
+        return res.json({status: 'ok', message: 'Адрес успешно удален', newAddresses: newAddresses});
       }
 
       res.status(405);
