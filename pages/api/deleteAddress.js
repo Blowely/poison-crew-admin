@@ -22,9 +22,8 @@ export default async function handle(req, res) {
         const newArr = account?.addresses.map((adr) => {
           if (adr._id.toString() === addressId) {
             adr.isArchived = true;
-            return adr;
           }
-          return adr
+          return adr;
         });
         const result = await Client.updateOne({phone}, {addresses: newArr})
 
