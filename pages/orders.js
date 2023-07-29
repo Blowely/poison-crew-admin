@@ -89,7 +89,7 @@ export default function OrdersPage() {
               {order?.products?.map((p) => (
                 <div key={p._id} style={{borderBottom: '1px solid grey'}}>
                   <div>
-                    <img src={p.images[0]} alt=""/>{p.title}
+                    <img src={p.images[0]} style={{width: '100px'}} alt=""/>{p.title}
                     <br/>
                     {p.size} размер
                     <br/>

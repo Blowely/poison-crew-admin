@@ -9,6 +9,7 @@ export const AddressSchema = new Schema({
   address: {type:String, required:true},
   postalCode: {type:String},
   workschedule: String,
+  isArchived: {type: Boolean}
 }, {
   timestamps: true,
 });
