@@ -66,7 +66,7 @@ export default async function handler(req,res) {
       console.log('response=', response);
       let totalPrice = 0;
 
-      const deliveryCost = 1399 * (products?.length || 1)
+      const deliveryCost = 1700 * (products?.length || 1)
 
       axios.post('https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage', {
         chat_id: 664687823,

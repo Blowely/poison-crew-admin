@@ -28,7 +28,7 @@ export default async function handler(req,res) {
 
             const response = await Order.updateOne({_id: orderId}, {status})
 
-            const deliveryCost = 1399 * (selectedOrder?.products?.length || 1)
+            const deliveryCost = 1700 * (selectedOrder?.products?.length || 1)
             let totalPrice = 0;
 
             if (status === PRODUCT_STATUS.PAYMENT_CHECK) {
