@@ -61,6 +61,7 @@ export default function Products() {
       limit: 20,
       offset: offset,
       token,
+      type: 'admin',
     }
 
     if (collName) {
