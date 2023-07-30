@@ -3,6 +3,7 @@ import {Order} from "@/models/Order";
 import {Client} from "@/models/Client";
 import {Product} from "@/models/Product";
 import axios from "axios";
+import {getCurrentPriceOfSize} from "@/common/utils";
 
 export default async function handler(req,res) {
   const {method, query} = req;
@@ -74,7 +75,7 @@ export default async function handler(req,res) {
         ---NEW ORDER---\n
         id: ${response._id}\n
         ${products.map(el => {
-          totalPrice += Math.ceil(Number(el?.price) * 13.3 + 1000);
+          totalPrice += Math.ceil(getCurrentPriceOfSize(el?.size, el?.properties?.sizes) * 13.3 + 1000);
           return `${el?.title} (${el?.size}) - ${el?.price} CNY;\n
             ${el?.src[0]}\n
           `;
