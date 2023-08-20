@@ -6,6 +6,7 @@ export const ProductSchema = new Schema({
   country: String,
   price: String,
   initial_price: String,
+  brand: String,
   src: [{type:String}],
   images: [{type:String}],
   category: {type:mongoose.Types.ObjectId, ref:'Category'},
