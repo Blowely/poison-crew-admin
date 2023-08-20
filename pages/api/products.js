@@ -10,7 +10,7 @@ export default async function handle(req, res) {
   if (method === 'GET') {
     try {
       const {phone} = decryptToken(query?.token);
-      const type = query?.type;
+      const queryType = query?.type;
 
       const client = phone ? await Client.findOne({phone}) : null;
       let projection = (client || phone === '79223955429') ? {} : {properties: 0};
@@ -27,11 +27,11 @@ export default async function handle(req, res) {
         const search = query?.search;
 
         const buildRequest = () => {
-          const obj = type === 'admin'
-              ? {}
-              : {
-                price: {$gte: 1}
-              };
+          const obj = {};
+
+          if (queryType !== 'admin') {
+            obj.price = {$gte: 1}
+          }
 
           if (collName && collName !== 'personal' && collName !== 'popular') {
             obj.title = req.query?.collName;
