@@ -96,5 +96,11 @@ export default async function handle(req, res) {
       //await Product.deleteOne({_id:req.query?.id});
       res.json(true);
     }
+    /*await Product.deleteMany({createdAt: {
+        $gte: "2023-08-20T20:38:10.998Z",
+        $lte: "2023-08-20T20:38:11.022Z"
+      }});
+    res.json(true);*/
+
   }
 }
