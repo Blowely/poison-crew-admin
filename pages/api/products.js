@@ -26,7 +26,7 @@ export default async function handle(req, res) {
         const collName = query?.collName;
         const search = query?.search;
 
-        const buildRequest = ({brand}) => {
+        const buildRequest = ({brand = ''}) => {
           const obj = {};
 
           if (queryType !== 'admin') {
@@ -52,10 +52,10 @@ export default async function handle(req, res) {
         if ((collName === 'personal' || collName === 'popular') && !search) {
           //random = Math.floor(Math.random() * count)
 
-          items = await Product.aggregate([{$match: buildRequest()},{ $sample: { size: 20 } }]);
+          items = await Product.aggregate([{$match: buildRequest({})},{ $sample: { size: 20 } }]);
 
         } else {
-          items = await Product.find(buildRequest(), {properties: 0}).skip(req.query?.offset)
+          items = await Product.find(buildRequest({}), {properties: 0}).skip(req.query?.offset)
               .limit(req.query.limit);
           if (!items.length) {
             items = await Product.find(buildRequest({brand: search}), {properties: 0}).skip(req.query?.offset)
@@ -63,7 +63,7 @@ export default async function handle(req, res) {
           }
         }
 
-        totalCount = await Product.count(buildRequest());
+        totalCount = await Product.count(buildRequest({}));
 
         result = {items: items, total_count: totalCount }
       }
@@ -106,8 +106,8 @@ export default async function handle(req, res) {
       res.json(true);
     }
    /* await Product.deleteMany({createdAt: {
-        $gte: "2023-08-20T20:45:38.040Z",
-        $lte: "2023-08-20T20:45:38.064Z"
+        $gte: "2023-08-20T20:53:26.899Z",
+        $lte: "2023-08-20T20:53:29.451Z"
       }});
     res.json(true);*/
 
