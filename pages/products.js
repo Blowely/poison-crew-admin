@@ -187,7 +187,7 @@ export default function Products() {
           <table className="basic mt-2">
             <tbody>
             {products.items?.map(product => (
-              <tr key={product._id} className="flex items-center justify-between">
+              <tr key={product._id} className="flex items-center justify-start gap-2">
                 <td style={{paddingLeft: '0px', paddingRight: 0}}>
                   <img style={{height: 'auto', maxWidth: '150px' }} onClick={() => setModalImageOpen(product.images[0])}
                        src={product.images[0]}/>
