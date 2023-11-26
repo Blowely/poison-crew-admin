@@ -26,7 +26,7 @@ export default async function handle(req, res) {
         const collName = query?.collName;
         const search = query?.search;
 
-        const buildRequest = ({brand = ''}) => {
+        const buildRequest = ({category = ''}) => {
           const obj = {};
 
           if (queryType !== 'admin') {
@@ -41,9 +41,9 @@ export default async function handle(req, res) {
             obj.title = new RegExp('.*' + search + '.*');
           }
 
-          if (brand) {
+          if (category) {
             delete obj.title;
-            obj.brand = new RegExp('.*' + brand + '.*');
+            obj.category = new RegExp('.*' + category + '.*');
           }
 
           return obj;
@@ -57,9 +57,11 @@ export default async function handle(req, res) {
         } else {
           items = await Product.find(buildRequest({}), {properties: 0}).skip(req.query?.offset)
               .limit(req.query.limit);
+
           if (!items.length) {
-            items = await Product.find(buildRequest({brand: search}), {properties: 0}).skip(req.query?.offset)
-                .limit(req.query.limit);
+            items = await Product.find(buildRequest({category: search}), {properties: 0})
+              .skip(req.query?.offset)
+              .limit(req.query.limit);
           }
         }
 
