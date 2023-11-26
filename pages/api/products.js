@@ -57,12 +57,6 @@ export default async function handle(req, res) {
         } else {
           items = await Product.find(buildRequest({}), {properties: 0}).skip(req.query?.offset)
               .limit(req.query.limit);
-
-          if (!items.length) {
-            items = await Product.find(buildRequest({category: search}), {properties: 0})
-              .skip(req.query?.offset)
-              .limit(req.query.limit);
-          }
         }
 
         totalCount = await Product.count(buildRequest({}));
@@ -103,15 +97,38 @@ export default async function handle(req, res) {
   }
 
   if (method === 'DELETE') {
-    if (req.query?.id) {
-      //await Product.deleteOne({_id:req.query?.id});
-      res.json(true);
-    }
+    try {
+      if (req.query?.id) {
+        //await Product.deleteOne({_id:req.query?.id});
+        res.json(true);
+      }
    /* await Product.deleteMany({createdAt: {
-        $gte: "2023-08-20T20:53:26.899Z",
-        $lte: "2023-08-20T20:53:29.451Z"
+        $gte: "2023-08-20T20:53:26.899Z",2023-08-20T22:19:35.142Z
+        $lte: "2023-08-20T20:53:29.451Z"2023-08-20T22:19:35.162Z
       }});
     res.json(true);*/
+
+    //
+    //  const items = await Product.find({createdAt: {
+    //     $gte: "2023-08-20T22:19:35.142Z",
+    //     $lte: "2023-08-20T22:19:35.162Z"
+    //   }});
+    //
+    //  await Promise.all(items.map(async ({_id, title}) => {
+    //    if (title.includes('nike') || title.includes('Nike')) {
+    //      return;
+    //    }
+    //    await Product.findOneAndUpdate({_id}, {title: `nike ${title}`})
+    //  }))
+    //
+    // console.log('items =',items)
+    //
+    // res.json({items});
+    } catch (e) {
+      console.log('e =', e);
+      res.status(500);
+      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
+    }
 
   }
 }
