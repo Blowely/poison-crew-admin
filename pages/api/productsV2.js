@@ -2,6 +2,7 @@ import {Product} from "@/models/Product";
 import {Client} from "@/models/Client";
 import {mongooseConnect} from "@/lib/mongoose";
 import {decryptToken} from "@/utils/utils";
+import {ProductV2} from "@/models/ProductV2";
 
 export default async function handle(req, res) {
   const {method, query} = req;
@@ -50,17 +51,11 @@ export default async function handle(req, res) {
           return obj;
         }
 
-        if ((collName === 'personal' || collName === 'popular') && !search) {
-          //random = Math.floor(Math.random() * count)
 
-          items = await Product.aggregate([{$match: buildRequest({})},{ $sample: { size: 20 } }]);
-
-        } else {
-          items = await Product.find(buildRequest({}), {properties: 0}).skip(req.query?.offset)
+        items = await ProductV2.find(buildRequest({})).skip(req.query?.offset)
               .limit(req.query.limit);
-        }
 
-        totalCount = await Product.count(buildRequest({}));
+        totalCount = await ProductV2.count(buildRequest({}));
 
         result = {items: items, total_count: totalCount }
       }
@@ -76,11 +71,28 @@ export default async function handle(req, res) {
 
   //await isAdminRequest(req,res);
   if (method === 'POST') {
-    const {title,description,price,src, images, category,properties} = req.body;
-    const productDoc = await Product.create({
-      title,description,price,src,images,category,properties,
-    })
-    res.json(productDoc);
+    try {
+      const {titleDescription,src} = req.body;
+
+      const isExist = await ProductV2.findOne({src: src}) || undefined;
+      console.log('isExist',isExist);
+
+      if (isExist) {
+        res.status(402);
+        res.json({status: 'productIsExist', message: 'productIsExist'});
+        return;
+      }
+
+      const productDoc = await ProductV2.create({
+        titleDescription,src
+      })
+      res.status(200);
+      res.json(productDoc);
+    } catch (e) {
+      res.status(500);
+      res.json({status: 'internalServerError', message: e});
+    }
+
   }
 
   if (method === 'PUT') {
