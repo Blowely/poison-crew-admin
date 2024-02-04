@@ -131,7 +131,7 @@ export default function Products() {
             {products.items?.map(product => (
               <tr key={product._id} className="flex items-center justify-start gap-2">
                 <td style={{paddingLeft: '0px', paddingRight: 0}}>
-                  <LinkOutlined onClick={() => window.location.href = product.src}/>
+                  <a href={`${product.src}`} target="_blank">{product.src}</a>
                 </td>
               </tr>
             ))}
