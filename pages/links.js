@@ -41,7 +41,7 @@ export default function Products() {
 
   const buildRequest = useCallback(() => {
     const obj = {
-      limit: 20,
+      limit: 13,
       offset: offset,
       token,
       type: 'admin',
@@ -110,7 +110,7 @@ export default function Products() {
   }
 
   const onPaginationChange = (page) => {
-    const value = page * 20 - 20;
+    const value = page * 13 - 13;
     setOffset(value);
     localStorage.setItem('offset', value.toString());
     localStorage.setItem('page', page.toString());
@@ -140,7 +140,7 @@ export default function Products() {
           <Pagination
             current={Number(lsCurrentPage)}
             total={products.total_count}
-            defaultPageSize={20}
+            defaultPageSize={13}
             showSizeChanger
             showQuickJumper
             showTotal={(total) => `Total ${total} items`}
