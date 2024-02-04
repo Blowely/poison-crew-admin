@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import Link from "next/link";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import axios from "axios";
-import {CopyOutlined, LoadingOutlined} from "@ant-design/icons";
+import {CopyOutlined, LinkOutlined, LoadingOutlined} from "@ant-design/icons";
 import {Modal, notification, Pagination, Select} from "antd";
 import {customUrlBuilder} from "@/common/utils";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
@@ -131,7 +131,7 @@ export default function Products() {
             {products.items?.map(product => (
               <tr key={product._id} className="flex items-center justify-start gap-2">
                 <td style={{paddingLeft: '0px', paddingRight: 0}}>
-                  <a href={`${product.src}`}>{product.src}</a>
+                  <LinkOutlined onClick={() => window.location.href = product.src}/>
                 </td>
               </tr>
             ))}
