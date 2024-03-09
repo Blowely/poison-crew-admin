@@ -131,9 +131,9 @@ export default function Addlink() {
     if (productLink?.length !== 0) {
       axios.post("https://api.re-poizon.ru/api/productsV2", payload)
           .then((res) => {
-            notification.success({message: `${productLink} добавлен`})
+            notification.success({message: `${productLink} добавлен`, duration: 200})
           }).catch((err) => {
-            notification.error({message: `${productLink} не добавлен`})
+            notification.error({message: `${productLink} не добавлен`, duration: 200})
           })
 
     }
