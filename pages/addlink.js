@@ -129,7 +129,7 @@ export default function Addlink() {
     const payload = {src:productLink, titleDescription}
 
     if (productLink?.length !== 0) {
-      axios.post("http://localhost:3000/api/productsV2", payload)
+      axios.post("https://api.re-poizon.ru/api/productsV2", payload)
           .then((res) => {
             notification.success({message: `${productLink} добавлен`})
           }).catch((err) => {
