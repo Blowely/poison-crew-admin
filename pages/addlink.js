@@ -3,7 +3,7 @@ import Link from "next/link";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import {CopyOutlined, LinkOutlined, LoadingOutlined} from "@ant-design/icons";
-import {notification, Pagination, Select} from "antd";
+import {notification, message as messageNotify, Pagination, Select} from "antd";
 import {customUrlBuilder} from "@/common/utils";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import TextArea from "antd/lib/input/TextArea";
@@ -131,9 +131,9 @@ export default function Addlink() {
     if (productLink?.length !== 0) {
       axios.post("https://api.re-poizon.ru/api/productsV2", payload)
           .then((res) => {
-            notification.success({message: `${productLink} добавлен`, duration: 200})
+            messageNotify.success(`${productLink} добавлен`)
           }).catch((err) => {
-            notification.error({message: `${productLink} не добавлен`, duration: 200})
+            messageNotify.error(`${productLink} не добавлен`)
           })
 
     }
