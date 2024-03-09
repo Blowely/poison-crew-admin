@@ -3,10 +3,10 @@ import Link from "next/link";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import {CopyOutlined, LinkOutlined, LoadingOutlined} from "@ant-design/icons";
-import {Modal, notification, Pagination, Select} from "antd";
+import {notification, Pagination, Select} from "antd";
 import {customUrlBuilder} from "@/common/utils";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
-import TextArea from "antd/es/input/TextArea";
+import TextArea from "antd/lib/input/TextArea";
 
 export default function Addlink() {
   const router = useRouter();
