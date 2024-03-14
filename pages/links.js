@@ -41,7 +41,7 @@ export default function Products() {
 
   const buildRequest = useCallback(() => {
     const obj = {
-      limit: 13,
+      limit: 1,
       offset: offset,
       token,
       type: 'admin',
@@ -110,7 +110,7 @@ export default function Products() {
   }
 
   const onPaginationChange = (page) => {
-    const value = page * 13 - 13;
+    const value = page * 1 - 1;
     setOffset(value);
     localStorage.setItem('offset', value.toString());
     localStorage.setItem('page', page.toString());
@@ -130,7 +130,7 @@ export default function Products() {
             <tbody>
             {products.items?.map(product => (
               <tr key={product._id} className="flex items-center justify-start gap-2">
-                <td style={{paddingLeft: '0px', paddingRight: 0}}>
+                <td style={{paddingLeft: '0px', paddingRight: 0}} onClick={() => onPaginationChange(Number(lsCurrentPage) + 1)}>
                   <a href={`${product.src}`} target="_blank">{product.src}</a>
                 </td>
               </tr>
@@ -140,7 +140,7 @@ export default function Products() {
           <Pagination
             current={Number(lsCurrentPage)}
             total={products.total_count}
-            defaultPageSize={13}
+            defaultPageSize={1}
             showSizeChanger
             showQuickJumper
             showTotal={(total) => `Total ${total} items`}
