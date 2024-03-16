@@ -168,7 +168,7 @@ export default function ProductForm({
       for (const file of files) {
         data.append('file', file);
       }
-      const res = await axios.post('/api/recognize', data);
+      const res = await axios.post('/api/recognizeV2', data);
 
       if (res.statusText !== 'OK' && res.status !== 200) {
         return null;

@@ -37,3 +37,11 @@ export const getCurrentPriceOfSize = (size, sizes) => {
 
   return Number(sizes[foundSizeIndex].price);
 }
+
+export function isNumeric(something){
+  return typeof(something) === 'number';
+}
+
+export function isNumber(n){
+  return Number(n)=== n;
+}
