@@ -60,12 +60,71 @@ export default async function handle(req,res) {
     data: JSON.stringify(body),
   };
 
-  const response = await axios(options);
+ /* const response = await axios(options);
 
   const resultBlocksStr = response.data.result;
   fs.writeFileSync('./output.json', JSON.stringify(resultBlocksStr));
 
-  const resArr = resultBlocksStr.split('<br />\r\n');
+  const resArr = resultBlocksStr.split('<br />\r\n');*/
+
+  const resArr = [
+    "¥349 | 约1-3天到",
+    "¥359 | 约5-6天到",
+    "全新微瑕",
+    "95",
+    "¥--",
+    "¥--",
+    "¥1319",
+    "¥--",
+    "46.5",
+    "48",
+    "47.5",
+    "46",
+    "515",
+    "45",
+    "¥999",
+    "¥819",
+    "¥--",
+    "44.5",
+    "44",
+    "43",
+    "¥1099",
+    "¥989",
+    "¥1099",
+    "¥--",
+    "42.5",
+    "42",
+    "41",
+    "40.5",
+    "¥--",
+    "¥--",
+    "¥--",
+    "¥--",
+    "40",
+    "39",
+    "38.5",
+    "38",
+    "¥899",
+    "¥379",
+    "¥359",
+    "¥--",
+    "37.5",
+    "36.5",
+    "36",
+    "35.5",
+    "1 + 为什么",
+    "Go to",
+    "包邮 32.15元/月起 &gt;",
+    "¥359 已选 36♡",
+    "6",
+    "Total 14263 ite",
+    "1d4iKDfQ",
+    "O ✔api.re-poizon.ru/links",
+    "查看尺码表",
+    "100% 20:52",
+    "GLOBE|MegaFon A",
+    "﻿\r\n"
+  ]
 
   const sizes = [];
   const prices = [];
@@ -151,7 +210,7 @@ export default async function handle(req,res) {
     return cheapest;
   }
 
-  resArr.reverse().forEach((el,i,arr) => {
+  resArr.forEach((el,i,arr) => {
     if (!el?.length) {
       return null;
     }
@@ -195,7 +254,7 @@ export default async function handle(req,res) {
 
   const cheapestPrice = getCheapestPrice(prices);
 
-  return res.json({
+  const result = {
     resArr,
     sizes,
     prices,
@@ -203,7 +262,30 @@ export default async function handle(req,res) {
     selectedSizeValue,
     legitCheckPrice,
     cheapestPrice
-  });
+  }
+
+  if (prices.length !== sizes.length) {
+
+    const body = {
+      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710679989883.jpg",
+    }
+
+    const options = {
+      method: 'POST',
+      url: 'http://localhost:3000/api/recognizeV3',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`,
+      },
+      data: JSON.stringify(body),
+    }
+
+    const resV3 = await axios(options).catch(console.log);
+    console.log('resV3',resV3)
+    return res.json(resV3?.data);
+  }
+
+  return res.json(result);
 }
 
 export const config = {
