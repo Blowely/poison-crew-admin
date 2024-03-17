@@ -271,7 +271,7 @@ export default async function handle(req,res) {
     }
 
     const body = {
-      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710704572572.jpg",
+      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710706745049.jpg",
     }
 
     const options = {
