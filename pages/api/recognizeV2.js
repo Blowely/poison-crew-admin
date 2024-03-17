@@ -45,7 +45,7 @@ export default async function handle(req,res) {
   }
 
   const body = {
-    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710662563738.jpg",
+    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710679989883.jpg",
   }
 
   const authToken = '772de3cf3fc2a4594f5676e319a6d2b25605ae1f';
@@ -60,67 +60,12 @@ export default async function handle(req,res) {
     data: JSON.stringify(body),
   };
 
- /* const response = await axios(options);
+  const response = await axios(options);
 
   const resultBlocksStr = response.data.result;
   fs.writeFileSync('./output.json', JSON.stringify(resultBlocksStr));
 
   const resArr = resultBlocksStr.split('<br />\r\n');
-*/
-  const resArr =[
-    "¥989 | 约5-6天到",
-    "5",
-    "40",
-    "W",
-    "¥--",
-    "¥999",
-    "¥819",
-    "¥--",
-    "45",
-    "44.5",
-    "44",
-    "43",
-    "¥1099",
-    "¥989",
-    "¥1099",
-    "¥--",
-    "42.5",
-    "42",
-    "41",
-    "40.5",
-    "40",
-    "长吕",
-    "¥--",
-    "¥--",
-    "¥--",
-    "¥--",
-    "39",
-    "38.5",
-    "38",
-    "¥899",
-    "¥379",
-    "¥359",
-    "¥--",
-    "37.5",
-    "36.5",
-    "36",
-    "35.5",
-    "为什么不",
-    "1 +",
-    "Go to",
-    "7",
-    "Total 14263 ite",
-    "包邮 88.59元/月起&gt; CLIE",
-    "¥989 已选 42 ♡",
-    "查看尺码表",
-    "1d52skyn",
-    "api.re-poizon.ru/links",
-    "。",
-    "出",
-    "081 % 16:01",
-    "GLOBE|MegaFon + A",
-    "﻿\r\n"
-  ]
 
   const sizes = [];
   const prices = [];
@@ -167,18 +112,18 @@ export default async function handle(req,res) {
   }
 
   const getSelectedSizeValue = (el) => {
-    const symbols = el.split(' ')
-    /*const symbols = el.trim().replace(/\s/g, "").split('')
+    const symbols = el.trim().replace(/\s/g, "").split('').reverse()
     let size = '';
+    let sizeLength = el.includes('.') ? 4 : 2;
 
     symbols.forEach((el, i) => {
       const numSymb = Number(el);
-      if (isNumber(numSymb) || el === '.') {
+      if ((isNumber(numSymb) || el === '.') && size.length !== sizeLength) {
         size += symbols[i];
       }
-    })*/
+    })
 
-    return symbols[symbols.length - 2];
+    return size;
   }
 
   const isLinkEndingValue = (arr, i) => {
@@ -199,7 +144,7 @@ export default async function handle(req,res) {
     return cheapest;
   }
 
-  resArr.forEach((el,i,arr) => {
+  resArr.reverse().forEach((el,i,arr) => {
     if (!el?.length) {
       return null;
     }
