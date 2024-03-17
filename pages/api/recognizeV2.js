@@ -45,7 +45,7 @@ export default async function handle(req,res) {
   }
 
   const body = {
-    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710611068903.jpg",
+    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710662563738.jpg",
   }
 
   const authToken = '772de3cf3fc2a4594f5676e319a6d2b25605ae1f';
@@ -60,12 +60,67 @@ export default async function handle(req,res) {
     data: JSON.stringify(body),
   };
 
-  const response = await axios(options);
+ /* const response = await axios(options);
 
   const resultBlocksStr = response.data.result;
   fs.writeFileSync('./output.json', JSON.stringify(resultBlocksStr));
 
   const resArr = resultBlocksStr.split('<br />\r\n');
+*/
+  const resArr =[
+    "¥989 | 约5-6天到",
+    "5",
+    "40",
+    "W",
+    "¥--",
+    "¥999",
+    "¥819",
+    "¥--",
+    "45",
+    "44.5",
+    "44",
+    "43",
+    "¥1099",
+    "¥989",
+    "¥1099",
+    "¥--",
+    "42.5",
+    "42",
+    "41",
+    "40.5",
+    "40",
+    "长吕",
+    "¥--",
+    "¥--",
+    "¥--",
+    "¥--",
+    "39",
+    "38.5",
+    "38",
+    "¥899",
+    "¥379",
+    "¥359",
+    "¥--",
+    "37.5",
+    "36.5",
+    "36",
+    "35.5",
+    "为什么不",
+    "1 +",
+    "Go to",
+    "7",
+    "Total 14263 ite",
+    "包邮 88.59元/月起&gt; CLIE",
+    "¥989 已选 42 ♡",
+    "查看尺码表",
+    "1d52skyn",
+    "api.re-poizon.ru/links",
+    "。",
+    "出",
+    "081 % 16:01",
+    "GLOBE|MegaFon + A",
+    "﻿\r\n"
+  ]
 
   const sizes = [];
   const prices = [];
@@ -97,17 +152,23 @@ export default async function handle(req,res) {
     return el.includes('¥') || el.includes('--');
   }
 
-  const isTableSize = (el) => {
+  const isTableSize = (el, i, arr) => {
     const numberedEl = Number(el);
-    return prices?.length > sizes?.length && isNumeric(numberedEl)
+    return arr[i + 1] !== 'Total'
+      && isNumber(numberedEl)
+      && isNumeric(numberedEl)
+      && el.length > 1
+      && prices.length
+      && !el.includes("\r");
   }
 
   const isSelectedSizeTitle = (el) => {
-    return el.includes('♡') || el.includes('已选');
+    return el.includes('♡');
   }
 
   const getSelectedSizeValue = (el) => {
-    const symbols = el.trim().replace(/\s/g, "").split('')
+    const symbols = el.split(' ')
+    /*const symbols = el.trim().replace(/\s/g, "").split('')
     let size = '';
 
     symbols.forEach((el, i) => {
@@ -115,13 +176,13 @@ export default async function handle(req,res) {
       if (isNumber(numSymb) || el === '.') {
         size += symbols[i];
       }
-    })
+    })*/
 
-    return size;
+    return symbols[symbols.length - 2];
   }
 
   const isLinkEndingValue = (arr, i) => {
-    return arr[i - 1]?.includes('Total');
+    return arr[i + 1]?.includes('link');
   }
 
   const getCheapestPrice = (prices) => {
@@ -138,7 +199,7 @@ export default async function handle(req,res) {
     return cheapest;
   }
 
-  resArr.reverse().forEach((el,i,arr) => {
+  resArr.forEach((el,i,arr) => {
     if (!el?.length) {
       return null;
     }
@@ -155,7 +216,7 @@ export default async function handle(req,res) {
       return prices.push(el.includes('--') ? '--' : Number(el.slice(1)));
     }
 
-    if (isTableSize(el)) {
+    if (isTableSize(el, i, arr)) {
       return sizes.push(el);
     }
 
