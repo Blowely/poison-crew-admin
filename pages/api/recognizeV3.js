@@ -46,7 +46,7 @@ export default async function handle(req,res) {
     }*/
 
     const body = {
-      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710704222581.jpg",
+      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710704572572.jpg",
     }
 
     const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOWEyN2IzYzctMWJlMC00ZTFmLThmZjktMzU5ZjkzZGFhMDFmIiwidHlwZSI6ImFwaV90b2tlbiJ9.wHCh1F-3A4d4stHIIJjF5vURg2vOhvYVpWXjknruJB4';
@@ -122,11 +122,11 @@ export default async function handle(req,res) {
     }
 
     const isSelectedSizeTitle = (el) => {
-      return el.includes('♡');
+      return el.includes('♡') || el.includes('已');
     }
 
     const getSelectedSizeValue = (el) => {
-      const symbols = el.trim().replace(/\s/g, "").split('').reverse()
+      const symbols = el.trim().replace(/\s/g, "").slice(0, -1).split('').reverse()
       let size = '';
       let sizeLength = el.includes('.') ? 4 : 2;
 
@@ -209,7 +209,8 @@ export default async function handle(req,res) {
       selectedLinkEndingValue,
       selectedSizeValue,
       legitCheckPrice,
-      cheapestPrice
+      cheapestPrice,
+      cost: 0.28
     });
   } catch (e) {
     console.log('err =', e);

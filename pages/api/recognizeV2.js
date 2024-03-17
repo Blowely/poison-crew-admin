@@ -174,11 +174,11 @@ export default async function handle(req,res) {
   }
 
   const isSelectedSizeTitle = (el) => {
-    return el.includes('♡');
+    return el.includes('♡') || el.includes('已');
   }
 
   const getSelectedSizeValue = (el) => {
-    const symbols = el.trim().replace(/\s/g, "").split('').reverse()
+    const symbols = el.trim().replace(/\s/g, "").slice(0, -1).split('').reverse()
     let size = '';
     let sizeLength = el.includes('.') ? 4 : 2;
 
@@ -261,7 +261,8 @@ export default async function handle(req,res) {
     selectedLinkEndingValue,
     selectedSizeValue,
     legitCheckPrice,
-    cheapestPrice
+    cheapestPrice,
+    cost: 0.14
   }
 
   if (prices.length !== sizes.length) {
@@ -270,7 +271,7 @@ export default async function handle(req,res) {
     }
 
     const body = {
-      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710704222581.jpg",
+      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710704572572.jpg",
     }
 
     const options = {
