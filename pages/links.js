@@ -55,7 +55,7 @@ export default function Products() {
   }, [offset, collName])
 
   useEffect(() => {
-    axios.get(customUrlBuilder('/api/productsV2', buildRequest())).then(response => {
+    axios.get(customUrlBuilder('/api/productsV3', buildRequest())).then(response => {
       const data = response.data?.items.map(({_id}) => _id).join(',');
       localStorage.setItem('productsList', data);
       setProducts(response.data);
