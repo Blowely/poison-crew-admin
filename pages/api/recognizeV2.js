@@ -281,7 +281,6 @@ export default async function handle(req,res) {
     }
 
     const resV3 = await axios(options).catch(console.log);
-    console.log('resV3',resV3)
     return res.json(resV3?.data);
   }
 

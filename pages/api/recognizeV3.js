@@ -66,7 +66,7 @@ export default async function handle(req,res) {
     };
 
     const response = await axios(options);
-    console.log('response REQV3=',response)
+
     const resultBlocksStr = response.data?.api4ai?.text;
 
     fs.writeFileSync('./output.json', JSON.stringify(resultBlocksStr));
