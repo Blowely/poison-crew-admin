@@ -141,7 +141,7 @@ export default async function handle(req,res) {
     }
 
     const isLinkEndingValue = (arr, i) => {
-      return arr[i + 1]?.includes('link');
+      return arr[i + 1]?.includes('link') || arr[i + 1]?.includes('ru');
     }
 
     const getCheapestPrice = (prices) => {
