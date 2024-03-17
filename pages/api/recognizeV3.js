@@ -46,7 +46,7 @@ export default async function handle(req,res) {
     }*/
 
     const body = {
-      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710679989883.jpg",
+      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710704222581.jpg",
     }
 
     const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOWEyN2IzYzctMWJlMC00ZTFmLThmZjktMzU5ZjkzZGFhMDFmIiwidHlwZSI6ImFwaV90b2tlbiJ9.wHCh1F-3A4d4stHIIJjF5vURg2vOhvYVpWXjknruJB4';
@@ -196,7 +196,7 @@ export default async function handle(req,res) {
     })
 
     const needToChangeSizeIndex = sizes.indexOf(selectedSizeValue)
-    if (needToChangeSizeIndex >= 0) {
+    if (needToChangeSizeIndex >= 0 && prices[needToChangeSizeIndex] !== '--') {
       prices[needToChangeSizeIndex] = legitCheckPrice;
     }
 

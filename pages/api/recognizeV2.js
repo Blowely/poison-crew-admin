@@ -248,7 +248,7 @@ export default async function handle(req,res) {
   })
 
   const needToChangeSizeIndex = sizes.indexOf(selectedSizeValue)
-  if (needToChangeSizeIndex >= 0) {
+  if (needToChangeSizeIndex >= 0 && prices[needToChangeSizeIndex] !== '--') {
     prices[needToChangeSizeIndex] = legitCheckPrice;
   }
 
@@ -265,9 +265,12 @@ export default async function handle(req,res) {
   }
 
   if (prices.length !== sizes.length) {
+    if (sizes.length - prices.length === 3) {
+      return res.json({...result, isNeedRecheck: true });
+    }
 
     const body = {
-      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710679989883.jpg",
+      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710704222581.jpg",
     }
 
     const options = {
