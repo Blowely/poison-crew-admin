@@ -97,14 +97,21 @@ export default async function handle(req,res) {
     return el.includes('¥') || el.includes('--');
   }
 
+  const isFractional = (el) => {
+    return el.includes('.')
+  }
+
   const isTableSize = (el, i, arr) => {
     const numberedEl = Number(el);
+    let isValidLength = el?.length > 2 ? isFractional(el) : true;
+
     return arr[i + 1] !== 'Total'
       && isNumber(numberedEl)
       && isNumeric(numberedEl)
       && el.length > 1
       && prices.length
-      && !el.includes("\r");
+      && !el.includes("\r")
+      && isValidLength
   }
 
   const isSelectedSizeTitle = (el) => {
@@ -123,7 +130,7 @@ export default async function handle(req,res) {
       }
     })
 
-    return size;
+    return size.split('').reverse().join('');
   }
 
   const isLinkEndingValue = (arr, i) => {
