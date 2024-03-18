@@ -42,7 +42,7 @@ export default async function handle(req,res) {
   }
 
   const body = {
-    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710761229740.jpg",
+    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710769266555.jpg",
   }
 
   const authToken = '772de3cf3fc2a4594f5676e319a6d2b25605ae1f';
@@ -134,7 +134,9 @@ export default async function handle(req,res) {
   }
 
   const getSelectedSizeValue = (el) => {
-    const symbols = el.trim().replace(/\s/g, "").slice(0, -1).split('').reverse()
+    //"¥849 已选 黑灰色 36"
+    let symbols = el.trim().replace(/\s/g, "").split('').reverse()
+
     let size = '';
     let sizeLength = el.includes('.') ? 4 : 2;
 
