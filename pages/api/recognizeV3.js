@@ -46,7 +46,7 @@ export default async function handle(req,res) {
     }*/
 
     const body = {
-      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710707424864.jpg",
+      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710752344452.jpg",
     }
 
     const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOWEyN2IzYzctMWJlMC00ZTFmLThmZjktMzU5ZjkzZGFhMDFmIiwidHlwZSI6ImFwaV90b2tlbiJ9.wHCh1F-3A4d4stHIIJjF5vURg2vOhvYVpWXjknruJB4';
@@ -100,7 +100,7 @@ export default async function handle(req,res) {
         return false;
       }
 
-      return el.includes('¥') || el.includes('--');
+      return el.includes('¥') || el.includes('--') || el.includes('\\');
     }
 
     const isFractional = (el) => {
