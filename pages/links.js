@@ -109,7 +109,20 @@ export default function Products() {
     notification.success({message: 'Copied', duration: 1})
   }
 
-  const onPaginationChange = (page) => {
+  const onPaginationChange = (page, src) => {
+    const body = {
+      value: src,
+    }
+
+    const options = {
+      method: 'POST',
+      url: `/api/log?value=${src}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+
+    axios(options).catch(console.log);
     const value = page * 1 - 1;
     setOffset(value);
     localStorage.setItem('offset', value.toString());
@@ -135,7 +148,7 @@ export default function Products() {
             <tbody>
             {products.items?.map(product => (
               <tr key={product._id} className="flex items-center justify-start gap-2">
-                <td style={{paddingLeft: '0px', paddingRight: 0}} onClick={() => onPaginationChange(Number(lsCurrentPage) + 1)}>
+                <td style={{paddingLeft: '0px', paddingRight: 0}} onClick={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}>
                   <a href={`${product.src}`} style={{paddingLeft: 0}} target="_blank">{getSrcEnding(product.src)}</a>
                 </td>
               </tr>
