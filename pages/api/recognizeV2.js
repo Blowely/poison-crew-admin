@@ -42,7 +42,7 @@ export default async function handle(req,res) {
   }
 
   const body = {
-    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710769266555.jpg",
+    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710770194319.jpg",
   }
 
   const authToken = '772de3cf3fc2a4594f5676e319a6d2b25605ae1f';
@@ -160,7 +160,9 @@ export default async function handle(req,res) {
 
   const getCheapestPrice = (prices) => {
     let cheapest = null;
-    const sortedPrices = [...prices].sort();
+    const sortedPrices = [...prices].sort(function (a, b) {
+      return a - b;
+    });
 
     for (let i = 0; i < sortedPrices.length; i++) {
       if (!isNumber(sortedPrices[i])) {
