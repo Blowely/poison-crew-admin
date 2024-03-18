@@ -41,7 +41,7 @@ export default async function handle(req,res) {
     }*/
 
     const body = {
-      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710770194319.jpg",
+      "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710770904581.jpg",
     }
 
     const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOWEyN2IzYzctMWJlMC00ZTFmLThmZjktMzU5ZjkzZGFhMDFmIiwidHlwZSI6ImFwaV90b2tlbiJ9.wHCh1F-3A4d4stHIIJjF5vURg2vOhvYVpWXjknruJB4';
@@ -154,8 +154,8 @@ export default async function handle(req,res) {
     }
 
     const isLinkEndingValue = (arr, i) => {
-      const spaceCheck = arr[i].split(' ');
-      if (arr[i].length !== 8 || spaceCheck.length > 1) {
+      const spaceCheckedEl = arr[i].replace(/\s/g, "");
+      if (spaceCheckedEl.length !== 8) {
         return false
       }
       return arr[i - 1].includes('Total');
@@ -220,7 +220,7 @@ export default async function handle(req,res) {
         if (selectedLinkEndingValue) {
           return;
         }
-        selectedLinkEndingValue = el;
+        selectedLinkEndingValue = el.replace(/\s/g, "");
       }
     })
 
