@@ -1,10 +1,7 @@
 import multiparty from 'multiparty';
-import {PutObjectCommand, S3Client} from '@aws-sdk/client-s3';
 import fs from 'fs';
-import mime from 'mime-types';
 import {mongooseConnect} from "@/lib/mongoose";
 //import {isAdminRequest} from "@/pages/api/auth/[...nextauth]";
-import {getIAM} from "@/yandexService/getIAMToken";
 import axios from "axios";
 import probe from "probe-image-size";
 import {isNumber, isNumeric} from "@/common/utils";
@@ -146,7 +143,11 @@ export default async function handle(req,res) {
   }
 
   const isLinkEndingValue = (arr, i) => {
-    return arr[i + 1]?.includes('link') || arr[i + 1]?.includes('ru');
+    const spaceCheck = arr[i].split(' ');
+    if (arr[i].length !== 8 || spaceCheck.length > 1) {
+      return false
+    }
+    return arr[i - 1].includes('Total');
   }
 
   const getCheapestPrice = (prices) => {
