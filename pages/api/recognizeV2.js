@@ -73,7 +73,7 @@ export default async function handle(req,res) {
   let selectedLinkEndingValue = null;
 
   const isButton = (el,i) => {
-    if (i > 2) {
+    if (i > 8) {
       return false
     }
 
