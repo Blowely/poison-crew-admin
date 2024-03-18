@@ -92,7 +92,14 @@ export default async function handle(req,res) {
 
     const getButtonLegitCheckPrice = (el) => {
       const parts = el.split(' ')//¥399 | 约6-7天到
-      return parts[0];
+
+      for (let part of parts) {
+        if (part.includes('¥')) {
+          return part;
+        }
+      }
+
+      return null;
     }
 
     const isTablePrice = (el) => {

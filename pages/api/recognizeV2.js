@@ -60,71 +60,12 @@ export default async function handle(req,res) {
     data: JSON.stringify(body),
   };
 
- /* const response = await axios(options);
+  const response = await axios(options);
 
   const resultBlocksStr = response.data.result;
   fs.writeFileSync('./output.json', JSON.stringify(resultBlocksStr));
 
-  const resArr = resultBlocksStr.split('<br />\r\n');*/
-
-  const resArr = [
-    "¥349 | 约1-3天到",
-    "¥359 | 约5-6天到",
-    "全新微瑕",
-    "95",
-    "¥--",
-    "¥--",
-    "¥1319",
-    "¥--",
-    "46.5",
-    "48",
-    "47.5",
-    "46",
-    "515",
-    "45",
-    "¥999",
-    "¥819",
-    "¥--",
-    "44.5",
-    "44",
-    "43",
-    "¥1099",
-    "¥989",
-    "¥1099",
-    "¥--",
-    "42.5",
-    "42",
-    "41",
-    "40.5",
-    "¥--",
-    "¥--",
-    "¥--",
-    "¥--",
-    "40",
-    "39",
-    "38.5",
-    "38",
-    "¥899",
-    "¥379",
-    "¥359",
-    "¥--",
-    "37.5",
-    "36.5",
-    "36",
-    "35.5",
-    "1 + 为什么",
-    "Go to",
-    "包邮 32.15元/月起 &gt;",
-    "¥359 已选 36♡",
-    "6",
-    "Total 14263 ite",
-    "1d4iKDfQ",
-    "O ✔api.re-poizon.ru/links",
-    "查看尺码表",
-    "100% 20:52",
-    "GLOBE|MegaFon A",
-    "﻿\r\n"
-  ]
+  const resArr = resultBlocksStr.split('<br />\r\n');
 
   const sizes = [];
   const prices = [];
@@ -145,7 +86,14 @@ export default async function handle(req,res) {
 
   const getButtonLegitCheckPrice = (el) => {
     const parts = el.split(' ')//¥399 | 约6-7天到
-    return parts[0];
+
+    for (let part of parts) {
+      if (part.includes('¥')) {
+        return part;
+      }
+    }
+
+    return null;
   }
 
   const isTablePrice = (el) => {
@@ -210,7 +158,7 @@ export default async function handle(req,res) {
     return cheapest;
   }
 
-  resArr.forEach((el,i,arr) => {
+  resArr.reverse().forEach((el,i,arr) => {
     if (!el?.length) {
       return null;
     }
