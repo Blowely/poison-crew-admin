@@ -42,7 +42,7 @@ export default async function handle(req,res) {
   }
 
   const body = {
-    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710758641994.jpg",
+    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710760682747.jpg",
   }
 
   const authToken = '772de3cf3fc2a4594f5676e319a6d2b25605ae1f';
@@ -91,7 +91,8 @@ export default async function handle(req,res) {
 
     for (let part of parts) {
       if (part.includes('¥')) {
-        return part;
+        const yuanIndex = part.indexOf('¥');
+        return part.substring(yuanIndex);
       }
     }
 
