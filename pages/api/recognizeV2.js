@@ -42,7 +42,7 @@ export default async function handle(req,res) {
   }
 
   const body = {
-    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710770194319.jpg",
+    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710773822020.jpg",
   }
 
   const authToken = '772de3cf3fc2a4594f5676e319a6d2b25605ae1f';
