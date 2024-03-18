@@ -42,7 +42,7 @@ export default async function handle(req,res) {
   }
 
   const body = {
-    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710760682747.jpg",
+    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710761229740.jpg",
   }
 
   const authToken = '772de3cf3fc2a4594f5676e319a6d2b25605ae1f';
@@ -84,6 +84,10 @@ export default async function handle(req,res) {
 
   const isGlobalShoppingCheck = (el) => {
     return el.includes('全球购');
+  }
+
+  const isLegitCheckPriceDiscount = (arr, i) => {
+    return isButton(arr[i + 1]);
   }
 
   const getButtonLegitCheckPrice = (el) => {
@@ -184,6 +188,11 @@ export default async function handle(req,res) {
       if (selectedSizeValue) {
         return;
       }
+
+      if (isLegitCheckPriceDiscount(arr, i)) {
+        return;
+      }
+
       return prices.push(el.includes('--') ? '--' : Number(el.slice(1)));
     }
 
