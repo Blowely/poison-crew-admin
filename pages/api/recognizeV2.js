@@ -45,7 +45,7 @@ export default async function handle(req,res) {
   }
 
   const body = {
-    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710679989883.jpg",
+    "image_url": "https://storage.yandexcloud.net/pc-mediafiles-dev3/1710758641994.jpg",
   }
 
   const authToken = '772de3cf3fc2a4594f5676e319a6d2b25605ae1f';
@@ -71,6 +71,7 @@ export default async function handle(req,res) {
   const prices = [];
 
   let legitCheckPrice = null;
+  let isGlobalShopping = false;
   let selectedSizeValue = null;
   let selectedLinkEndingValue = null;
 
@@ -82,6 +83,10 @@ export default async function handle(req,res) {
     if (el.includes('|') || el.includes('约') || el.includes('天')) {
       return true;
     }
+  }
+
+  const isGlobalShoppingCheck = (el) => {
+    return el.includes('全球购');
   }
 
   const getButtonLegitCheckPrice = (el) => {
@@ -168,6 +173,11 @@ export default async function handle(req,res) {
       return;
     }
 
+    if (isGlobalShoppingCheck(el)) {
+      isGlobalShopping = true;
+      return;
+    }
+
     if (isTablePrice(el)) {
       if (selectedSizeValue) {
         return;
@@ -210,6 +220,7 @@ export default async function handle(req,res) {
     selectedSizeValue,
     legitCheckPrice,
     cheapestPrice,
+    isGlobalShopping,
     cost: 0.14
   }
 
