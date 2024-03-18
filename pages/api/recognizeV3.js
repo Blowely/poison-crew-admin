@@ -131,6 +131,7 @@ export default async function handle(req,res) {
         && prices.length
         && !el.includes("\r")
         && isValidLength
+        && !sizes.includes(el)
     }
 
     const isSelectedSizeTitle = (el) => {
