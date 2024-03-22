@@ -149,7 +149,9 @@ export default function Products() {
             {products.items?.map(product => (
               <tr key={product._id} className="flex items-center justify-start gap-2">
                 <td style={{paddingLeft: '0px', paddingRight: 0}} onClick={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}>
-                  <a href={`${product.src}`} style={{paddingLeft: 0}} target="_blank">{getSrcEnding(product.src)}</a>
+                  <a href={`${product.src}`} style={{paddingLeft: 0, userSelect: "none"}} target="_blank">
+                    {getSrcEnding(product.src)}
+                  </a>
                 </td>
               </tr>
             ))}
@@ -163,6 +165,7 @@ export default function Products() {
             showQuickJumper
             showTotal={(total) => `Total ${total} items`}
             onChange={onPaginationChange}
+            style={{userSelect: "none"}}
           />
         </>
       }
