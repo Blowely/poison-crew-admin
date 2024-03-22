@@ -148,14 +148,13 @@ export default function Products() {
             <tbody>
             {products.items?.map(product => (
               <tr key={product._id} className="flex items-center justify-start gap-2">
-                <td style={{paddingLeft: '0px', paddingRight: 0}} onClick={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}>
+                <td style={{paddingLeft: '0px', paddingRight: 0}}
+                    onClick={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}
+                    onFocus={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}
+                >
                   <a href={`${product.src}`} style={{paddingLeft: 0}} target="_blank">
                     {getSrcEnding(product.src)}
                   </a>
-                </td>
-                <td style={{paddingLeft: '0px', paddingRight: 0}} onClick={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}>
-                  <Button onClick={() => {window.open(product.src)}}>
-                  </Button>
                 </td>
               </tr>
             ))}
