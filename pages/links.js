@@ -159,8 +159,8 @@ export default function Products() {
                 <td style={{paddingLeft: '0px', paddingRight: 0}}
                     onClick={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}
                 >
-                  <Input onFocus={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}>
-                  </Input>
+                  <input onTouchEnd={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}>
+                  </input>
                 </td>
               </tr>
             ))}
