@@ -155,7 +155,6 @@ export default function Products() {
                 </td>
                 <td style={{paddingLeft: '0px', paddingRight: 0}} onClick={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}>
                   <Button onClick={() => {window.open(product.src)}}>
-                    {getSrcEnding(product.src)}
                   </Button>
                 </td>
               </tr>
