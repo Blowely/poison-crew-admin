@@ -153,7 +153,7 @@ export default function Products() {
                     onTouchEnd={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}
                 >
                   <a href={`${product.src}`} style={{paddingLeft: 0}}
-                      target="_blank" />
+                     target="_blank" >{getSrcEnding(product.src)}</a>
                 </td>
               </tr>
             ))}
