@@ -3,7 +3,7 @@ import Link from "next/link";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import {CopyOutlined, LinkOutlined, LoadingOutlined} from "@ant-design/icons";
-import {Button, Modal, notification, Pagination, Select} from "antd";
+import {Button, Input, Modal, notification, Pagination, Select} from "antd";
 import {customUrlBuilder} from "@/common/utils";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
@@ -155,6 +155,12 @@ export default function Products() {
                   <a href={`${product.src}`} style={{paddingLeft: 0}} target="_blank">
                     {getSrcEnding(product.src)}
                   </a>
+                </td>
+                <td style={{paddingLeft: '0px', paddingRight: 0}}
+                    onClick={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}
+                >
+                  <Input onFocus={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}>
+                  </Input>
                 </td>
               </tr>
             ))}
