@@ -110,10 +110,6 @@ export default function Products() {
   }
 
   const onPaginationChange = (page, src) => {
-    const body = {
-      value: src,
-    }
-
     const options = {
       method: 'POST',
       url: `/api/log?value=${src}`,
@@ -127,7 +123,7 @@ export default function Products() {
     setOffset(value);
     localStorage.setItem('offset', value.toString());
     localStorage.setItem('page', page.toString());
-    window.open(`dewulink://m.dewu.com/note?routerUrl=https://dw4.co/t/A/1txUv9Gg`)
+    window.open(`dewulink://m.dewu.com/note?routerUrl=${src}`)
   }
 
   const getSrcEnding = (src) => {
