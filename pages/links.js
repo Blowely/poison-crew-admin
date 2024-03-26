@@ -127,7 +127,7 @@ export default function Products() {
     setOffset(value);
     localStorage.setItem('offset', value.toString());
     localStorage.setItem('page', page.toString());
-    window.open(`dewulink://m.dewu.com/note?routerUrl=https%3A%2F%2Fm.poizon.com%2Frouter%2Fproduct%2FProductDetail%3FloadUrl%3Dhttps%253A%252F%252Fm.dewu.com%252Frouter%252Fproduct%252FProductDetail%26skuId%3D647443429%26spuId%3D8079801%26from%3D%26sourceName%3DshareDetail%26distributionCode%3D%26share_platform_title%3D7%26outside_channel_type%3D0%26sellingPointAb%3D0%26fromUserId%3Dd58f7d439f7c3698b497be3abca93169%26phone_os%3Dwindows%26browser_name%3Dother%26m_brand%3Dother%26eFrom%3Dhttps%253A%252F%252Fcdn-m.dewu.com%252Frouter%252Fproduct%252FProductDetail%253FspuId%253D8079801%2526sourceName%253DshareDetail%2526outside_channel_type%253D0%2526share_platform_title%253D7%2526fromUserId%253Dd58f7d439f7c3698b497be3abca93169%2526skuId%253D647443429&distributionCode=&evokeType=topLocation&directFrom=cdn-m.dewu.com`)
+    window.open(`dewulink://m.dewu.com/note?routerUrl=https://dw4.co/t/A/1txUv9Gg`)
   }
 
   const getSrcEnding = (src) => {
