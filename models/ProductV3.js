@@ -6,10 +6,11 @@ export const ProductV3Schema = new Schema({
   titleDescription: String,
   country: String,
   price: Number,
-  initial_price: String,
+  cheapestPrice: Number,
   brand: String,
   src: String,
   images: [{type:String}],
+  sizesAndPrices: [{type:Object}],
   category: {type:mongoose.Types.ObjectId, ref:'Category'},
   properties: {type:Object},
 }, {
