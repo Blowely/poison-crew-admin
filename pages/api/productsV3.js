@@ -98,11 +98,22 @@ export default async function handle(req, res) {
 
   if (method === 'PUT') {
     try {
-      const {title,description,price,src, images,category,properties,sizesAndPrices, cheapestPrice, _id} = req.body;
-      await ProductV3.updateOne({_id}, {title,description,price,src,images,category,properties, sizesAndPrices, cheapestPrice});
+      const {title,description,price,src, images,category,properties,sizesAndPrices, cheapestPrice, sizeInfoList, _id} = req.body;
+      await ProductV3.updateOne({_id}, {
+        title,
+        description,
+        price,
+        src,
+        images,
+        category,
+        properties,
+        sizesAndPrices,
+        cheapestPrice,
+        sizeInfoList
+      });
 
       res.status(200);
-      res.json(true);
+      res.json({answer: true});
     } catch (e) {
       console.log('e =', e);
       res.status(500);

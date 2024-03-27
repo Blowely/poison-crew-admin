@@ -11,6 +11,7 @@ export const ProductV3Schema = new Schema({
   src: String,
   images: [{type:String}],
   sizesAndPrices: [{type:Object}],
+  sizeInfoList: [{type:Object}],
   category: {type:mongoose.Types.ObjectId, ref:'Category'},
   properties: {type:Object},
 }, {
