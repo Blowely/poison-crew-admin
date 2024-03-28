@@ -98,8 +98,7 @@ export default async function handle(req, res) {
 
   if (method === 'PUT') {
     try {
-      const {title,description,price,src, images,category,properties,sizesAndPrices, cheapestPrice, sizeInfoList, _id} = req.body;
-      await ProductV3.updateOne({_id}, {
+      const {
         title,
         description,
         price,
@@ -109,11 +108,30 @@ export default async function handle(req, res) {
         properties,
         sizesAndPrices,
         cheapestPrice,
-        sizeInfoList
+        sizeInfoList,
+        _id,
+        spuId,
+        isDeleted
+      } = req.body;
+
+      const filter = !!_id ? {_id} : {spuId}
+      const response = await ProductV3.updateOne(filter, {
+        spuId,
+        title,
+        description,
+        price,
+        src,
+        images,
+        category,
+        properties,
+        sizesAndPrices,
+        cheapestPrice,
+        sizeInfoList,
+        isDeleted
       });
 
       res.status(200);
-      res.json({answer: true});
+      res.json({answer: response.data});
     } catch (e) {
       console.log('e =', e);
       res.status(500);

@@ -1,6 +1,7 @@
 import mongoose, {model, Schema, models} from "mongoose";
 
 export const ProductV3Schema = new Schema({
+  spuId: Number,
   title: String,
   description: String,
   titleDescription: String,
@@ -14,6 +15,7 @@ export const ProductV3Schema = new Schema({
   sizeInfoList: [{type:Object}],
   category: {type:mongoose.Types.ObjectId, ref:'Category'},
   properties: {type:Object},
+  isDeleted: Boolean
 }, {
   timestamps: true,
 });
