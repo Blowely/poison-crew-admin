@@ -1,9 +1,42 @@
-import {Product} from "@/models/Product";
 import {Client} from "@/models/Client";
 import {mongooseConnect} from "@/lib/mongoose";
 import {decryptToken} from "@/utils/utils";
 import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
+import axios from "axios";
+import async from "async";
+import {exec} from "child_process";
+
+const phoneApi = 'http://192.168.1.102:8015';
+const ahkScriptPath = 'C:/Users/User/Desktop/ahk/parseProductsGoBackToServer.exe';
+
+const visitProduct = async (src, callback) => {
+  const response = await axios(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${src}`);
+
+  if (!response) {return;}
+
+  exec(`"${ahkScriptPath}"`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Ошибка при выполнении скрипта: ${error}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+    console.error(`stderr: ${stderr}`);
+    callback()
+  });
+}
+
+
+// Создание очереди задач с лимитом параллельного выполнения
+const queue = async.queue(async (task, callback) => {
+  // Здесь происходит выполнение API метода
+  await visitProduct(task.src, callback);
+}, 1); // Одновременно выполняется только одна задача
+
+// Функция для добавления задачи в очередь
+function addToQueue(src) {
+  queue.push({ src });
+}
 
 export default async function handle(req, res) {
   const {method, query} = req;
@@ -19,47 +52,20 @@ export default async function handle(req, res) {
 
       let items = [];
       let totalCount = undefined;
-      let result = [];
+      let result = undefined;
 
       if (req.query?.id) {
         result = await ProductV3.findOne({_id: req.query.id}, projection);
-      } else {
-
-        const collName = query?.collName;
-        const search = query?.search;
-
-        const buildRequest = ({category = ''}) => {
-          const obj = {};
-
-          if (collName && collName !== 'personal' && collName !== 'popular') {
-            obj.title = new RegExp('.*' + req.query?.collName + '.*');
-          }
-
-          if (search) {
-            obj.title = new RegExp('.*' + search + '.*');
-          }
-
-          if (category) {
-            delete obj.title;
-            obj.category = new RegExp('.*' + category + '.*');
-          }
-
-          if (queryType !== 'admin') {
-            obj.price = {$gt: 1}
-          }
-
-          console.log('obj',obj);
-          return obj;
-        }
-
-
-        items = await ProductV3.find(buildRequest({})).skip(req.query?.offset)
-              .limit(req.query.limit);
-
-        totalCount = await ProductV3.count(buildRequest({}));
-
-        result = {items: items, total_count: totalCount }
       }
+
+      const src = result?.src;
+      const res = await visitProduct(src);
+
+      const id = req.body;
+      addToQueue(src); // Добавление запроса в очередь
+      res.send('Request added to queue.');
+
+
 
       res.status(200);
       res.json(result);
