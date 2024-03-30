@@ -6,8 +6,9 @@ import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
 import async from "async";
 import {exec} from "child_process";
+import { setTimeout } from "timers/promises";
 
-const phoneApi = 'http://192.168.1.102:8015';
+const phoneApi = 'http://192.168.1.99:8015';
 const ahkScriptPath = 'C:/Users/User/Desktop/ahk/parseProductsGoBackToServer.exe';
 
 const visitProduct = async (src, callback) => {
@@ -22,8 +23,9 @@ const visitProduct = async (src, callback) => {
     }
     console.log(`stdout: ${stdout}`);
     console.error(`stderr: ${stderr}`);
-    callback()
+    //callback()
   });
+  await setTimeout(15000);
 }
 
 
@@ -59,9 +61,7 @@ export default async function handle(req, res) {
       }
 
       const src = result?.src;
-      const res = await visitProduct(src);
 
-      const id = req.body;
       addToQueue(src); // Добавление запроса в очередь
       res.send('Request added to queue.');
 
