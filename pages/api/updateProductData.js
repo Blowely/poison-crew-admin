@@ -6,39 +6,27 @@ import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
 import async from "async";
 import {exec} from "child_process";
-import { setTimeout } from "timers/promises";
 
-const phoneApi = 'http://192.168.1.99:8015';
+const phoneApi = 'http://192.168.1.99:8016';
 const ahkScriptPath = 'C:/Users/User/Desktop/ahk/parseProductsGoBackToServer.exe';
 
-const visitProduct = async (src, callback) => {
-  const response = await axios(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${src}`);
+// Создание очереди задач с лимитом параллельного выполнения
+const queue = async.queue((task, callback) => {
+  const response = axios(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${task.src}`);
 
   if (!response) {return;}
 
-  exec(`"${ahkScriptPath}"`, (error, stdout, stderr) => {
+  // Выполнение AHK скрипта
+  exec(ahkScriptPath, (error, stdout, stderr) => {
     if (error) {
-      console.error(`Ошибка при выполнении скрипта: ${error}`);
-      return;
+      console.error(`Error executing AHK script: ${error}`);
+    } else {
+      console.log(`AHK script executed successfully. Output: ${stdout}`);
     }
-    console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
-    //callback()
+    // Вызываем callback для завершения задачи
+    callback();
   });
-  await setTimeout(15000);
-}
-
-
-// Создание очереди задач с лимитом параллельного выполнения
-const queue = async.queue(async (task, callback) => {
-  // Здесь происходит выполнение API метода
-  await visitProduct(task.src, callback);
-}, 1); // Одновременно выполняется только одна задача
-
-// Функция для добавления задачи в очередь
-function addToQueue(src) {
-  queue.push({ src });
-}
+}, 1);
 
 export default async function handle(req, res) {
   const {method, query} = req;
@@ -49,20 +37,26 @@ export default async function handle(req, res) {
       const {phone} = decryptToken(query?.token);
       const queryType = query?.type;
 
-      const client = phone ? await Client.findOne({phone}) : null;
-      let projection = (client || phone === '79223955429') ? {} : {properties: 0};
+      //const client = phone ? await Client.findOne({phone}) : null;
+      //let projection = (client || phone === '79223955429') ? {} : {properties: 0};
 
       let items = [];
       let totalCount = undefined;
       let result = undefined;
 
       if (req.query?.id) {
-        result = await ProductV3.findOne({_id: req.query.id}, projection);
+        result = await ProductV3.findOne({_id: req.query.id}, {});
       }
 
       const src = result?.src;
 
-      addToQueue(src); // Добавление запроса в очередь
+      queue.push({ src }, (err) => {
+        if (err) {
+          console.error(`Error adding task to the queue: ${err}`);
+        } else {
+          console.log(`Task added to the queue: ${ahkScriptPath}`);
+        }
+      });
       res.send('Request added to queue.');
 
 
