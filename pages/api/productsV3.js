@@ -4,7 +4,9 @@ import {mongooseConnect} from "@/lib/mongoose";
 import {decryptToken} from "@/utils/utils";
 import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
+import axios from "axios";
 
+const updateProductDataUrl = 'http://localhost:3000/api/updateProductData';
 export default async function handle(req, res) {
   const {method, query} = req;
   await mongooseConnect();
@@ -21,8 +23,12 @@ export default async function handle(req, res) {
       let totalCount = undefined;
       let result = [];
 
+      console.log('req.query?.id',req.query?.id)
       if (req.query?.id) {
+        const productId = req.query?.id
         result = await ProductV3.findOne({_id: req.query.id}, projection);
+        //console.log('result1 =',result)
+        await axios(`${updateProductDataUrl}?id=${productId}&token${query?.token}`)
       } else {
 
         const collName = query?.collName;
@@ -44,9 +50,9 @@ export default async function handle(req, res) {
             obj.category = new RegExp('.*' + category + '.*');
           }
 
-          if (queryType !== 'admin') {
-            obj.price = {$gt: 1}
-          }
+          // if (queryType !== 'admin') {
+          //   obj.price = {$gt: 1}
+          // }
 
           console.log('obj',obj);
           return obj;

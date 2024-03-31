@@ -4,29 +4,34 @@ import {decryptToken} from "@/utils/utils";
 import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
-import async from "async";
 import {exec} from "child_process";
+import PQueue from 'p-queue';
+import { setTimeout } from "timers/promises";
 
 const phoneApi = 'http://192.168.1.99:8016';
 const ahkScriptPath = 'C:/Users/User/Desktop/ahk/parseProductsGoBackToServer.exe';
 
 // Создание очереди задач с лимитом параллельного выполнения
-const queue = async.queue((task, callback) => {
-  const response = axios(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${task.src}`);
 
-  if (!response) {return;}
 
-  // Выполнение AHK скрипта
-  exec(ahkScriptPath, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing AHK script: ${error}`);
-    } else {
-      console.log(`AHK script executed successfully. Output: ${stdout}`);
-    }
-    // Вызываем callback для завершения задачи
-    callback();
+const queue = new PQueue({ concurrency: 1 });
+
+function runAHKScript(src) {
+  return new Promise((resolve, reject) => {
+    const response = axios(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${src}`);
+
+    exec(ahkScriptPath, async (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing AHK script: ${error}`);
+        reject(error);
+      } else {
+        console.log(`AHK script executed successfully. Output: ${stdout}`);
+        await setTimeout(2000)
+        resolve();
+      }
+    });
   });
-}, 1);
+}
 
 export default async function handle(req, res) {
   const {method, query} = req;
@@ -50,16 +55,8 @@ export default async function handle(req, res) {
 
       const src = result?.src;
 
-      queue.push({ src }, (err) => {
-        if (err) {
-          console.error(`Error adding task to the queue: ${err}`);
-        } else {
-          console.log(`Task added to the queue: ${ahkScriptPath}`);
-        }
-      });
+      queue.add(() => runAHKScript(src));
       res.send('Request added to queue.');
-
-
 
       res.status(200);
       res.json(result);

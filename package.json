@@ -33,6 +33,7 @@
     "next": "13.2.3",
     "next-auth": "^4.20.1",
     "node-jose": "^2.2.0",
+    "p-queue": "^8.0.1",
     "postcss": "^8.4.21",
     "probe-image-size": "^7.2.3",
     "react": "18.2.0",
