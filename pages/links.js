@@ -38,7 +38,6 @@ export default function Products() {
 
   const [offset, setOffset] = useState(lsOffset || 0);
 
-
   const buildRequest = useCallback(() => {
     const obj = {
       limit: 1,
