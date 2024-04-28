@@ -8,7 +8,7 @@ import {exec} from "child_process";
 import PQueue from 'p-queue';
 import { setTimeout } from "timers/promises";
 
-const phoneApi = 'http://192.168.1.99:8016';
+const phoneApi = 'http://192.168.0.8:8016';
 const ahkScriptPath = 'C:/Users/User/Desktop/ahk/parseProductsGoBackToServer.exe';
 
 // Создание очереди задач с лимитом параллельного выполнения

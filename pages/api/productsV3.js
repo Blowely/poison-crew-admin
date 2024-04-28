@@ -27,7 +27,7 @@ export default async function handle(req, res) {
       if (req.query?.id) {
         const productId = req.query?.id
         result = await ProductV3.findOne({_id: req.query.id}, projection);
-        //console.log('result1 =',result)
+
         await axios(`${updateProductDataUrl}?id=${productId}&token${query?.token}`)
       } else {
 
@@ -38,11 +38,11 @@ export default async function handle(req, res) {
           const obj = {};
 
           if (collName && collName !== 'personal' && collName !== 'popular') {
-            obj.title = new RegExp('.*' + req.query?.collName + '.*');
+            obj.title = new RegExp(req.query?.collName, "i");
           }
 
           if (search) {
-            obj.title = new RegExp('.*' + search + '.*');
+            obj.title = new RegExp(search, "i");
           }
 
           if (category) {
