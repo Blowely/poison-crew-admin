@@ -26,7 +26,7 @@ function runAHKScript(src) {
         reject(error);
       } else {
         console.log(`AHK script executed successfully. Output: ${stdout}`);
-        await setTimeout(2000)
+        await setTimeout(2500)
         resolve();
       }
     });
