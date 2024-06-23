@@ -128,12 +128,16 @@ export default function Addlink() {
 
     const payload = {src:productLink, titleDescription}
 
+
     if (productLink?.length !== 0) {
       axios.post("https://api.re-poizon.ru/api/productsV3", payload)
           .then((res) => {
-            messageNotify.success(`${productLink} добавлен`)
+            setSrc(productLink);
+            setTimeout(() => setSrc(''), 200)
+            //messageNotify.success(`${productLink} добавлен`)
           }).catch((err) => {
-            messageNotify.error(`${productLink} не добавлен`)
+            setSrc('');
+            //messageNotify.error(`${productLink} не добавлен`)
           })
 
     }

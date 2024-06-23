@@ -6,7 +6,7 @@ import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
 
-const updateProductDataUrl = 'http://localhost:3000/api/updateProductData';
+const updateProductDataUrl = 'https://a66c-2a03-d000-3108-9a36-891c-446a-15ae-384c.ngrok-free.app/api/updateProductData';
 export default async function handle(req, res) {
   const {method, query} = req;
   await mongooseConnect();
