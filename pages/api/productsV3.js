@@ -6,7 +6,7 @@ import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
 
-const updateProductDataUrl = 'https://a66c-2a03-d000-3108-9a36-891c-446a-15ae-384c.ngrok-free.app/api/updateProductData';
+const updateProductDataUrl = 'https://3fd8-91-236-247-161.ngrok-free.app/api/updateProductData';
 export default async function handle(req, res) {
   const {method, query} = req;
   await mongooseConnect();
@@ -26,9 +26,11 @@ export default async function handle(req, res) {
       console.log('req.query?.id',req.query?.id)
       if (req.query?.id) {
         const productId = req.query?.id
-        result = await ProductV3.findOne({_id: req.query.id}, projection);
+        result = await ProductV3.findOne({_id: productId}, projection);
+        console.log('res =',result);
 
-        await axios(`${updateProductDataUrl}?id=${productId}&token${query?.token}`)
+        await axios(`${updateProductDataUrl}?src=${result?.src}&token=${query?.token}`)
+          .catch(() => console.log('updateProductFailed'));
       } else {
 
         const collName = query?.collName;
