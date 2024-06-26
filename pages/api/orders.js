@@ -1,9 +1,9 @@
 import {mongooseConnect} from "@/lib/mongoose";
 import {Order} from "@/models/Order";
 import {Client} from "@/models/Client";
-import {Product} from "@/models/Product";
 import axios from "axios";
 import {getCurrentPriceOfSize} from "@/common/utils";
+import {ProductV3} from "@/models/ProductV3";
 
 export default async function handler(req,res) {
   const {method, query} = req;
@@ -36,7 +36,7 @@ export default async function handler(req,res) {
       const {clientId, products, address} = JSON.parse(req.body);
 
       const client = await Client.findOne({_id: clientId});
-      const selectedProducts = await Product.find({
+      const selectedProducts = await ProductV3.find({
         _id: {
           $in: products.map(el => el._id)
         }}
@@ -99,7 +99,7 @@ export default async function handler(req,res) {
 
       const order = await Order.findOne({_id});
       const products = order?.products;
-      const newProduct = await Product.findOne({_id: products[0]._id});
+      const newProduct = await ProductV3.findOne({_id: products[0]._id});
       const copyNewProduct = JSON.parse(JSON.stringify(newProduct));
       copyNewProduct.size = products[0]?.size
 
