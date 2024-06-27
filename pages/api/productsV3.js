@@ -24,12 +24,15 @@ export default async function handle(req, res) {
       let result = [];
 
       console.log('req.query?.id',req.query?.id)
-      if (req.query?.id) {
-        const productId = req.query?.id
-        result = await ProductV3.findOne({_id: productId}, projection);
-        console.log('res =',result);
+      if (req.query?.id || req.query?.src) {
+        if (req.query?.id) {
+          const productId = req.query?.id
+          result = await ProductV3.findOne({_id: productId}, projection);
+          console.log('res =',result);
+        }
 
-        await axios(`${updateProductDataUrl}?src=${result?.src}&token=${query?.token}`)
+
+        await axios(`${updateProductDataUrl}?src=${result?.src || req.query?.src}&token=${query?.token}`)
           .catch(() => console.log('updateProductFailed'));
       } else {
 
