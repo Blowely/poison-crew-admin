@@ -24,15 +24,9 @@ export default async function handle(req, res) {
       let result = [];
 
       if (req.query?.id || req.query?.src) {
-        if (req.query?.id) {
-          const productId = req.query?.id
-          result = await ProductV3.findOne({_id: productId}, projection);
-          axios(`${updateProductDataUrl}?src=${req.query?.src || result?.src}&token=${query?.token}`)
-            .catch(() => console.log('updateProductFailed'));
-          console.log('res =',result);
-        } else if (req.query?.src) {
+        if (req.query?.src) {
           const src = req.query?.src;
-          axios(`${updateProductDataUrl}?src=${req.query?.src || result?.src}&token=${query?.token}`)
+          axios(`${updateProductDataUrl}?src=${src}&token=${query?.token}`)
             .catch(() => console.log('updateProductFailed'));
           console.log('src =',src)
           const productData = await ProductV3.find({src});
@@ -40,6 +34,12 @@ export default async function handle(req, res) {
 
           return res.status(200).json(productData);
         }
+
+        const productId = req.query?.id
+        result = await ProductV3.findOne({_id: productId}, projection);
+        axios(`${updateProductDataUrl}?src=${result?.src}&token=${query?.token}`)
+          .catch(() => console.log('updateProductFailed'));
+        console.log('res =',result);
       } else {
 
         const collName = query?.collName;
