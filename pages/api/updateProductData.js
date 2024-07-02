@@ -8,8 +8,8 @@ import {exec} from "child_process";
 import PQueue from 'p-queue';
 import { setTimeout } from "timers/promises";
 
-const phoneApi = 'http://192.168.0.8:8016';
-const ahkScriptPath = 'C:/Users/User/Desktop/ahk/parseProductsGoBackToServer.exe';
+const phoneApi = 'http://192.168.1.205:8016';
+const ahkScriptPath = '"C:/Users/Azerty/Desktop/ahk/parseProductsGoBackToServer.exe"';
 
 // Создание очереди задач с лимитом параллельного выполнения
 
@@ -39,7 +39,7 @@ export default async function handle(req, res) {
 
   if (method === 'GET') {
     try {
-      const {phone} = decryptToken(query?.token);
+      //const {phone} = decryptToken(query?.token);
       const queryType = query?.type;
 
       //const client = phone ? await Client.findOne({phone}) : null;
@@ -49,17 +49,14 @@ export default async function handle(req, res) {
       let totalCount = undefined;
       let result = undefined;
 
-      if (req.query?.id) {
-        result = await ProductV3.findOne({_id: req.query.id}, {});
-      }
-
-      const src = result?.src;
+      const src = req.query?.src;
+      console.log('src =',src);
 
       queue.add(() => runAHKScript(src));
+
+
       res.send('Request added to queue.');
 
-      res.status(200);
-      res.json(result);
     } catch (e) {
       console.log('e =', e);
       res.status(500);
@@ -160,7 +157,7 @@ export default async function handle(req, res) {
     //
     // res.json({items});
     } catch (e) {
-      console.log('e =', e);
+      console.log('e =11', e);
       res.status(500);
       res.json({status: 'internalServerError', message: 'Ошибка сервера'});
     }
@@ -195,7 +192,7 @@ export default async function handle(req, res) {
 
       res.json({items});
     } catch (e) {
-      console.log('e =', e);
+      console.log('e =12', e);
       res.status(500);
       res.json({status: 'internalServerError', message: 'Ошибка сервера'});
     }
