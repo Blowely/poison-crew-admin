@@ -126,6 +126,9 @@ export default function Products() {
   }
 
   const getSrcEnding = (src) => {
+    if (!src) {
+      return;
+    }
     const parts = src?.split('/');
     return parts[parts?.length - 1];
   }
@@ -145,10 +148,10 @@ export default function Products() {
             {products.items?.map(product => (
               <tr key={product._id} className="flex items-center justify-start gap-2">
                 <td style={{paddingLeft: '0px', paddingRight: 0}}
-                    onTouchEnd={() => onPaginationChange(Number(lsCurrentPage) + 1, product.src)}
+                    onTouchEnd={() => onPaginationChange(Number(lsCurrentPage) + 1, product?.src)}
                 >
-                  <a href={`${product.src}`} style={{paddingLeft: 0}}
-                     target="_blank" >{getSrcEnding(product.src)}</a>
+                  <a href={`${product?.src}`} style={{paddingLeft: 0}}
+                     target="_blank" >{getSrcEnding(product?.src)}</a>
                 </td>
               </tr>
             ))}
