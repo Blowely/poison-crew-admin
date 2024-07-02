@@ -84,7 +84,7 @@ export default async function handle(req, res) {
 
       const lastEl = await ProductV3.find().sort({_id:-1}).limit(1);
 
-      if (lastEl?.spuId) {
+      if (lastEl[0]?.spuId) {
         return res.status(200).send('Last element is up to date');
       }
 
