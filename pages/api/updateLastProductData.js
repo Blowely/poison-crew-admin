@@ -88,7 +88,7 @@ export default async function handle(req, res) {
         return res.status(200).send('Last element is up to date');
       }
 
-      const response = await ProductV3.updateOne({_id:  lastEl._id}, {
+      const response = await ProductV3.updateOne({_id:  lastEl[0]._id}, {
         spuId,
         title,
         description,
