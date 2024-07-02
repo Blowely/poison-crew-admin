@@ -8,8 +8,8 @@ import {exec} from "child_process";
 import PQueue from 'p-queue';
 import { setTimeout } from "timers/promises";
 
-const phoneApi = 'http://192.168.0.8:8016';
-const ahkScriptPath = 'C:/Users/User/Desktop/ahk/parseProductsGoBackToServer.exe';
+const phoneApi = 'http://192.168.1.205:8016';
+const ahkScriptPath = '"C:/Users/Azerty/Desktop/ahk/parseProductsGoBackToServer.exe"';
 
 // Создание очереди задач с лимитом параллельного выполнения
 
@@ -36,6 +36,33 @@ function runAHKScript(src) {
 export default async function handle(req, res) {
   const {method, query} = req;
   await mongooseConnect();
+
+  if (method === 'GET') {
+    try {
+      //const {phone} = decryptToken(query?.token);
+      const queryType = query?.type;
+
+      //const client = phone ? await Client.findOne({phone}) : null;
+      //let projection = (client || phone === '79223955429') ? {} : {properties: 0};
+
+      let items = [];
+      let totalCount = undefined;
+      let result = undefined;
+
+      const src = req.query?.src;
+      console.log('src =',src);
+
+      queue.add(() => runAHKScript(src));
+
+
+      res.send('Request added to queue.');
+
+    } catch (e) {
+      console.log('e =', e);
+      res.status(500);
+      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
+    }
+  }
 
   if (method === 'PUT') {
     try {
