@@ -127,7 +127,7 @@ export default function Products() {
 
   const getSrcEnding = (src) => {
     const parts = src?.split('/');
-    return parts[parts.length - 1];
+    return parts[parts?.length - 1];
   }
 
   return (
