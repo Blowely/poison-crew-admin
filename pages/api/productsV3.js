@@ -6,7 +6,7 @@ import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
 
-const updateProductDataUrl = 'http://localhost:3000/api/updateProductData';
+const updateProductDataUrl = 'https://110e-91-236-247-241.ngrok-free.app/api/updateProductData';
 export default async function handle(req, res) {
   const {method, query} = req;
   await mongooseConnect();
@@ -23,12 +23,23 @@ export default async function handle(req, res) {
       let totalCount = undefined;
       let result = [];
 
-      console.log('req.query?.id',req.query?.id)
-      if (req.query?.id) {
-        const productId = req.query?.id
-        result = await ProductV3.findOne({_id: req.query.id}, projection);
+      if (req.query?.id || req.query?.src) {
+        if (req.query?.src) {
+          const src = req.query?.src;
+          axios(`${updateProductDataUrl}?src=${src}&token=${query?.token}`)
+            .catch(() => console.log('updateProductFailed'));
+          console.log('src =',src)
+          const productData = await ProductV3.find({src});
+          console.log('productData =',productData);
 
-        await axios(`${updateProductDataUrl}?id=${productId}&token${query?.token}`)
+          return res.status(200).json(productData);
+        }
+
+        const productId = req.query?.id
+        result = await ProductV3.findOne({_id: productId}, projection);
+        axios(`${updateProductDataUrl}?src=${result?.src}&token=${query?.token}`)
+          .catch(() => console.log('updateProductFailed'));
+        console.log('res =',result);
       } else {
 
         const collName = query?.collName;
@@ -133,7 +144,7 @@ export default async function handle(req, res) {
         cheapestPrice,
         sizeInfoList,
         isDeleted
-      });
+      },{upsert:true});
 
       res.status(200);
       res.json({answer: response.data});
