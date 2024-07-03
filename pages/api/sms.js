@@ -18,7 +18,7 @@ export default async function handle(req, res) {
 
       const email = 'moviefokll@gmail.com'
       const apiKey = 'YHlsgo25Cs_zmFlRAyCuj8RMMauF8Za-'
-      const uri = `https://gate.smsaero.ru/v2/sms/send`;
+      const uri = `https://${email + ':' + apiKey}@gate.smsaero.ru/v2/sms/send`;
 
       let url = [
         `${uri}`,
@@ -30,9 +30,6 @@ export default async function handle(req, res) {
       await axios({
         method: 'GET',
         url: url,
-        headers: {
-          'Authorization': `Basic ${btoa(email + ':' + apiKey)}`,
-        },
       });
 
       const token = btoa(`${phone}:${code}`);
