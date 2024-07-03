@@ -80,34 +80,11 @@ export default async function handle(req, res) {
         isDeleted
       } = req.body;
 
-      // Update last product
-
-      const lastEl = await ProductV3.find().sort({_id:-1}).limit(1);
-
-      if (lastEl[0]?.spuId) {
-        await ProductV3.updateOne({spuId}, {
-          spuId,
-          title,
-          description,
-          price,
-          images,
-          category,
-          properties,
-          sizesAndPrices,
-          cheapestPrice,
-          sizeInfoList,
-          isDeleted
-        });
-
-        return res.status(200).send('Last element is up to date');
-      }
-
-      const response = await ProductV3.updateOne({_id:  lastEl[0]._id}, {
+      const response = await ProductV3.updateOne({spuId}, {
         spuId,
         title,
         description,
         price,
-        src: lastEl.src,
         images,
         category,
         properties,

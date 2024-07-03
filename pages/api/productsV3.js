@@ -90,19 +90,19 @@ export default async function handle(req, res) {
   //await isAdminRequest(req,res);
   if (method === 'POST') {
     try {
-      const {titleDescription,src} = req.body;
+      const {titleDescription,src, spuId} = req.body;
 
-      const isExist = await ProductV3.findOne({src: src}) || undefined;
+      const isExist = await ProductV3.findOne({src: src});
       console.log('isExist',isExist);
 
       if (isExist) {
-        res.status(402);
+        res.status(200);
         res.json({status: 'productIsExist', message: 'productIsExist'});
         return;
       }
 
       const productDoc = await ProductV3.create({
-        titleDescription,src
+        titleDescription,src, spuId
       })
       res.status(200);
       res.json(productDoc);
