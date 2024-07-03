@@ -17,8 +17,9 @@ const ahkScriptPath = '"C:/Users/Azerty/Desktop/ahk/parseProductsGoBackToServer.
 const queue = new PQueue({ concurrency: 1 });
 
 function runAHKScript(src) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const response = axios(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${src}`);
+    await setTimeout(1000)
 
     exec(ahkScriptPath, async (error, stdout, stderr) => {
       if (error) {
@@ -26,7 +27,7 @@ function runAHKScript(src) {
         reject(error);
       } else {
         console.log(`AHK script executed successfully. Output: ${stdout}`);
-        await setTimeout(3000)
+        await setTimeout(2500)
         resolve();
       }
     });
