@@ -17,20 +17,23 @@ export default async function handle(req, res) {
       phonesCodesList[phone] = {phone,  code};
 
       const email = 'moviefokll@gmail.com'
-      const apiKey = 'YHlsgo25Cs_zmFlRAyCuj8RMMauF8Za-'
-      const uri = `https://${email + ':' + apiKey}@gate.smsaero.ru/v2/sms/send`;
+      const apiKey = '7uBLFcOzg6t0qK3MuDpNcycejSpi'
+      const testUrl = `https://gate.smsaero.ru/v2/sms/send`;
+
 
       let url = [
-        `${uri}`,
+        `${testUrl}`,
         '?number=', phone,
         '&text=', code,
         '&sign=', 'SMS Aero'
       ].join('');
 
-      await axios({
-        method: 'GET',
-        url: url,
+
+      var headers = new Headers({
+        'Authorization': `Basic ${btoa(email + ':' + apiKey)}`
       });
+
+      await fetch(url, {headers: headers}).then(console.log).catch(console.log)
 
       const token = btoa(`${phone}:${code}`);
 
