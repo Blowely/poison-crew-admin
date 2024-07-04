@@ -75,9 +75,10 @@ export default async function handler(req,res) {
         ---NEW ORDER---\n
         id: ${response._id}\n
         ${products.map(el => {
-          totalPrice += Math.ceil(getCurrentPriceOfSize(el?.size, el?.properties?.sizes));
-          return `${el?.title} (${el?.size}) - ${el?.price} CNY;\n
-            ${el?.src[0]}\n
+          const price = el?.price?.toString().substring(0, el?.price?.length - 2);
+          totalPrice += Number(price);
+          return `${el?.title} (${el?.size}) - ${price} RUB;\n
+            ${el?.src}\n
           `;
         })} 
         totalPrice(RUB): ${totalPrice + deliveryCost}\n
