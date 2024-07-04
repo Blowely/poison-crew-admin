@@ -38,8 +38,9 @@ export default async function handler(req,res) {
                 ---PAYMENT CHECK---\n
                 id: ${orderId}\n
                 ${selectedOrder?.products?.map(el => {
-                        totalPrice += Math.ceil(getCurrentPriceOfSize(el?.size, el?.properties?.sizes) * 13.3 + 1000);
-                        return `${el?.title} (${el?.size}) - ${el?.price} CNY;\n
+                        const price = el?.price?.toString().substring(0, el?.price?.length - 2);
+                        totalPrice += Number(price);
+                        return `${el?.title} (${el?.size}) - ${price} RUB;\n
                     ${el?.src[0]}\n
                   `;
                     })} 

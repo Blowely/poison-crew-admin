@@ -86,7 +86,7 @@ export default async function handler(req,res) {
       });
 
       res.status(200);
-      res.json({status: 'ok', message: 'заказ оформлен'});
+      res.json({status: 'ok', message: 'заказ оформлен', orderId: response._id});
     } catch (e) {
       console.log('e =', e);
       res.status(500);
