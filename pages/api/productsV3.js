@@ -23,13 +23,13 @@ export default async function handle(req, res) {
       let totalCount = undefined;
       let result = [];
 
-      if (req.query?.id || req.query?.spuId) {
-        if (req.query?.spuId) {
-          const spuId = req.query?.spuId;
-          axios(`${updateLastProductData}?spuId=${spuId}&token=${query?.token}`)
+      if (req.query?.id || req.query?.src) {
+        if (req.query?.src) {
+          const src = req.query?.src;
+          axios(`${updateLastProductData}?src=${src}&token=${query?.token}`)
             .catch(() => console.log('updateProductFailed'));
-          console.log('spuId =',spuId)
-          const productData = await ProductV3.find({spuId});
+          console.log('src =',src)
+          const productData = await ProductV3.find({src});
           console.log('productData =',productData);
 
           return res.status(200).json(productData);
