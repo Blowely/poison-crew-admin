@@ -51,7 +51,7 @@ export default async function handle(req, res) {
       let result = undefined;
 
       const spuId = req.query?.spuId;
-      console.log('src =',spuId);
+      console.log('spuId =',spuId);
 
       queue.add(() => runAHKScript(spuId));
 
