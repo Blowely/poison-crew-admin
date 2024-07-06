@@ -16,9 +16,9 @@ const ahkScriptPath = '"C:/Users/Azerty/Desktop/ahk/parseProductsGoBackToServer.
 
 const queue = new PQueue({ concurrency: 1 });
 
-function runAHKScript(src) {
+function runAHKScript(spuId) {
   return new Promise(async (resolve, reject) => {
-    const response = axios(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${src}`);
+    const response = axios(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=https://cdn-m.dewu.com/router/product/ProductDetail?spuId=${spuId}`);
     await setTimeout(1000)
 
     exec(ahkScriptPath, async (error, stdout, stderr) => {
@@ -50,10 +50,10 @@ export default async function handle(req, res) {
       let totalCount = undefined;
       let result = undefined;
 
-      const src = req.query?.src;
-      console.log('src =',src);
+      const spuId = req.query?.spuId;
+      console.log('src =',spuId);
 
-      queue.add(() => runAHKScript(src));
+      queue.add(() => runAHKScript(spuId));
 
 
       res.send('Request added to queue.');
