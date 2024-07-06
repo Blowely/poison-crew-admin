@@ -26,7 +26,7 @@ export default async function handle(req, res) {
       if (req.query?.id || req.query?.spuId) {
         if (req.query?.spuId) {
           const spuId = req.query?.spuId;
-          axios(`${updateLastProductData}?src=${spuId}&token=${query?.token}`)
+          axios(`${updateLastProductData}?spuId=${spuId}&token=${query?.token}`)
             .catch(() => console.log('updateProductFailed'));
           console.log('spuId =',spuId)
           const productData = await ProductV3.find({spuId});
