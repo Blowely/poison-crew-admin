@@ -23,23 +23,29 @@ export default async function handle(req, res) {
       let totalCount = undefined;
       let result = [];
 
-      if (req.query?.id || req.query?.src) {
-        if (req.query?.src) {
-          const src = req.query?.src;
-          axios(`${updateLastProductData}?src=${src}&token=${query?.token}`)
-            .catch(() => console.log('updateProductFailed'));
-          console.log('src =',src)
-          const productData = await ProductV3.find({src});
-          console.log('productData =',productData);
-
-          return res.status(200).json(productData);
+      if (req.query?.parse) {
+        if (req.query?.src && req.query?.id) {
+          return res.status(200).send('error: send src or product id');
         }
 
-        const productId = req.query?.id
-        result = await ProductV3.findOne({_id: productId}, projection);
-        axios(`${updateLastProductData}?src=${result?.src}&token=${query?.token}`)
+        let src = req.query?.src || undefined;
+
+        if (req.query?.id) {
+          const productId = req.query?.id
+          const productData = await ProductV3.findOne({_id: productId}, projection);
+          src = productData?.src;
+        }
+
+        axios(`${updateLastProductData}?src=${src}&token=${query?.token}`)
           .catch(() => console.log('updateProductFailed'));
-        console.log('res =',result);
+      }
+
+      if (req.query?.id) {
+        const productData = await ProductV3.findOne({_id: req.query?.id}, projection);
+        return res.status(200).json(productData);
+      } else if (req.query?.src) {
+        const productData = await ProductV3.find({src: req.query.src});
+        return res.status(200).json(productData);
       } else {
 
         const collName = query?.collName;
