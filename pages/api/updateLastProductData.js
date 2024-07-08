@@ -91,7 +91,7 @@ export default async function handle(req, res) {
       });
 
       res.status(200);
-      res.json({isModified: !!(response.modifiedCount)});
+      res.json({answer: response.data});
     } catch (e) {
       console.log('e =', e);
       res.status(500);
