@@ -1,9 +1,5 @@
-import {Client} from "@/models/Client";
 import {mongooseConnect} from "@/lib/mongoose";
-import {decryptToken} from "@/utils/utils";
-import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
-import axios from "axios";
 import {exec} from "child_process";
 import PQueue from 'p-queue';
 import { setTimeout } from "timers/promises";
@@ -18,7 +14,7 @@ const queue = new PQueue({ concurrency: 1 });
 
 function runAHKScript(src) {
   return new Promise(async (resolve, reject) => {
-    const response = axios(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${src}`);
+    fetch(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${src}`).catch(console.log);
     await setTimeout(1000)
 
     exec(ahkScriptPath, async (error, stdout, stderr) => {
