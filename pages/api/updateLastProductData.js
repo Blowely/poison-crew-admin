@@ -76,7 +76,7 @@ export default async function handle(req, res) {
         isDeleted
       } = req.body;
 
-      const response = await ProductV3.updateOne({spuId}, {
+      const response = await ProductV3.updateMany({spuId}, {
         spuId,
         title,
         description,
