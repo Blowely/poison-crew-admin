@@ -6,7 +6,7 @@ import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
 
-const updateLastProductData = 'https://fd36-91-236-247-248.ngrok-free.app/api/updateLastProductData';
+const updateLastProductData = 'https://5df6-91-236-247-240.ngrok-free.app/api/updateLastProductData';
 export default async function handle(req, res) {
   const {method, query} = req;
   await mongooseConnect();
