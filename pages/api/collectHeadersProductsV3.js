@@ -16,6 +16,10 @@ export default async function handle(req, res) {
     try {
       const spuId = req.body.spuId;
 
+      delete req.headers['accept-encoding'];
+      delete req.headers['connection'];
+      delete req.headers['content-length'];
+
       const auth = {
         path: 'https://app.dewu.com/api/v1/app/sx/commodity/detail/page/coupon/v5',
         query: req.query,
