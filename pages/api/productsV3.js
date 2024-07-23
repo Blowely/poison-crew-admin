@@ -6,7 +6,7 @@ import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
 
-const updateLastProductData = 'https://5df6-91-236-247-240.ngrok-free.app/api/updateLastProductData';
+const updateLastProductData = 'https://8baa-91-236-247-240.ngrok-free.app/api/updateLastProductData';
 export default async function handle(req, res) {
   const {method, query} = req;
   await mongooseConnect();
@@ -24,6 +24,11 @@ export default async function handle(req, res) {
       let result = [];
 
       if (req.query?.parse) {
+        if (req.query?.spuId) {
+          return axios(`${updateLastProductData}?spuId=${req.query?.spuId}&token=${query?.token}`)
+            .catch(() => console.log('updateProductFailed'));
+        }
+
         if (req.query?.src && req.query?.id) {
           return res.status(200).send('error: send src or product id');
         }

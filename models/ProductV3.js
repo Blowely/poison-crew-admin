@@ -15,6 +15,7 @@ export const ProductV3Schema = new Schema({
   sizeInfoList: [{type:Object}],
   category: {type:mongoose.Types.ObjectId, ref:'Category'},
   properties: {type:Object},
+  auth: {type:Object},
   isDeleted: Boolean
 }, {
   timestamps: true,

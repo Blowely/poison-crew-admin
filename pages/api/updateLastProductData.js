@@ -12,22 +12,26 @@ const ahkScriptPath = '"C:/Users/Azerty/Desktop/ahk/parseProductsGoBackToServer.
 
 const queue = new PQueue({ concurrency: 1 });
 
-function runAHKScript(src) {
-  return new Promise(async (resolve, reject) => {
-    fetch(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${src}`).catch(console.log);
-    await setTimeout(1000)
-
-    exec(ahkScriptPath, async (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error executing AHK script: ${error}`);
-        reject(error);
-      } else {
-        console.log(`AHK script executed successfully. Output: ${stdout}`);
-        await setTimeout(2500)
-        resolve();
-      }
+function runAHKScript(spuId) {
+  try {
+    fetch(`${phoneApi}/dewulink://cdn-m.dewu.com/router/product/ProductDetail?spuId=${spuId}&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=d58f7d439f7c3698b497be3abca93169`);
+    //await fetch(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${src}`);
+    return new Promise((resolve, reject) => {
+      exec(ahkScriptPath, async (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Ошибка выполнения AHK-скрипта: ${error}`);
+          reject(error);
+        } else {
+          console.log(`AHK-скрипт выполнен успешно. Вывод: ${stdout}`);
+          //await setTimeout(3000)
+          resolve();
+        }
+      });
     });
-  });
+  } catch (error) {
+    console.error(`Ошибка в runAHKScript: ${error}`);
+    throw error;
+  }
 }
 
 export default async function handle(req, res) {
@@ -45,10 +49,11 @@ export default async function handle(req, res) {
       let totalCount = undefined;
       let result = undefined;
 
-      const src = req.query?.src;
-      console.log('src =',src);
+      //const src = req.query?.src;
+      const spuId = req.query?.spuId;
+      console.log('spuId =',spuId);
 
-      queue.add(() => runAHKScript(src));
+      queue.add(() => runAHKScript(spuId));
 
 
       res.send('Request added to queue.');
