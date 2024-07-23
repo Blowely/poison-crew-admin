@@ -14,26 +14,29 @@ export default async function handle(req, res) {
   //await isAdminRequest(req,res);
   if (method === 'POST') {
     try {
-      console.log('req =', req);
       const spuId = req.body.spuId;
 
+      const auth = {
+        path: 'https://app.dewu.com/api/v1/app/sx/commodity/detail/page/coupon/v5',
+        query: req.query,
+        body: req.body,
+        headers: {...req.headers, host: 'app.dewu.com'}
+      }
+
       const isExist = await ProductV3.findOne({spuId: spuId});
-      console.log('isExist',isExist);
 
       if (isExist) {
+        let productDoc = await ProductV3.findOneAndUpdate({
+          spuId
+        }, {auth})
         res.status(200);
         res.json({status: 'productIsExist', message: 'productIsExist'});
         return;
       }
 
-      const auth = {
-        path: req?.path,
-        query: req.query,
-        body: req.body,
-        headers: req.headers
-      }
 
-      const productDoc = await ProductV3.create({
+      console.log('auth =',auth);
+      let productDoc = await ProductV3.create({
         spuId, auth
       })
       res.status(200);
