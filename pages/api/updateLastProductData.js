@@ -12,9 +12,9 @@ const ahkScriptPath = '"C:/Users/Azerty/Desktop/ahk/parseProductsGoBackToServer.
 
 const queue = new PQueue({ concurrency: 1 });
 
-function runAHKScript(spuId) {
+async function runAHKScript(spuId) {
   try {
-    fetch(`${phoneApi}/dewulink://cdn-m.dewu.com/router/product/ProductDetail?spuId=${spuId}&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=d58f7d439f7c3698b497be3abca93169`);
+    await fetch(`${phoneApi}/dewulink://cdn-m.dewu.com/router/product/ProductDetail?spuId=${spuId}&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=d58f7d439f7c3698b497be3abca93169`);
     //await fetch(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${src}`);
     return new Promise((resolve, reject) => {
       exec(ahkScriptPath, async (error, stdout, stderr) => {
