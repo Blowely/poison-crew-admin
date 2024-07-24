@@ -25,8 +25,9 @@ export default async function handle(req, res) {
 
       if (req.query?.parse) {
         if (req.query?.spuId) {
-          return axios(`${updateLastProductData}?spuId=${req.query?.spuId}&token=${query?.token}`)
+           axios(`${updateLastProductData}?spuId=${req.query?.spuId}&token=${query?.token}`)
             .catch(() => console.log('updateProductFailed'));
+          return res.status(200).send('request added to queue');
         }
 
         if (req.query?.src && req.query?.id) {
