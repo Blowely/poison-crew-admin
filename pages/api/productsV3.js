@@ -5,6 +5,7 @@ import {decryptToken} from "@/utils/utils";
 import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
+import { setTimeout } from "timers/promises";
 
 const updateLastProductData = 'https://05a9-91-236-247-240.ngrok-free.app/api/updateLastProductData';
 export default async function handle(req, res) {
@@ -27,7 +28,8 @@ export default async function handle(req, res) {
         if (req.query?.spuId) {
            axios(`${updateLastProductData}?spuId=${req.query?.spuId}&token=${query?.token}`)
             .catch(() => console.log('updateProductFailed'));
-          return res.status(200).send('request added to queue');
+           await setTimeout(1000)
+           return res.status(200).send('request added to queue');
         }
 
         if (req.query?.src && req.query?.id) {
