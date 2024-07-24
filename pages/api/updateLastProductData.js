@@ -32,8 +32,7 @@ async function runAHKScript(spuId) {
       });
     });
   } catch (error) {
-    console.error(`Ошибка в runAHKScript: ${error}`);
-    throw error;
+    console.error(`Ошибка в runAHKScript: ${spuId} ${error}`);
   }
 }
 
