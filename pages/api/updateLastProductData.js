@@ -22,7 +22,7 @@ function runAHKScript(spuId) {
           console.error(`Ошибка выполнения AHK-скрипта: ${error}`);
           reject(error);
         } else {
-          console.log(`AHK-скрипт выполнен успешно. Вывод: ${stdout}`);
+          console.log(`AHK-скрипт выполнен успешно. Осталось: ${queue.size}`);
           //await setTimeout(3000)
           resolve();
         }
