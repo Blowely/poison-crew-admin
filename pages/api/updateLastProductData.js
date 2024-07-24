@@ -14,6 +14,7 @@ const queue = new PQueue({ concurrency: 1 });
 
 async function runAHKScript(spuId) {
   try {
+    await setTimeout(200)
     await fetch(`${phoneApi}/dewulink://cdn-m.dewu.com/router/product/ProductDetail?spuId=${spuId}&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=d58f7d439f7c3698b497be3abca93169`);
     //await fetch(`${phoneApi}/dewulink://m.dewu.com/note?routerUrl=${src}`);
     await setTimeout(500)
