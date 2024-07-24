@@ -5,6 +5,7 @@ import {decryptToken} from "@/utils/utils";
 import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
+import {ProductV4} from "@/models/ProductV4";
 
 const updateLastProductData = 'https://8baa-91-236-247-240.ngrok-free.app/api/updateLastProductData';
 export default async function handle(req, res) {
@@ -27,10 +28,10 @@ export default async function handle(req, res) {
         headers: {...req.headers, host: 'app.dewu.com'}
       }
 
-      const isExist = await ProductV3.findOne({spuId: spuId});
+      const isExist = await ProductV4.findOne({spuId: spuId});
 
       if (isExist) {
-        let productDoc = await ProductV3.findOneAndUpdate({
+        let productDoc = await ProductV4.findOneAndUpdate({
           spuId
         }, {auth})
         res.status(200);
@@ -40,7 +41,7 @@ export default async function handle(req, res) {
 
 
       console.log('auth =',auth);
-      let productDoc = await ProductV3.create({
+      let productDoc = await ProductV4.create({
         spuId, auth
       })
       res.status(200);
