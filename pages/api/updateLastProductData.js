@@ -41,17 +41,6 @@ export default async function handle(req, res) {
 
   if (method === 'GET') {
     try {
-      //const {phone} = decryptToken(query?.token);
-      const queryType = query?.type;
-
-      //const client = phone ? await Client.findOne({phone}) : null;
-      //let projection = (client || phone === '79223955429') ? {} : {properties: 0};
-
-      let items = [];
-      let totalCount = undefined;
-      let result = undefined;
-
-      //const src = req.query?.src;
       const spuId = req.query?.spuId;
       console.log('spuId =',spuId);
 
