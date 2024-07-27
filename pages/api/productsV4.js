@@ -108,7 +108,7 @@ export default async function handle(req, res) {
           const response = await parseAuthProductDataBySpuId(spuId);
 
           if (!response) {
-            return res.status(404).json({text:'miss product'});
+            return res.status(404).json({text:'not found'});
           }
 
           return res.status(200).json({text:'request added to queue'});
