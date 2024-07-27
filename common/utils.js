@@ -50,9 +50,7 @@ export function isNumber(n){
 export const productsV4buildRequest = (payload) => {
   const {search, category} = payload;
 
-  const obj = {
-    ...payload
-  };
+  const obj = {};
 
   if (search) {
     obj.title = new RegExp(search, "i");
