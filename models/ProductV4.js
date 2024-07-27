@@ -15,7 +15,7 @@ export const ProductV4Schema = new Schema({
   sizeInfoList: [{type:Object}],
   category: {type:mongoose.Types.ObjectId, ref:'Category'},
   properties: {type:Object},
-  brandId: String,
+  brandId: Number,
   categoryName: String,
   categoryId: Number,
   level1CategoryId: Number,
