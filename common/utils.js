@@ -63,7 +63,7 @@ export const productsV4buildRequest = (payload) => {
   // if (queryType !== 'admin') {
   //   obj.price = {$gt: 1}
   // }
-  console.log('obj =',obj);
+
   return obj;
 }
 
