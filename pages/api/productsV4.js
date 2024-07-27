@@ -60,7 +60,7 @@ const updateProductBySpuId = async (spuId) => {
       return {error: false, product: {}, message: 'no auth data', status: 200};
     }
 
-    const {url, query, body: authData, headers: authHeaders} = product.auth;
+    const {path, query, body: authData, headers: authHeaders} = product.auth;
 
     const builtUrl = customUrlBuilder(url, query);
     console.log('builtUrl=',builtUrl)
