@@ -86,21 +86,10 @@ const getCheapestPrice = (prices) => {
 export const handlePoizonProductResponse = (poizonProduct) => {
   try {
     const title = poizonProduct?.data?.detail?.title || "";
+    const data = poizonProduct?.data || {};
 
     if (!title) {
-      const str = JSON.stringify(poizonProduct);
-      const spuIdIndex = str.indexOf('spuId=');
-      const spuIdStartValueIndex = spuIdIndex + 6;
-      let spuIdEndValueIndex = spuIdIndex + 13;
-      let spuId = str.substring(spuIdStartValueIndex, spuIdEndValueIndex);
-
-      while (spuId.includes('&') && spuIdEndValueIndex--) {
-        spuId = str.substring(spuIdStartValueIndex, spuIdEndValueIndex);
-      }
-
-      if (!spuId) {
-        return 'error. spuId is not defined';
-      }
+      const spuId = data?.detail?.spuId || "";
 
       const payload = {
         spuId,
@@ -118,7 +107,7 @@ export const handlePoizonProductResponse = (poizonProduct) => {
       return payload
     }
 
-    const data = poizonProduct?.data || {};
+
     const images = data?.image?.spuImage?.images?.map(({url}) => url) || [];
     const skuInfoList = data?.layerModel?.layer?.skuInfoList || [];
     const skus = data?.skus || [];
