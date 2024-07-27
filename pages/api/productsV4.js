@@ -119,7 +119,6 @@ export default async function handle(req, res) {
           return res.status(status).json({product, message});
         }
 
-
         const productData = await ProductV4.findOne({spuId});
         return res.status(200).json(productData);
       }
