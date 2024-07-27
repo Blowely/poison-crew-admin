@@ -87,7 +87,7 @@ const getCheapestPrice = (prices) => {
 
 export const handlePoizonProductResponse = (poizonProduct) => {
   try {
-
+    console.log('poizonProduct =',poizonProduct);
     const title = poizonProduct?.data?.detail?.title || "";
     console.log('title1',title)
 
