@@ -116,7 +116,7 @@ export const handlePoizonProductResponse = (poizonProduct) => {
     const level1CategoryId = data?.detail?.level1CategoryId || "";
     const level2CategoryId = data?.detail?.level2CategoryId || "";
     const brandId = data?.detail?.brandId || "";
-    const commonQuestionRes = data?.detail?.commonTipsModel?.commonQuestionRes?.questionAndAnswerList || [];
+    const commonQuestionRes = data?.commonTipsModel?.commonQuestionRes?.questionAndAnswerList || [];
     const sizeInfoList = data?.sizeDto?.sizeInfo?.sizeTemplate?.list || [];
 
     const pricesAndSkuIds = []
