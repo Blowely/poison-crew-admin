@@ -46,3 +46,25 @@ export function isNumeric(something){
 export function isNumber(n){
   return Number(n)=== n;
 }
+
+export const productsV4buildRequest = (payload) => {
+  const {search, category} = payload;
+
+  const obj = {
+    ...payload
+  };
+
+  if (search) {
+    obj.title = new RegExp(search, "i");
+  }
+
+  if (category) {
+    obj.category = new RegExp('.*' + category + '.*');
+  }
+
+  // if (queryType !== 'admin') {
+  //   obj.price = {$gt: 1}
+  // }
+
+  return obj;
+}

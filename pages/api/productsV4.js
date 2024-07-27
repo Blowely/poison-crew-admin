@@ -6,6 +6,8 @@ import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
 import { setTimeout } from "timers/promises";
+import {ProductV4} from "@/models/ProductV4";
+import {productsV4buildRequest} from "@/common/utils";
 
 const myHeaders = new Headers();
 myHeaders.append("accept", "*/*");
@@ -31,24 +33,133 @@ const requestOptions = {
 };
 
 const updateLastProductData = 'http://localhost:3001/api/updateLastProductData';
+const competitorUrl = 'https://unicorngo.ru/api/catalog/product';
+
+const parseAuthProductDataBySpuId = async (spuId) => {
+  const response = await fetch(`${competitorUrl}/${spuId}`, requestOptions)
+    .catch((error) => console.error(error));
+
+  if (!response.ok) {
+    return false;
+  }
+
+  axios(`${updateLastProductData}?spuId=${spuId}`)
+    .catch(() => console.log('updateProductFailed'));
+  await setTimeout(1000)
+  return true;
+}
+
+const updateProductBySpuId = async (spuId) => {
+  try {
+    const product = await ProductV4.findOne({spuId})
+
+    if (!product) {
+      return {error: false, product: {}, message: 'not found'};
+    }
+
+    if (!product?.auth) {
+      return {error: false, product: {}, message: 'no auth data'};
+    }
+
+    const {url, query, body, headers} = product.auth;
+
+    axios(`${updateLastProductData}?spuId=${spuId}`)
+      .catch(() => console.log('updateProductFailed'));
+    await setTimeout(1000)
+
+    return {error: false,};
+  } catch (e) {
+    return {error: true, message: e.message};
+  }
+}
+
 export default async function handle(req, res) {
   const {method, query} = req;
   if (method === 'GET') {
     try {
-      if (req.query?.parse) {
-        if (req.query?.spuId) {
-          const response = await fetch(`https://unicorngo.ru/api/catalog/product/${req.query?.spuId}`, requestOptions).catch((error) => console.error(error));
+      const spuId = query?.spuId;
+      const isParseAuth = query['parse-auth'];
+      const isUpdate = query?.update;
+      const category = query?.category;
+      const search = query?.search;
+      const offset = query?.offset || 0;
+      const limit = query?.limit || 20;
 
-          if (!response.ok) {
+      const reqObj = {
+        category,
+        search
+      }
+
+      if (spuId) {
+        if (isParseAuth) {
+          const response = await parseAuthProductDataBySpuId(spuId);
+
+          if (!response) {
             return res.status(404).json({text:'miss product'});
           }
 
-          axios(`${updateLastProductData}?spuId=${req.query?.spuId}&token=${query?.token}`)
-            .catch(() => console.log('updateProductFailed'));
-          await setTimeout(1000)
           return res.status(200).json({text:'request added to queue'});
         }
+
+        if (isUpdate) {
+
+        }
+
+
+        const productData = await ProductV4.findOne({spuId});
+        return res.status(200).json(productData);
       }
+
+      const items = await ProductV4.find(productsV4buildRequest({reqObj})).skip(offset).limit(limit);
+
+      const totalCount = await ProductV4.count();
+
+      const result = {items: items, total_count: totalCount }
+
+      res.status(200).json(result);
+    } catch (e) {
+      console.log('e =', e);
+      res.status(500);
+      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
+    }
+  }
+
+  if (method === 'PUT') {
+    try {
+      const {
+        title,
+        description,
+        price,
+        src,
+        images,
+        category,
+        properties,
+        sizesAndPrices,
+        cheapestPrice,
+        sizeInfoList,
+        _id,
+        spuId,
+        isDeleted
+      } = req.body;
+
+      const filter = !!_id ? {_id} : {spuId}
+      const response = await ProductV4.updateOne({spuId}, {
+        spuId,
+        title,
+        description,
+        price,
+        src,
+        images,
+        category,
+        properties,
+        sizesAndPrices,
+        cheapestPrice,
+        sizeInfoList,
+        isDeleted
+      },{upsert:true});
+
+      res.status(200);
+      res.json({answer: response.data});
     } catch (e) {
       console.log('e =', e);
       res.status(500);
