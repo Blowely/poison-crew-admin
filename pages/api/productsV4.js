@@ -53,7 +53,7 @@ const updateProductBySpuId = async (spuId) => {
   try {
     const product = await ProductV4.findOne({spuId: spuId})
     if (!product) {
-      return {error: false, product: {}, message: 'not found', status: 200};
+      return {error: false, product: {}, message: 'not found', status: 404};
     }
 
     if (!product?.auth) {
