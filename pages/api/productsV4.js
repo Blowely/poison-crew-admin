@@ -78,11 +78,11 @@ const updateProductBySpuId = async (spuId) => {
     }
 
     console.log(handledPoizonProduct)
-    const updatedProduct = ProductV4.updateOne({spuId}, handledPoizonProduct)
+    const updatedProduct = await ProductV4.updateOne({spuId}, handledPoizonProduct)
 
     return {error: false, product: updatedProduct, message: 'updated', status: 200};
   } catch (e) {
-    return {error: true, message: e.message, error_res: e, status: 501};
+    return {error: true, message: e.message, status: 500};
   }
 }
 
