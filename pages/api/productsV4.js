@@ -7,7 +7,7 @@ import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
 import { setTimeout } from "timers/promises";
 import {ProductV4} from "@/models/ProductV4";
-import {productsV4buildRequest} from "@/common/utils";
+import {customUrlBuilder, handlePoizonProductResponse, productsV4buildRequest} from "@/common/utils";
 
 const myHeaders = new Headers();
 myHeaders.append("accept", "*/*");
@@ -54,22 +54,33 @@ const updateProductBySpuId = async (spuId) => {
     const product = await ProductV4.findOne({spuId})
 
     if (!product) {
-      return {error: false, product: {}, message: 'not found'};
+      return {error: false, product: {}, message: 'not found', status: 200};
     }
 
     if (!product?.auth) {
-      return {error: false, product: {}, message: 'no auth data'};
+      return {error: false, product: {}, message: 'no auth data', status: 200};
     }
 
-    const {url, query, body, headers} = product.auth;
+    const {url, query, body: authData, headers: authHeaders} = product.auth;
 
-    axios(`${updateLastProductData}?spuId=${spuId}`)
-      .catch(() => console.log('updateProductFailed'));
-    await setTimeout(1000)
+    const {data: poizonProduct, statusText, status} = await axios.post(
+      customUrlBuilder(url, query),
+      {...authData},
+      {headers: authHeaders}
+    )
 
-    return {error: false,};
+    const handledPoizonProduct = handlePoizonProductResponse(poizonProduct)
+
+    if (statusText !== 'OK' && status !== 200) {
+      return {error: false, product: {}, message: 'poizon product not found', status: 200};
+    }
+
+    console.log(handledPoizonProduct)
+    const updatedProduct = ProductV4.updateOne({spuId}, {...handledPoizonProduct})
+
+    return {error: false, product: updatedProduct, message: 'updated', status: 200};
   } catch (e) {
-    return {error: true, message: e.message};
+    return {error: true, message: e.message, error_res: e, status: 500};
   }
 }
 
@@ -102,7 +113,8 @@ export default async function handle(req, res) {
         }
 
         if (isUpdate) {
-
+          const {status, product, message} = await updateProductBySpuId(spuId);
+          return res.status(status).json({product, message});
         }
 
 
