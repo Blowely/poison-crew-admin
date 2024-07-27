@@ -88,6 +88,7 @@ const updateProductBySpuId = async (spuId) => {
 export default async function handle(req, res) {
   await mongooseConnect();
   const {method, query} = req;
+
   if (method === 'GET') {
     try {
       const spuId = query?.spuId;
