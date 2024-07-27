@@ -113,8 +113,8 @@ export default async function handle(req, res) {
         }
 
         if (isUpdate) {
-          const {status, product, message} = await updateProductBySpuId(spuId);
-          return res.status(status).json({product, message});
+          const {status, product, message, error_res} = await updateProductBySpuId(spuId);
+          return res.status(status).json({product, message, error_res});
         }
 
 
