@@ -96,8 +96,6 @@ export const handlePoizonProductResponse = (poizonProduct) => {
         title: '',
         cheapestPrice: '',
         sizesAndPrices: [],
-        category: '66029ec83d545163a2435edb',
-        brand: 'nike',
         images: [],
         sizeInfoList: [],
         isDeleted: true,
