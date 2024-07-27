@@ -15,6 +15,12 @@ export const ProductV4Schema = new Schema({
   sizeInfoList: [{type:Object}],
   category: {type:mongoose.Types.ObjectId, ref:'Category'},
   properties: {type:Object},
+  brandId: String,
+  categoryName: String,
+  categoryId: Number,
+  level1CategoryId: Number,
+  level2CategoryId: Number,
+  commonQuestionRes: [{type:Object}],
   auth: {type:Object},
   isDeleted: Boolean
 }, {
