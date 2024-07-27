@@ -132,7 +132,6 @@ export default async function handle(req, res) {
 
       res.status(200).json(result);
     } catch (e) {
-      console.log('e=',e);
       res.status(500).json({status: 'internalServerError', message: 'Ошибка сервера'});
     }
   }
@@ -174,7 +173,6 @@ export default async function handle(req, res) {
       res.status(200);
       res.json({answer: response.data});
     } catch (e) {
-      console.log('e =', e);
       res.status(500);
       res.json({status: 'internalServerError', message: 'Ошибка сервера'});
     }
