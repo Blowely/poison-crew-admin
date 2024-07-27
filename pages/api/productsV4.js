@@ -51,8 +51,7 @@ const parseAuthProductDataBySpuId = async (spuId) => {
 
 const updateProductBySpuId = async (spuId) => {
   try {
-    const product = await ProductV4.findOne({spuId})
-
+    const product = await ProductV4.findOne({spuId: spuId})
     if (!product) {
       return {error: false, product: {}, message: 'not found', status: 200};
     }
@@ -85,6 +84,7 @@ const updateProductBySpuId = async (spuId) => {
 }
 
 export default async function handle(req, res) {
+  await mongooseConnect();
   const {method, query} = req;
   if (method === 'GET') {
     try {
@@ -113,7 +113,6 @@ export default async function handle(req, res) {
         }
 
         if (isUpdate) {
-          console.log('spuId =',spuId)
           const {status, product, message, error_res} = await updateProductBySpuId(spuId);
           return res.status(status).json({product, message, error_res});
         }
@@ -131,9 +130,7 @@ export default async function handle(req, res) {
 
       res.status(200).json(result);
     } catch (e) {
-      console.log('e =', e);
-      res.status(500);
-      res.json({status: 'internalServerError', message: 'Ошибка сервера'});
+      res.status(500).json({status: 'internalServerError', message: 'Ошибка сервера'});
     }
   }
 
