@@ -80,7 +80,7 @@ const updateProductBySpuId = async (spuId) => {
 
     return {error: false, product: updatedProduct, message: 'updated', status: 200};
   } catch (e) {
-    return {error: true, message: e.message, error_res: e, status: 500};
+    return {error: true, message: e.message, error_res: e, status: 501};
   }
 }
 
@@ -113,6 +113,7 @@ export default async function handle(req, res) {
         }
 
         if (isUpdate) {
+          console.log('spuId =',spuId)
           const {status, product, message, error_res} = await updateProductBySpuId(spuId);
           return res.status(status).json({product, message, error_res});
         }
