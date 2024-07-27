@@ -116,7 +116,7 @@ export const handlePoizonProductResponse = (poizonProduct) => {
     const level1CategoryId = data?.detail?.level1CategoryId || "";
     const level2CategoryId = data?.detail?.level2CategoryId || "";
     const brandId = data?.detail?.brandId || "";
-    const commonQuestionRes = data?.commonTipsModel?.commonQuestionRes?.questionAndAnswerList || [];
+    const questionAndAnswerList = data?.commonTipsModel?.commonQuestionRes?.questionAndAnswerList || [];
     const sizeInfoList = data?.sizeDto?.sizeInfo?.sizeTemplate?.list || [];
 
     const pricesAndSkuIds = []
@@ -159,7 +159,7 @@ export const handlePoizonProductResponse = (poizonProduct) => {
       categoryId,
       level1CategoryId,
       level2CategoryId,
-      commonQuestionRes,
+      questionAndAnswerList,
       sizeInfoList,
       isDeleted: false
     };

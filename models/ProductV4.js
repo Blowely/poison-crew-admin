@@ -20,7 +20,7 @@ export const ProductV4Schema = new Schema({
   categoryId: Number,
   level1CategoryId: Number,
   level2CategoryId: Number,
-  commonQuestionRes: [{type:Object}],
+  questionAndAnswerList: [{type:Object}],
   auth: {type:Object},
   isDeleted: Boolean
 }, {
