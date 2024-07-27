@@ -62,8 +62,11 @@ const updateProductBySpuId = async (spuId) => {
 
     const {url, query, body: authData, headers: authHeaders} = product.auth;
 
+    const builtUrl = customUrlBuilder(url, query);
+    console.log('builtUrl=',builtUrl)
+
     const {data: poizonProduct, statusText, status} = await axios.post(
-      customUrlBuilder(url, query),
+      builtUrl,
       {...authData},
       {headers: authHeaders}
     )
