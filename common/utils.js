@@ -87,9 +87,7 @@ const getCheapestPrice = (prices) => {
 
 export const handlePoizonProductResponse = (poizonProduct) => {
   try {
-    console.log('poizonProduct =',poizonProduct);
     const title = poizonProduct?.data?.detail?.title || "";
-    console.log('title1',title)
 
     if (!title) {
       const str = JSON.stringify(poizonProduct);
@@ -105,9 +103,7 @@ export const handlePoizonProductResponse = (poizonProduct) => {
       if (!spuId) {
         return 'error. spuId is not defined';
       }
-      const title = poizonProduct?.data?.detail?.title || "";
-      console.log('spuIdDeleted =',spuId);
-      console.log('titleDeleted =',title);
+
       const payload = {
         spuId,
         title: '',
