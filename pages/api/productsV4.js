@@ -78,7 +78,7 @@ const updateProductBySpuId = async (spuId) => {
     }
 
     console.log(handledPoizonProduct)
-    const updatedProduct = ProductV4.updateOne({spuId}, {...handledPoizonProduct})
+    const updatedProduct = ProductV4.updateOne({spuId}, handledPoizonProduct)
 
     return {error: false, product: updatedProduct, message: 'updated', status: 200};
   } catch (e) {
@@ -116,8 +116,8 @@ export default async function handle(req, res) {
         }
 
         if (isUpdate) {
-          const {status, product, message, error_res} = await updateProductBySpuId(spuId);
-          return res.status(status).json({product, message, error_res});
+          const {status, product, message} = await updateProductBySpuId(spuId);
+          return res.status(status).json({product, message});
         }
 
 
@@ -133,6 +133,7 @@ export default async function handle(req, res) {
 
       res.status(200).json(result);
     } catch (e) {
+      console.log('e=',e);
       res.status(500).json({status: 'internalServerError', message: 'Ошибка сервера'});
     }
   }
