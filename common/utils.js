@@ -51,7 +51,7 @@ export const productsV4buildRequest = (payload) => {
   const {search, category} = payload;
 
   const obj = {};
-  console.log('search =',search);
+
   if (search) {
     obj.title = new RegExp(search, "i");
   }
@@ -63,7 +63,7 @@ export const productsV4buildRequest = (payload) => {
   // if (queryType !== 'admin') {
   //   obj.price = {$gt: 1}
   // }
-  console.log('obj =',obj);
+
   return obj;
 }
 

@@ -124,7 +124,7 @@ export default async function handle(req, res) {
         return res.status(200).json(productData);
       }
 
-      const items = await ProductV4.find(productsV4buildRequest({reqObj})).skip(offset).limit(limit);
+      const items = await ProductV4.find(productsV4buildRequest(reqObj)).skip(offset).limit(limit);
 
       const totalCount = await ProductV4.count();
 
