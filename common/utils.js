@@ -51,7 +51,7 @@ export const productsV4buildRequest = (payload) => {
   const {search, category} = payload;
 
   const obj = {};
-
+  console.log('search =',search);
   if (search) {
     obj.title = new RegExp(search, "i");
   }
