@@ -136,6 +136,23 @@ export default async function handle(req, res) {
     }
   }
 
+  if (method === 'POST') {
+    try {
+      const {
+        spuId,
+        auth
+      } = req.body;
+
+      let productDoc = await ProductV4.create({
+        spuId, auth
+      })
+
+      res.status(200).json(productDoc);
+    } catch (e) {
+      res.status(500).json({status: 'internalServerError', message: 'Ошибка сервера'});
+    }
+  }
+
   if (method === 'PUT') {
     try {
       const {
