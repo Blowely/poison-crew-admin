@@ -1,13 +1,9 @@
-import {Product} from "@/models/Product";
-import {Client} from "@/models/Client";
 import {mongooseConnect} from "@/lib/mongoose";
-import {decryptToken} from "@/utils/utils";
-import {ProductV2} from "@/models/ProductV2";
-import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
-import { setTimeout } from "timers/promises";
+import {setTimeout} from "timers/promises";
 import {ProductV4} from "@/models/ProductV4";
 import {customUrlBuilder, handlePoizonProductResponse, productsV4buildRequest} from "@/common/utils";
+import {Link} from "@/models/Link";
 
 const myHeaders = new Headers();
 myHeaders.append("accept", "*/*");
@@ -35,12 +31,26 @@ const requestOptions = {
 const updateLastProductData = 'http://localhost:3001/api/updateLastProductData';
 const competitorUrl = 'https://unicorngo.ru/api/catalog/product';
 
-const parseAuthProductDataBySpuId = async (spuId) => {
-  const response = await fetch(`${competitorUrl}/${spuId}`, requestOptions)
-    .catch((error) => console.error(error));
+const createPoizonLink = async (spuId) => {
+  const link = `dewulink://cdn-m.dewu.com/router/product/ProductDetail?spuId=${spuId}&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=d58f7d439f7c3698b497be3abca93169`;
 
-  if (!response.ok) {
-    return false;
+  return await Link.create({
+    link,
+  });
+}
+
+const competitorCheckBySpuId = async (spuId) => {
+  return await fetch(`${competitorUrl}/${spuId}`, requestOptions)
+    .catch((error) => console.error(error));
+}
+
+const parseAuthProductDataBySpuId = async (spuId, isCompetitorCheck) => {
+  if (isCompetitorCheck) {
+    const response = await competitorCheckBySpuId(spuId);
+
+    if (!response.ok) {
+      return false;
+    }
   }
 
   axios(`${updateLastProductData}?spuId=${spuId}`)
@@ -93,6 +103,7 @@ export default async function handle(req, res) {
     try {
       const spuId = query?.spuId;
       const isParseAuth = query['parse-auth'];
+      const isCompetitorCheck = query['competitor-check'] || false;
       const isUpdate = query?.update;
       const category = query?.category;
       const search = query?.search;
@@ -106,7 +117,7 @@ export default async function handle(req, res) {
 
       if (spuId) {
         if (isParseAuth) {
-          const response = await parseAuthProductDataBySpuId(spuId);
+          const response = await parseAuthProductDataBySpuId(spuId, isCompetitorCheck);
 
           if (!response) {
             return res.status(404).json({text:'not found'});
@@ -118,6 +129,18 @@ export default async function handle(req, res) {
         if (isUpdate) {
           const {status, product, message} = await updateProductBySpuId(spuId);
           return res.status(status).json({product, message});
+        }
+
+        if (isCompetitorCheck) {
+          const response = await competitorCheckBySpuId(spuId);
+
+          if (!response.ok) {
+            return res.status(404).json({text:'not found'});
+          }
+
+          const productDoc = await createPoizonLink(spuId);
+
+          return res.status(200).json(productDoc);
         }
 
         const productData = await ProductV4.findOne({spuId});
