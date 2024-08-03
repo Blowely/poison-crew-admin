@@ -80,14 +80,12 @@ export default async function handle(req, res) {
           //   obj.price = {$gt: 1}
           // }
 
-          console.log('obj',obj);
           return obj;
         }
 
 
         items = await Link.find(buildRequest({})).skip(req.query?.offset)
               .limit(req.query.limit);
-        console.log('items',items)
 
         totalCount = await Link.count(buildRequest({}));
 
