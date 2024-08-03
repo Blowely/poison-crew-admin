@@ -6,6 +6,7 @@ import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
 import { setTimeout } from "timers/promises";
+import {Link} from "@/models/Link";
 
 const myHeaders = new Headers();
 myHeaders.append("accept", "*/*");
@@ -47,41 +48,12 @@ export default async function handle(req, res) {
       let totalCount = undefined;
       let result = [];
 
-      if (req.query?.parse) {
-        if (req.query?.spuId) {
-          const response = await fetch(`https://unicorngo.ru/api/catalog/product/${req.query?.spuId}`, requestOptions).catch((error) => console.error(error));
-
-          if (!response.ok) {
-            return res.status(404).json({text:'miss product'});
-          }
-
-           axios(`${updateLastProductData}?spuId=${req.query?.spuId}&token=${query?.token}`)
-            .catch(() => console.log('updateProductFailed'));
-           await setTimeout(1000)
-           return res.status(200).json({text:'request added to queue'});
-        }
-
-        if (req.query?.src && req.query?.id) {
-          return res.status(200).send('error: send src or product id');
-        }
-
-        let src = req.query?.src || undefined;
-
-        if (req.query?.id) {
-          const productId = req.query?.id
-          const productData = await ProductV3.findOne({_id: productId}, projection);
-          src = productData?.src;
-        }
-
-        axios(`${updateLastProductData}?src=${src}&token=${query?.token}`)
-          .catch(() => console.log('updateProductFailed'));
-      }
 
       if (req.query?.id) {
-        const productData = await ProductV3.findOne({_id: req.query?.id}, projection);
+        const productData = await Link.findOne({_id: req.query?.id}, projection);
         return res.status(200).json(productData);
       } else if (req.query?.src) {
-        const productData = await ProductV3.find({src: req.query.src});
+        const productData = await Link.find({link: req.query.src});
         return res.status(200).json(productData);
       } else {
 
@@ -113,10 +85,11 @@ export default async function handle(req, res) {
         }
 
 
-        items = await ProductV3.find(buildRequest({})).skip(req.query?.offset)
+        items = await Link.find(buildRequest({})).skip(req.query?.offset)
               .limit(req.query.limit);
+        console.log('items',items)
 
-        totalCount = await ProductV3.count(buildRequest({}));
+        totalCount = await Link.count(buildRequest({}));
 
         result = {items: items, total_count: totalCount }
       }

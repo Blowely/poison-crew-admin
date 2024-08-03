@@ -54,7 +54,8 @@ export default function Products() {
   }, [offset, collName])
 
   useEffect(() => {
-    axios.get(customUrlBuilder('/api/productsV3', buildRequest())).then(response => {
+    console.log('w',customUrlBuilder('http://localhost:3001/api/productsV3', buildRequest()))
+    axios.get(customUrlBuilder('http://localhost:3001/api/productsV3', buildRequest())).then(response => {
       const data = response.data?.items.map(({_id}) => _id).join(',');
       localStorage.setItem('productsList', data);
       setProducts(response.data);
@@ -108,10 +109,10 @@ export default function Products() {
     notification.success({message: 'Copied', duration: 1})
   }
 
-  const onPaginationChange = (page, src) => {
+  const onPaginationChange = (page, link) => {
     const options = {
       method: 'POST',
-      url: `/api/log?value=${src}`,
+      url: `/api/log?value=${link}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -122,7 +123,7 @@ export default function Products() {
     setOffset(value);
     localStorage.setItem('offset', value.toString());
     localStorage.setItem('page', page.toString());
-    window.open(`dewulink://m.dewu.com/note?routerUrl=${src}`)
+    window.open(link)
   }
 
   const getSrcEnding = (src) => {
@@ -148,10 +149,11 @@ export default function Products() {
             {products.items?.map(product => (
               <tr key={product._id} className="flex items-center justify-start gap-2">
                 <td style={{paddingLeft: '0px', paddingRight: 0}}
-                    onTouchEnd={() => onPaginationChange(Number(lsCurrentPage) + 1, product?.src)}
+                    onClick={() => onPaginationChange(Number(lsCurrentPage) + 1, product?.link)}
+                    onTouchEnd={() => onPaginationChange(Number(lsCurrentPage) + 1, product?.link)}
                 >
-                  <a href={`${product?.src}`} style={{paddingLeft: 0}}
-                     target="_blank" >{getSrcEnding(product?.src)}</a>
+                  <a href={`${product?.link}`} style={{paddingLeft: 0}}
+                     target="_blank" >{product?.link}</a>
                 </td>
               </tr>
             ))}
