@@ -54,8 +54,7 @@ export default function Products() {
   }, [offset, collName])
 
   useEffect(() => {
-    console.log('w',customUrlBuilder('http://localhost:3001/api/productsV3', buildRequest()))
-    axios.get(customUrlBuilder('http://localhost:3001/api/productsV3', buildRequest())).then(response => {
+    axios.get(customUrlBuilder('https://api.re-poizon.ru/api/productsV3', buildRequest())).then(response => {
       const data = response.data?.items.map(({_id}) => _id).join(',');
       localStorage.setItem('productsList', data);
       setProducts(response.data);
