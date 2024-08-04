@@ -122,7 +122,7 @@ export default function Products() {
     setOffset(value);
     localStorage.setItem('offset', value.toString());
     localStorage.setItem('page', page.toString());
-    window.open(link)
+    //window.open(link)
   }
 
   const getSrcEnding = (src) => {
@@ -151,8 +151,8 @@ export default function Products() {
                     onClick={() => onPaginationChange(Number(lsCurrentPage) + 1, product?.link)}
                     //onTouchEnd={() => onPaginationChange(Number(lsCurrentPage) + 1, product?.link)}
                 >
-                  <a style={{paddingLeft: 0}}
-                     target="_blank" >{product?.link}</a>
+                  <a href={product?.link} style={{paddingLeft: 0}}
+                     >{product?.link}</a>
                 </td>
               </tr>
             ))}
