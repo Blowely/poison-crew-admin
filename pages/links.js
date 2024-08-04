@@ -149,9 +149,9 @@ export default function Products() {
               <tr key={product._id} className="flex items-center justify-start gap-2">
                 <td style={{paddingLeft: '0px', paddingRight: 0}}
                     onClick={() => onPaginationChange(Number(lsCurrentPage) + 1, product?.link)}
-                    onTouchEnd={() => onPaginationChange(Number(lsCurrentPage) + 1, product?.link)}
+                    //onTouchEnd={() => onPaginationChange(Number(lsCurrentPage) + 1, product?.link)}
                 >
-                  <a href={`${product?.link}`} style={{paddingLeft: 0}}
+                  <a style={{paddingLeft: 0}}
                      target="_blank" >{product?.link}</a>
                 </td>
               </tr>
