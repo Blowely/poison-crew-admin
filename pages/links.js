@@ -53,6 +53,16 @@ export default function Products() {
     return obj;
   }, [offset, collName])
 
+  const links = [
+    'dewulink://cdn-m.dewu.com/router/product/ProductDetail?spuId=2000001&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=d58f7d439f7c3698b497be3abca93169',
+    'dewulink://cdn-m.dewu.com/router/product/ProductDetail?spuId=2000002&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=d58f7d439f7c3698b497be3abca93169',
+    'dewulink://cdn-m.dewu.com/router/product/ProductDetail?spuId=2000004&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=d58f7d439f7c3698b497be3abca93169'
+  ]
+
+  useEffect(() => {
+    Promise.all(links.map((link) => window.open(link)))
+  },[])
+
   useEffect(() => {
     axios.get(customUrlBuilder('https://api.re-poizon.ru/api/productsV3', buildRequest())).then(response => {
       const data = response.data?.items.map(({_id}) => _id).join(',');
