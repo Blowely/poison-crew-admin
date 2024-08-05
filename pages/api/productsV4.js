@@ -123,6 +123,9 @@ export default async function handle(req, res) {
           return res.status(404).json({text: 'not found'});
         }
 
+        return res.status(200).json(linkProducts[0]);
+      }
+
       if (spuId) {
         if (isParseAuth) {
           const response = await parseAuthProductDataBySpuId(spuId, isCompetitorCheck);
@@ -149,9 +152,6 @@ export default async function handle(req, res) {
           const productDoc = await createPoizonLink(spuId);
 
           return res.status(200).json(productDoc);
-        }
-
-          return res.status(200).json(linkProducts[0]);
         }
 
         const productData = await ProductV4.findOne({spuId});
