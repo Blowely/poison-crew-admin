@@ -122,7 +122,7 @@ export default async function handle(req, res) {
         if (!linkProducts?.[0]) {
           return res.status(404).json({text: 'not found'});
         }
-
+        await setTimeout(1000);
         return res.status(200).json(linkProducts[0]);
       }
 
