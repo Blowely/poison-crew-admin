@@ -96,7 +96,7 @@ const updateProductBySpuId = async (spuId) => {
 }
 
 export default async function handle(req, res) {
-  await mongooseConnect();
+  await mongooseConnect() //remove if run local;
   const {method, query} = req;
 
   if (method === 'GET') {
@@ -104,6 +104,7 @@ export default async function handle(req, res) {
       const spuId = query?.spuId;
       const isParseAuth = query['parse-auth'];
       const isCompetitorCheck = query['competitor-check'] || false;
+      const existLinkNumber = query['exist-link'];
       const isUpdate = query?.update;
       const category = query?.category;
       const search = query?.search;
@@ -141,6 +142,16 @@ export default async function handle(req, res) {
           const productDoc = await createPoizonLink(spuId);
 
           return res.status(200).json(productDoc);
+        }
+
+        if (existLinkNumber) {
+          const linkProducts = await Link.find({}).skip(existLinkNumber).limit(1)
+
+          if (!linkProducts?.[0]) {
+            return res.status(404).json({text: 'not found'});
+          }
+
+          return res.status(200).json(linkProducts[0]);
         }
 
         const productData = await ProductV4.findOne({spuId});
