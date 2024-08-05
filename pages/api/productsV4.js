@@ -116,6 +116,13 @@ export default async function handle(req, res) {
         search
       }
 
+      if (existLinkNumber) {
+        const linkProducts = await Link.find({}).skip(existLinkNumber).limit(1)
+
+        if (!linkProducts?.[0]) {
+          return res.status(404).json({text: 'not found'});
+        }
+
       if (spuId) {
         if (isParseAuth) {
           const response = await parseAuthProductDataBySpuId(spuId, isCompetitorCheck);
@@ -143,13 +150,6 @@ export default async function handle(req, res) {
 
           return res.status(200).json(productDoc);
         }
-
-        if (existLinkNumber) {
-          const linkProducts = await Link.find({}).skip(existLinkNumber).limit(1)
-
-          if (!linkProducts?.[0]) {
-            return res.status(404).json({text: 'not found'});
-          }
 
           return res.status(200).json(linkProducts[0]);
         }
