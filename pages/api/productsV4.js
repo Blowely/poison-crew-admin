@@ -41,7 +41,6 @@ const createPoizonLink = async (spuId) => {
 
 const competitorCheckBySpuId = async (spuId) => {
   return await fetch(`${competitorUrl}/${spuId}`, requestOptions)
-    .catch((error) => console.error(error));
 }
 
 const parseAuthProductDataBySpuId = async (spuId, isCompetitorCheck) => {
