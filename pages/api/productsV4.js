@@ -2,7 +2,7 @@ import {mongooseConnect} from "@/lib/mongoose";
 import axios from "axios";
 import {setTimeout} from "timers/promises";
 import {ProductV4} from "@/models/ProductV4";
-import {customUrlBuilder, handlePoizonProductResponse, productsV4buildRequest} from "@/common/utils";
+import {customUrlBuilder, handlePoizonProductResponse} from "@/common/utils";
 import {Link} from "@/models/Link";
 
 const myHeaders = new Headers();
@@ -100,6 +100,7 @@ export default async function handle(req, res) {
 
   if (method === 'GET') {
     try {
+      const isAdmin = query['admin'] || false;
       const spuId = query?.spuId;
       const isParseAuth = query['parse-auth'];
       const isCompetitorCheck = query['competitor-check'] || false;
@@ -108,11 +109,19 @@ export default async function handle(req, res) {
       const category = query?.category;
       const search = query?.search;
       const offset = query?.offset || 0;
-      const limit = query?.limit || 20;
+      const limit = query?.limit || "20";
+      const minPrice = query?.minPrice;
+      const maxPrice = query?.maxPrice;
+      const sizeType = query?.sizeType;
+      const size = query?.size;
 
       const reqObj = {
         category,
-        search
+        search,
+        sizeType,
+        size,
+        minPrice,
+        maxPrice,
       }
 
       if (existLinkNumber) {
@@ -157,7 +166,55 @@ export default async function handle(req, res) {
         return res.status(200).json(productData);
       }
 
-      const items = await ProductV4.find(productsV4buildRequest(reqObj)).skip(offset).limit(limit);
+      const productsV4buildRequest = () => {
+        const {search, category, minPrice, maxPrice, sizeType, size} = reqObj;
+
+        let obj = {};
+
+        if (search) {
+          obj.title = new RegExp(search, "i");
+        }
+
+        if (category) {
+          obj.category = new RegExp('.*' + category + '.*');
+        }
+
+        if (sizeType) {
+          obj.sizeType = new RegExp('.*' + sizeType + '.*');
+        }
+
+        if (size) {
+          // Формируем запрос для фильтрации по размеру
+          obj.sizesAndPrices = {
+              $elemMatch: {
+                size: size,
+                ...(minPrice !== undefined && { price: { $gte: parseFloat(minPrice)  } }),
+                ...(maxPrice !== undefined && { price: { $lte: parseFloat(maxPrice)  } })
+              }
+            }
+        } else {
+          // Формируем запрос для фильтрации по полю cheapestPrice
+          obj = {
+            ...obj,
+            ...(minPrice !== undefined && { cheapestPrice: { $gte: parseFloat(minPrice) } }),
+            ...(maxPrice !== undefined && { cheapestPrice: { $lte: parseFloat(maxPrice) } })
+          };
+        }
+        // if (queryType !== 'admin') {
+        //   obj.price = {$gt: 1}
+        // }
+
+        return obj;
+      }
+
+      console.log('productsV4buildRequest',JSON.stringify(productsV4buildRequest()));
+      const projection = {
+        ...(isAdmin === false && { auth: 0 })
+      };
+      console.log('limit = ',limit)
+      console.log('projection = ',projection)
+      const items = await ProductV4.find(
+        productsV4buildRequest(),  projection).limit(limit).skip(offset);
 
       const totalCount = await ProductV4.count();
 
@@ -165,6 +222,7 @@ export default async function handle(req, res) {
 
       res.status(200).json(result);
     } catch (e) {
+      console.log('e =', e.message);
       res.status(500).json({status: 'internalServerError', message: 'Ошибка сервера'});
     }
   }

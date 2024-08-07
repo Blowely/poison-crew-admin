@@ -145,11 +145,11 @@ export const handlePoizonProductResponse = (poizonProduct) => {
       const propertyVersionSizeObj = salePropertiesList.find((el) => el?.propertyValueId === properties[properties.length - 2]?.propertyValueId)
       const version = {
         name: propertyVersionSizeObj?.name || "",
-        value:  propertyVersionSizeObj?.name || "",
+        value:  propertyVersionSizeObj?.value || "",
       }
 
-      if (version.name.includes('宽')) {
-        version.name = version.name.replace('宽', ' ширина');
+      if (version.value.includes('宽')) {
+        version.value = version.value.replace('宽', ' ширина');
       }
 
       return {...el, size: propertySizeObj?.value, version};
