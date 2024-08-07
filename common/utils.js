@@ -142,9 +142,17 @@ export const handlePoizonProductResponse = (poizonProduct) => {
       const {properties} = skus.find(({skuId}) => skuId === el?.skuId);
 
       const propertySizeObj = salePropertiesList.find((el) => el?.propertyValueId === properties[properties.length - 1]?.propertyValueId)
+      const propertyVersionSizeObj = salePropertiesList.find((el) => el?.propertyValueId === properties[properties.length - 2]?.propertyValueId)
+      const version = {
+        name: propertyVersionSizeObj?.name || "",
+        value:  propertyVersionSizeObj?.name || "",
+      }
 
+      if (version.name.includes('宽')) {
+        version.name = version.name.replace('宽', ' ширина');
+      }
 
-      return {...el, size: propertySizeObj?.value};
+      return {...el, size: propertySizeObj?.value, version};
     })
 
     return {
