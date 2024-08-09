@@ -105,6 +105,7 @@ export default async function handle(req, res) {
       const isParseAuth = query['parse-auth'];
       const isCompetitorCheck = query['competitor-check'] || false;
       const existLinkNumber = query['exist-link'];
+      const existProductNumber = query['exist-product'];
       const isUpdate = query?.update;
       const category = query?.category;
       const search = query?.search;
@@ -132,6 +133,18 @@ export default async function handle(req, res) {
         }
         await setTimeout(1000);
         return res.status(200).json(linkProducts[0]);
+      }
+
+      if (existProductNumber && isUpdate) {
+        const products = await ProductV4.find({}).skip(existProductNumber).limit(1)
+
+        if (!products?.[0]) {
+          return res.status(404).json({text: 'not found'});
+        }
+
+        const {status, product, message} = await updateProductBySpuId(products[0].spuId);
+
+        return res.status(status).json({product, message});
       }
 
       if (spuId) {
