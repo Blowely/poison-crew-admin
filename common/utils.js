@@ -167,6 +167,8 @@ export const handlePoizonProductResponse = (poizonProduct) => {
       level1CategoryId,
       level2CategoryId,
       sizeInfoList,
+      skus,
+      salePropertiesList,
       isDeleted: false
     };
   } catch (error) {
