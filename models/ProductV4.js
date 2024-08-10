@@ -22,6 +22,7 @@ export const ProductV4Schema = new Schema({
   level2CategoryId: Number,
   skus: [{type:Object}],
   salePropertiesList: [{type:Object}],
+  arSkuIdRelation: [{type:Object}],
   auth: {type:Object},
   isDeleted: Boolean
 }, {

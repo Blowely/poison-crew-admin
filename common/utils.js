@@ -117,6 +117,7 @@ export const handlePoizonProductResponse = (poizonProduct) => {
     const level2CategoryId = data?.detail?.level2CategoryId || "";
     const brandId = data?.detail?.brandId || "";
     const sizeInfoList = data?.sizeDto?.sizeInfo?.sizeTemplate?.list || [];
+    const arSkuIdRelation = data?.image?.spuImage?.arSkuIdRelation || [];
 
     const pricesAndSkuIds = []
     const prices = [];
@@ -160,6 +161,7 @@ export const handlePoizonProductResponse = (poizonProduct) => {
       sizeInfoList,
       skus,
       salePropertiesList,
+      arSkuIdRelation,
       isDeleted: false
     };
   } catch (error) {
