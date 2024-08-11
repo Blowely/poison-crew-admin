@@ -230,11 +230,11 @@ export default async function handle(req, res) {
         ...(isAdmin === false && { auth: 0 })
       };
 
-      //const sortOrder = sortDirection === 'asc' ? 1 : sortDirection === 'desc' ? -1 : null;
+      const sortOrder = sortDirection === 'asc' ? 1 : sortDirection === 'desc' ? -1 : null;
 
-      const items = await ProductV4.find(productsV4buildRequest(), {projection})
-        .limit(limit)
-        .skip(offset);
+      const items = await ProductV4.find(productsV4buildRequest(), projection)
+        .skip(offset)
+        .limit(limit);
 
 
       const totalCount = await ProductV4.count();
