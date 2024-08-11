@@ -202,18 +202,23 @@ export default async function handle(req, res) {
           obj.sizesAndPrices = {
               $elemMatch: {
                 size: size,
-                ...(minPrice !== undefined && { price: { $gte: parseFloat(minPrice)  } }),
+                ...(minPrice
+                  ? { cheapestPrice: { $gte: parseFloat(minPrice) } }
+                  :  { cheapestPrice: { $gte: 1 } }),
                 ...(maxPrice !== undefined && { price: { $lte: parseFloat(maxPrice)  } })
               }
             }
-        } /*else {
+        } else {
           // Формируем запрос для фильтрации по полю cheapestPrice
           obj = {
             ...obj,
-            ...(minPrice !== undefined && { cheapestPrice: { $gte: parseFloat(minPrice) } }),
+            ...(minPrice
+              ? { cheapestPrice: { $gte: parseFloat(minPrice) } }
+              :  { cheapestPrice: { $gte: 1 } }),
             ...(maxPrice !== undefined && { cheapestPrice: { $lte: parseFloat(maxPrice) } })
           };
-        }*/
+        }
+
         // if (queryType !== 'admin') {
         //   obj.price = {$gt: 1}
         // }
@@ -225,22 +230,12 @@ export default async function handle(req, res) {
         ...(isAdmin === false && { auth: 0 })
       };
 
-      const sortOrder = sortDirection === 'asc' ? 1 : sortDirection === 'desc' ? -1 : null;
+      //const sortOrder = sortDirection === 'asc' ? 1 : sortDirection === 'desc' ? -1 : null;
 
-      const items = await ProductV4.aggregate([
-        { $match: productsV4buildRequest() },
-        {
-          $addFields: {
-            hasPrice: { $cond: { if: { $ne: ["$cheapestPrice", null] }, then: 1, else: 0 } }
-          }
-        },
-        {
-          $sort: sortOrder ? { hasPrice: -1, cheapestPrice: sortOrder } : { hasPrice: -1, _id: 1 }
-        },
-        { $skip: Number(offset) },
-        { $limit: Number(limit) },
-        { $project: projection }
-      ]);
+      const items = await ProductV4.find(productsV4buildRequest(), {projection})
+        .limit(limit)
+        .skip(offset);
+
 
       const totalCount = await ProductV4.count();
 
