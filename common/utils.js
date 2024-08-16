@@ -83,20 +83,22 @@ const getCheapestPrice = (prices) => {
   return cheapest;
 }
 
-const getClearTitle = (title) => {
+const getClearTitle = (name) => {
   /// Проверка наличия английских букв
-  const hasEnglish = /[a-zA-Z]/.test(title);
+  const hasEnglish = /[a-zA-Z]/.test(name);
 
   if (hasEnglish) {
     // Удаление спецсимволов "【" и "】" перед английским названием
-    title = title.replace(/^【.*?】\s*/, '');
+    name = name.replace(/^【.*?】\s*/, '');
 
     // Удаление китайских символов
-    return title.replace(/[\u4e00-\u9fa5]/g, '').trim();
-  } else {
-    // Если английских букв нет, оставляем строку без изменений, только убираем лишние пробелы
-    return title.trim();
+    name = name.replace(/[\u4e00-\u9fa5]/g, '');
   }
+
+  // Удаление лишних пробелов внутри строки
+  name = name.replace(/\s+/g, ' ').trim();
+
+  return name;
 }
 
 export const handlePoizonProductResponse = (poizonProduct) => {
