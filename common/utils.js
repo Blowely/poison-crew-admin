@@ -84,12 +84,20 @@ const getCheapestPrice = (prices) => {
 }
 
 const getClearTitle = (name) => {
-  /// Проверка наличия английских букв
+  // Проверка наличия английских букв
   const hasEnglish = /[a-zA-Z]/.test(name);
 
   if (hasEnglish) {
     // Удаление спецсимволов "【" и "】" перед английским названием
     name = name.replace(/^【.*?】\s*/, '');
+
+    // Добавление пробелов между английскими буквами, китайскими символами, цифрами и спецсимволами
+    name = name.replace(/([a-zA-Z0-9])([\u4e00-\u9fa5])/g, '$1 $2')
+      .replace(/([\u4e00-\u9fa5])([a-zA-Z0-9])/g, '$1 $2')
+      .replace(/([a-zA-Z])([0-9])/g, '$1 $2')
+      .replace(/([0-9])([a-zA-Z])/g, '$1 $2')
+      .replace(/([a-zA-Z0-9])([\W_])/g, '$1 $2')
+      .replace(/([\W_])([a-zA-Z0-9])/g, '$1 $2');
 
     // Удаление китайских символов
     name = name.replace(/[\u4e00-\u9fa5]/g, '');
