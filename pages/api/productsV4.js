@@ -200,21 +200,17 @@ export default async function handle(req, res) {
         if (size) {
           // Формируем запрос для фильтрации по размеру
           obj.sizesAndPrices = {
-              $elemMatch: {
-                size: size,
-                ...(minPrice
-                  ? { cheapestPrice: { $gte: parseFloat(minPrice) } }
-                  :  { cheapestPrice: { $gte: 1 } }),
-                ...(maxPrice !== undefined && { price: { $lte: parseFloat(maxPrice)  } })
-              }
+            $elemMatch: {
+              size: size,
+              ...(minPrice !== undefined && { price: { $gte: parseFloat(minPrice)  } }),
+              ...(maxPrice !== undefined && { price: { $lte: parseFloat(maxPrice)  } })
             }
+          }
         } else {
           // Формируем запрос для фильтрации по полю cheapestPrice
           obj = {
             ...obj,
-            ...(minPrice
-              ? { cheapestPrice: { $gte: parseFloat(minPrice) } }
-              :  { cheapestPrice: { $gte: 1 } }),
+            ...(maxPrice !== undefined &&  { cheapestPrice: { $gte: parseFloat(minPrice) } }),
             ...(maxPrice !== undefined && { cheapestPrice: { $lte: parseFloat(maxPrice) } })
           };
         }
@@ -235,7 +231,7 @@ export default async function handle(req, res) {
       const items = await ProductV4.find(productsV4buildRequest(), projection)
         .skip(offset)
         .limit(limit);
-
+      //console.log('items',items);
 
       const totalCount = await ProductV4.count();
 
