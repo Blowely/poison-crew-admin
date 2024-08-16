@@ -210,7 +210,7 @@ export default async function handle(req, res) {
           // Формируем запрос для фильтрации по полю cheapestPrice
           obj = {
             ...obj,
-            ...(maxPrice !== undefined &&  { cheapestPrice: { $gte: parseFloat(minPrice) } }),
+            ...(minPrice !== undefined &&  { cheapestPrice: { $gte: parseFloat(minPrice) } }),
             ...(maxPrice !== undefined && { cheapestPrice: { $lte: parseFloat(maxPrice) } })
           };
         }
