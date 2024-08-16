@@ -3,6 +3,7 @@ import mongoose, {model, Schema, models} from "mongoose";
 export const ProductV4Schema = new Schema({
   spuId: Number,
   title: String,
+  clearTitle: String,
   description: String,
   titleDescription: String,
   country: String,

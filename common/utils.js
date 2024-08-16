@@ -83,9 +83,26 @@ const getCheapestPrice = (prices) => {
   return cheapest;
 }
 
+const getClearTitle = (title) => {
+  /// Проверка наличия английских букв
+  const hasEnglish = /[a-zA-Z]/.test(title);
+
+  if (hasEnglish) {
+    // Удаление спецсимволов "【" и "】" перед английским названием
+    title = title.replace(/^【.*?】\s*/, '');
+
+    // Удаление китайских символов
+    return title.replace(/[\u4e00-\u9fa5]/g, '').trim();
+  } else {
+    // Если английских букв нет, оставляем строку без изменений, только убираем лишние пробелы
+    return title.trim();
+  }
+}
+
 export const handlePoizonProductResponse = (poizonProduct) => {
   try {
     const title = poizonProduct?.data?.detail?.title || "";
+    const clearTitle = getClearTitle(title || "");
     const data = poizonProduct?.data || {};
 
     if (!title) {
@@ -150,6 +167,7 @@ export const handlePoizonProductResponse = (poizonProduct) => {
     return {
       spuId,
       title,
+      clearTitle,
       cheapestPrice: getCheapestPrice(prices),
       sizesAndPrices,
       brandId,

@@ -85,7 +85,6 @@ const updateProductBySpuId = async (spuId) => {
       return {error: false, product: {}, message: 'poizon product not found', status: 200};
     }
 
-    console.log(handledPoizonProduct)
     const updatedProduct = await ProductV4.updateOne({spuId}, handledPoizonProduct)
 
     return {error: false, product: updatedProduct, message: 'updated', status: 200};
@@ -144,6 +143,7 @@ export default async function handle(req, res) {
         }
 
         const {status, product, message} = await updateProductBySpuId(products[0].spuId);
+        console.log('product',product)
 
         return res.status(status).json({product, message});
       }
@@ -186,7 +186,7 @@ export default async function handle(req, res) {
         let obj = {};
 
         if (search) {
-          obj.title = new RegExp(search, "i");
+          obj.clearTitle = new RegExp(search, "i");
         }
 
         if (category) {
@@ -226,7 +226,7 @@ export default async function handle(req, res) {
         ...(isAdmin === false && { auth: 0 })
       };
 
-      const sortOrder = sortDirection === 'asc' ? 1 : sortDirection === 'desc' ? -1 : null;
+      const sortOrder = sortDirection === 'asc' ? 1 : sortDirection === 'desc' ? -1 : {};
 
       const items = await ProductV4.find(productsV4buildRequest(), projection)
         .skip(offset)
