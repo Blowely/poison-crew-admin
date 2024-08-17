@@ -187,6 +187,8 @@ export default async function handle(req, res) {
 
         if (search) {
           obj.clearTitle = new RegExp(search, "i");
+        } else {
+          obj.clearTitle = new RegExp('nike', "i");
         }
 
         if (category) {
@@ -226,16 +228,31 @@ export default async function handle(req, res) {
         ...(isAdmin === false && { auth: 0 })
       };
 
-      const sortOrder = sortDirection === 'asc' ? 1 : sortDirection === 'desc' ? -1 : {};
+      const sortOrder = sortDirection === 'asc' ? 1 : sortDirection === 'desc' ? -1 : null;
 
-      const items = await ProductV4.find(productsV4buildRequest(), projection)
+      /*const items = await ProductV4.find(productsV4buildRequest(), projection)
         .skip(offset)
-        .limit(limit);
+        .limit(limit);*/
       //console.log('items',items);
 
-      const totalCount = await ProductV4.count();
+      const items = await ProductV4.aggregate([
+        { $match: productsV4buildRequest() },
+        {
+          $addFields: {
+            hasPrice: { $cond: { if: { $ne: ["$cheapestPrice", null] }, then: 1, else: 0 } }
+          }
+        },
+        {
+          $sort: sortOrder ? { hasPrice: -1, cheapestPrice: sortOrder } : { hasPrice: -1, _id: 1 }
+        },
+        { $skip: Number(offset) },
+        { $limit: Number(limit) },
+        { $project: projection }
+      ]);
 
-      const result = {items: items, total_count: totalCount }
+      //const totalCount = await ProductV4.count();
+
+      const result = {items: items, /*total_count: totalCount*/ }
 
       res.status(200).json(result);
     } catch (e) {
