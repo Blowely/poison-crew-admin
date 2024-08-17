@@ -237,22 +237,27 @@ export default async function handle(req, res) {
 
       const items = await ProductV4.aggregate([
         { $match: productsV4buildRequest() },
-        {
-          $addFields: {
-            hasPrice: { $cond: { if: { $ne: ["$cheapestPrice", null] }, then: 1, else: 0 } }
+        ...(minPrice === undefined ? [
+          {
+            $addFields: {
+              hasPrice: { $cond: { if: { $ne: ["$cheapestPrice", null] }, then: 1, else: 0 } }
+            }
+          },
+          {
+            $sort: sortOrder ? { hasPrice: -1, cheapestPrice: sortOrder } : { hasPrice: -1, _id: 1 }
           }
-        },
-        {
-          $sort: sortOrder ? { hasPrice: -1, cheapestPrice: sortOrder } : { hasPrice: -1, _id: 1 }
-        },
+        ] : [
+          { $sort: sortOrder ? { cheapestPrice: sortOrder } : { _id: 1 } }
+        ]),
         { $skip: Number(offset) },
         { $limit: Number(limit) },
         { $project: projection }
       ]);
+      let filteredCount = await ProductV4.countDocuments(productsV4buildRequest());
 
       //const totalCount = await ProductV4.count();
 
-      const result = {items: items, /*total_count: totalCount*/ }
+      const result = {items: items, total_count: filteredCount }
 
       res.status(200).json(result);
     } catch (e) {
