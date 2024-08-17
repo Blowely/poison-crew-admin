@@ -253,11 +253,11 @@ export default async function handle(req, res) {
         { $limit: Number(limit) },
         { $project: projection }
       ]);
-      let filteredCount = await ProductV4.countDocuments(productsV4buildRequest());
+      //let filteredCount = await ProductV4.countDocuments(productsV4buildRequest());
 
       //const totalCount = await ProductV4.count();
 
-      const result = {items: items, total_count: filteredCount }
+      const result = {items: items }
 
       res.status(200).json(result);
     } catch (e) {
