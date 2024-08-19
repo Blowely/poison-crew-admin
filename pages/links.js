@@ -22,6 +22,14 @@ export default function Products() {
   const [modalImageOpen, setModalImageOpen] = useState(false);
 
   const collName = searchParams.get('collName');
+  const dewulink = searchParams.get('dewulink') || '';
+
+  useEffect(() => {
+    if (dewulink) {
+      window.open(dewulink);
+    }
+  },[dewulink])
+
 
   let lsOffset = '';
   let lsCurrentPage = '';
