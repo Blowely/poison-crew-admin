@@ -108,6 +108,7 @@ export default async function handle(req, res) {
       const isUpdate = query?.update;
       const category = query?.category;
       const search = query?.search;
+      const brandId = query['brand-id'] || null;
       const offset = query?.offset || 0;
       const limit = query?.limit || "20";
       const minPrice = query?.minPrice;
@@ -189,6 +190,10 @@ export default async function handle(req, res) {
           obj.clearTitle = new RegExp(search, "i");
         } else {
           obj.clearTitle = new RegExp('nike', "i");
+        }
+
+        if (brandId) {
+          obj.brandId = brandId;
         }
 
         if (category) {
