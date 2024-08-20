@@ -129,6 +129,7 @@ export default async function handle(req, res) {
       const isUpdate = query?.update;
       const search = query?.search;
       const brandId = query?.brandId || null;
+      const brandIds = query?.brandIds || null;
       const categoryId = query?.categoryId || null;
       const level1CategoryId = query?.level1CategoryId || null;
       const level2CategoryId = query?.level2CategoryId || null;
@@ -214,6 +215,10 @@ export default async function handle(req, res) {
 
         if (brandId) {
           obj.brandId = Number(brandId);
+        }
+
+        if (brandIds) {
+          obj.brandId = { $in: brandIds.split(',').map((el) => Number(el)) }
         }
 
         if (categoryId) {
