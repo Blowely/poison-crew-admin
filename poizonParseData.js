@@ -1,5 +1,5 @@
 (async () => {
-  for (let i = 1013851; i <= 1055000; i++) {
+  for (let i = 1046174; i <= 1055000; i++) {
     try {
       //const res = await fetch(`https://api.re-poizon.ru/api/productsV4?exist-product=${i}&update=true`)
       const res = await fetch(`https://api.re-poizon.ru/api/productsV4?spuId=${i}&update=true`)
