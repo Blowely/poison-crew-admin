@@ -141,7 +141,6 @@ export default async function handle(req, res) {
       const sortDirection = query?.sortDirection;
 
       const reqObj = {
-        category,
         search,
         sizeType,
         size,
@@ -205,7 +204,7 @@ export default async function handle(req, res) {
       }
 
       const productsV4buildRequest = () => {
-        const {search, category, minPrice, maxPrice, sizeType, size} = reqObj;
+        const {search, minPrice, maxPrice, sizeType, size} = reqObj;
 
         let obj = {};
 
