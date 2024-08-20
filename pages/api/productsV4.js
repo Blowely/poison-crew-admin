@@ -4,6 +4,8 @@ import {setTimeout} from "timers/promises";
 import {ProductV4} from "@/models/ProductV4";
 import {customUrlBuilder, handlePoizonProductResponse} from "@/common/utils";
 import {Link} from "@/models/Link";
+import {Brand} from "@/models/Brand";
+import {Category} from "@/models/Category";
 
 const myHeaders = new Headers();
 myHeaders.append("accept", "*/*");
@@ -83,6 +85,25 @@ const updateProductBySpuId = async (spuId) => {
 
     if (statusText !== 'OK' && status !== 200) {
       return {error: false, product: {}, message: 'poizon product not found', status: 200};
+    }
+
+    const isExistBrand = await Brand.findOne({id: handledPoizonProduct.brandId})
+
+    if (!isExistBrand) {
+      await Brand.create({
+        id: Number(handledPoizonProduct.brandId),
+        originName: handledPoizonProduct.brandName,
+        logo: handledPoizonProduct.brandLogo
+      });
+    }
+
+    const isExistCategory = await Category.findOne({id: handledPoizonProduct.categoryId})
+
+    if (!isExistCategory) {
+      await Category.create({
+        id: Number(handledPoizonProduct.categoryId),
+        originName: handledPoizonProduct.categoryName
+      });
     }
 
     const updatedProduct = await ProductV4.updateOne({spuId}, handledPoizonProduct)

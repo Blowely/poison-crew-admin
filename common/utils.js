@@ -148,6 +148,8 @@ export const handlePoizonProductResponse = (poizonProduct) => {
     const brandId = data?.detail?.brandId || "";
     const sizeInfoList = data?.sizeDto?.sizeInfo?.sizeTemplate?.list || [];
     const arSkuIdRelation = data?.image?.spuImage?.arSkuIdRelation || [];
+    const brandName = data?.brandRootInfo?.brandItemList[0]?.brandName || "";
+    const brandLogo = data?.brandRootInfo?.brandItemList[0]?.brandLogo || "";
 
     const pricesAndSkuIds = []
     const prices = [];
@@ -184,6 +186,8 @@ export const handlePoizonProductResponse = (poizonProduct) => {
       cheapestPrice: getCheapestPrice(prices),
       sizesAndPrices,
       brandId,
+      brandName,
+      brandLogo,
       images,
       categoryName,
       categoryId,
