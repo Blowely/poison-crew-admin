@@ -108,7 +108,7 @@ export default async function handle(req, res) {
       const isUpdate = query?.update;
       const category = query?.category;
       const search = query?.search;
-      const brandId = query['brand-id'] || null;
+      const brandId = query?.brandId || null;
       const offset = query?.offset || 0;
       const limit = query?.limit || "20";
       const minPrice = query?.minPrice;
