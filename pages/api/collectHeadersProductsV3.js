@@ -6,6 +6,7 @@ import {ProductV2} from "@/models/ProductV2";
 import {ProductV3} from "@/models/ProductV3";
 import axios from "axios";
 import {ProductV4} from "@/models/ProductV4";
+import {Log} from "@/models/Log";
 
 export default async function handle(req, res) {
   const {method, query} = req;
@@ -28,6 +29,8 @@ export default async function handle(req, res) {
       }
 
       const isExist = await ProductV4.findOne({spuId: spuId});
+
+      await Log.create({spuId});
 
       if (isExist) {
         let productDoc = await ProductV4.findOneAndUpdate({
