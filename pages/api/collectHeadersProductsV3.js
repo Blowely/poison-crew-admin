@@ -33,16 +33,15 @@ export default async function handle(req, res) {
       await Log.create({spuId});
 
       if (isExist) {
-        let productDoc = await ProductV4.findOneAndUpdate({
+        await ProductV4.findOneAndUpdate({
           spuId
         }, {auth})
+
         res.status(200);
         res.json({status: 'productIsExist', message: 'productIsExist'});
         return;
       }
 
-
-      console.log('auth =',auth);
       let productDoc = await ProductV4.create({
         spuId, auth
       })
