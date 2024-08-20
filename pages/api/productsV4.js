@@ -127,9 +127,11 @@ export default async function handle(req, res) {
       const existLinkNumber = query['exist-link'];
       const existProductNumber = query['exist-product'];
       const isUpdate = query?.update;
-      const category = query?.category;
       const search = query?.search;
       const brandId = query?.brandId || null;
+      const categoryId = query?.categoryId || null;
+      const level1CategoryId = query?.level1CategoryId || null;
+      const level2CategoryId = query?.level2CategoryId || null;
       const offset = query?.offset || 0;
       const limit = query?.limit || "20";
       const minPrice = query?.minPrice;
@@ -215,8 +217,16 @@ export default async function handle(req, res) {
           obj.brandId = Number(brandId);
         }
 
-        if (category) {
-          obj.category = new RegExp('.*' + category + '.*');
+        if (categoryId) {
+          obj.categoryId = Number(brandId);
+        }
+
+        if (level1CategoryId) {
+          obj.level1CategoryId = Number(level1CategoryId);
+        }
+
+        if (level2CategoryId) {
+          obj.level2CategoryId = Number(level2CategoryId);
         }
 
         if (sizeType) {
