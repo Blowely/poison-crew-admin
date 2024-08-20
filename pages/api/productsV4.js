@@ -188,12 +188,10 @@ export default async function handle(req, res) {
 
         if (search) {
           obj.clearTitle = new RegExp(search, "i");
-        } else {
-          obj.clearTitle = new RegExp('nike', "i");
         }
 
         if (brandId) {
-          obj.brandId = brandId;
+          obj.brandId = Number(brandId);
         }
 
         if (category) {
