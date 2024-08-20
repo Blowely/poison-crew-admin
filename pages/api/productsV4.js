@@ -218,7 +218,7 @@ export default async function handle(req, res) {
         }
 
         if (categoryId) {
-          obj.categoryId = Number(brandId);
+          obj.categoryId = Number(categoryId);
         }
 
         if (level1CategoryId) {
