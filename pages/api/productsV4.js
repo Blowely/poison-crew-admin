@@ -6,6 +6,7 @@ import {customUrlBuilder, handlePoizonProductResponse} from "@/common/utils";
 import {Link} from "@/models/Link";
 import {Brand} from "@/models/Brand";
 import {Category} from "@/models/Category";
+import * as cheerio from 'cheerio';
 
 const myHeaders = new Headers();
 myHeaders.append("accept", "*/*");
@@ -140,6 +141,8 @@ export default async function handle(req, res) {
       const sizeType = query?.sizeType;
       const size = query?.size;
       const sortDirection = query?.sortDirection;
+      const page = query?.page || '1';
+      const url = query?.url;
 
       const reqObj = {
         search,
@@ -170,6 +173,30 @@ export default async function handle(req, res) {
         console.log('product',product)
 
         return res.status(status).json({product, message});
+      }
+
+      if (url) {
+        let config = {
+          method: 'get',
+          maxBodyLength: Infinity,
+          url: `https://www.poizon.com/product/${url}`,
+        };
+
+        const response = await axios.request(config);
+
+        const $ = cheerio.load(`${response.data}`);
+        const rawData = $('script[id="__NEXT_DATA__"]:first').text();
+
+        let productData = [];
+        try {
+          const data = JSON.parse(rawData);
+          productData = data?.props?.pageProps;
+          console.log('data?.props?.pageProps =',data?.props?.pageProps) //check priceInfo
+        } catch (error) {
+          console.error("Ошибка парсинга JSON:", error);
+        }
+
+        return res.status(200).json(productData);
       }
 
       if (spuId) {
@@ -273,7 +300,7 @@ export default async function handle(req, res) {
         .limit(limit);*/
       //console.log('items',items);
 
-      const items = await ProductV4.aggregate([
+      /*const items = await ProductV4.aggregate([
         { $match: productsV4buildRequest() },
         ...(minPrice === undefined ? [
           {
@@ -290,10 +317,46 @@ export default async function handle(req, res) {
         { $skip: Number(offset) },
         { $limit: Number(limit) },
         { $project: projection }
-      ]);
+      ]);*/
       //let filteredCount = await ProductV4.countDocuments(productsV4buildRequest());
 
       //const totalCount = await ProductV4.count();
+
+      let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `https://www.poizon.com/category/sneakers-500000091?pinSpuIds=64839289&page=${page}`,
+        headers: {
+          'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+          'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7,zh-CN;q=0.6,zh;q=0.5',
+          'cache-control': 'no-cache',
+          'cookie': 'fe_sensors_ssid=72bbe4e5-cb7f-405e-8fee-97c21c20b089; _gcl_au=1.1.1389199027.1724270793; _scid=384e81a0-cbf6-4e26-9c69-78ce3b82baac; _pin_unauth=dWlkPU1UVTJOamRrTURjdFlXVm1aaTAwWVRrd0xUZ3hOMkV0WlRnek4yRmhPV1ZtWTJJeg; _ga=GA1.1.1513070028.1724270794; _ScCbts=%5B%5D; sk=9OwIO03sERS71jLjFNmrHy5ynKAIVi1gDKN6lK5sWxd6HmhJsOiPMOD4ecqRctHDrI0vHiTJF8CVtqiI885eKvUIpf1t; _sctr=1%7C1724187600000; _fbp=fb.1.1724271221984.242998406874190143; duToken=Mst6G15wXz1J79oOclDjq00je4xvI0R9rgJOfkAY_SmOk6yunK93KcGuQcE8zloY3jncqlDeVbArJVmVmAp7iiHgzqXqjkaqlgLINXNkmWZreOYEDSrbahSd+jBKUldWVniPnWmK1hUZWqlKn9BnfHueoymqkJzUM6ScDNWiagEu+3_8QTGWHOUdFB6+12YcBUqDKS98QGxl3tTcy41XKWpLu3F6Jq+ZB+f+iw3snVfvFVndh_KrHbKNiGXtw6QISwo0_tKS4kGN0HSY02MuaZUy4hiLxpxpjfj7j_y1swTdvWhhEwBGLL5w8H5RP7PrAcuT7H7ZACa0qB5fLr4dF35Ki2t0dcw5q_JxbBgFtAvOKmNum4YHsGW2RK8WHySzjH8phDWgBY18rLjL; feLoginExpire=1724882664000; feLoginss=2060878319; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22191768c51e41ba8-0209215c5b4d9ba-26001e51-2073600-191768c51e5d02%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfY29va2llX2lkIjoiMTkxNzY4YzUxZTQxYmE4LTAyMDkyMTVjNWI0ZDliYS0yNjAwMWU1MS0yMDczNjAwLTE5MTc2OGM1MWU1ZDAyIn0%3D%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%22%2C%22value%22%3A%22%22%7D%2C%22%24device_id%22%3A%22191768c51e41ba8-0209215c5b4d9ba-26001e51-2073600-191768c51e5d02%22%7D; _clck=29nabb%7C2%7Cfol%7C0%7C1694; _clsk=3f5kah%7C1724506847049%7C3%7C1%7Cs.clarity.ms%2Fcollect; accessToken=iC18xoiHQobXmByh7YYae2MJnVkEyay71XeXO4bwsgAg5AFHL8YvZxVCZQY5VDQm; tfstk=fcIjM4ZtBjcXUtBWsEeyP5oB74K1csZUfA9OKOnqBnKA1OCFaFdw0ZzO1_OP0IW2DCn1K9KNuZXZnafFpmS4oho6mhxTTWrUYtWDjhESOjJKiup2LloxXIUN0FJbTWrU4BdL5tFF7a2oVU9MwKpxkheW2d9wXjpA6QLJpplvXhCOe89wQVhvHKHJ2dJZCcMBCrOch8IK14cERJByNcnIZnLY1s0Z-2qXnEdptEm9hg9XlBBAmnGWlLIPVe8rQ7tRKa5vFHZjtK_Rdnp1jJ361FsDVd_uGq5CidBJPsyZSL_1BMxDAAEAFnOXJgL0fJfdFOQePgyLxntvMN-cQvNVFi1Vng6ZB4KX0aTCcHEnMC7PdG91j5q5OOBhWUssGgyKYBOQbVMW-c9WT8wSSVJMSlcSAOblQEpkhUy7FjQMkLvWT8wSSVYvEKOzF8GAS; __kla_id=eyJjaWQiOiJObVE0WWpFMU1HVXROemcwTUMwME56YzJMVGsxTTJRdE1UTmlNVFptTmpNMlpEQmgiLCIkcmVmZXJyZXIiOnsidHMiOjE3MjQyNzA3OTMsInZhbHVlIjoiaHR0cHM6Ly93d3cucG9pem9uLmNvbS8iLCJmaXJzdF9wYWdlIjoiaHR0cHM6Ly93d3cucG9pem9uLmNvbS9wcm9kdWN0L2pvcmRhbi0xLWxvdy1hc2hlbi1zbGF0ZS1tZW4tcy01MzU0MDg4MT90cmFja19yZWZlcmVyX3BhZ2VfaWQ9MjI5NiZ0cmFja19yZWZlcmVyX2Jsb2NrX3R5cGU9NDc2NiZ0cmFja19yZWZlcmVyX3Bvc2l0aW9uPTIifSwiJGxhc3RfcmVmZXJyZXIiOnsidHMiOjE3MjQ1Mjg0MzksInZhbHVlIjoiIiwiZmlyc3RfcGFnZSI6Imh0dHBzOi8vd3d3LnBvaXpvbi5jb20vIn19; _uetsid=c54b2ed0621d11ef9a914b7247eece9a; _uetvid=dd0b00405ff811efb177f75985c57097; _scid_r=384e81a0-cbf6-4e26-9c69-78ce3b82baac; _ga_PPLYZ7Q5C8=GS1.1.1724528462.9.0.1724528462.60.0.0; fe_sensors_ssid=72bbe4e5-cb7f-405e-8fee-97c21c20b089',
+          'pragma': 'no-cache',
+          'priority': 'u=0, i',
+          'referer': 'https://www.poizon.com/',
+          'sec-ch-ua': '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"Windows"',
+          'sec-fetch-dest': 'document',
+          'sec-fetch-mode': 'navigate',
+          'sec-fetch-site': 'same-origin',
+          'sec-fetch-user': '?1',
+          'upgrade-insecure-requests': '1',
+          'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36'
+        }
+      };
+
+      const response = await axios.request(config);
+
+      const $ = cheerio.load(`${response.data}`);
+      const rawData = $('script[type="application/ld+json"]:first').text();
+      let items = [];
+      try {
+        const data = JSON.parse(rawData);
+        items = data?.itemListElement;
+      } catch (error) {
+        console.error("Ошибка парсинга JSON:", error);
+      }
 
       const result = {items: items }
 
