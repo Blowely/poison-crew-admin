@@ -199,6 +199,30 @@ export default async function handle(req, res) {
         return res.status(200).json(productData);
       }
 
+      if (search) {
+        let config = {
+          method: 'get',
+          maxBodyLength: Infinity,
+          url: `https://www.poizon.com/search?keyword=${search}`,
+        };
+
+        const response = await axios.request(config);
+
+        const $ = cheerio.load(`${response.data}`);
+        const rawData = $('script[type="application/ld+json"]:first').text();
+        let items = [];
+        try {
+          const data = JSON.parse(rawData);
+          items = data?.itemListElement;
+        } catch (error) {
+          console.error("Ошибка парсинга JSON:", error);
+        }
+
+        const result = {items: items }
+
+        return res.status(200).json(result);
+      }
+
       if (spuId) {
         if (isParseAuth) {
           const response = await parseAuthProductDataBySpuId(spuId, isCompetitorCheck);
