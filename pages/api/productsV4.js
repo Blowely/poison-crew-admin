@@ -35,7 +35,8 @@ const updateLastProductData = 'http://localhost:3001/api/updateLastProductData';
 const competitorUrl = 'https://unicorngo.ru/api/catalog/product';
 
 const createPoizonLink = async (spuId) => {
-  const link = `dewulink://cdn-m.dewu.com/router/product/ProductDetail?spuId=${spuId}&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=d58f7d439f7c3698b497be3abca93169`;
+  //const link = `dewulink://cdn-m.dewu.com/router/product/ProductDetail?spuId=${spuId}&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=d58f7d439f7c3698b497be3abca93169`;
+  const link = `https://poizon2hk.page.link/?link=https://hk.poizon.com/router/sell/productDetail?spuId=${spuId}&ibi=com.shizhuang.poizon.hk&isi=1509915974&efr=1`;
 
   return await Link.create({
     link,
