@@ -42,6 +42,9 @@ export default async function handle(req, res) {
 
       const productData = await axios.post(url,data,{headers}).catch((err) => {
         console.log('err',err)
+        res.status(500);
+        res.json({status: 'internalServerError', message: err});
+        return;
       })
 
       console.log('productData',productData)
