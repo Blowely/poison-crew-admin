@@ -43,7 +43,7 @@ export default async function handle(req, res) {
       const productData = await axios.post(url,data,{headers}).catch((err) => {
         console.log('err',err)
         res.status(500);
-        res.json({status: 'internalServerError', message: err});
+        res.json({status: 'internalServerError', message: err.message});
         return;
       })
 
@@ -70,7 +70,7 @@ export default async function handle(req, res) {
       res.json(productDoc);
     } catch (e) {
       res.status(500);
-      res.json({status: 'internalServerError', message: e});
+      res.json({status: 'internalServerError', message: e.message});
     }
   }
 }
