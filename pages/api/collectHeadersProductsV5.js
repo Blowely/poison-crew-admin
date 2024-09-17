@@ -23,10 +23,12 @@ export default async function handle(req, res) {
       delete req.headers['content-length'];
 
       const body = req.body;
+      const data = req.data;
+      const url = 'https://asia-east-public.poizon.com/api/v1/h5/adapter/center/oversea/get-index-spu-share-detail';
       const headers = {...req.headers, host: 'asia-east-public.poizon.com'};
 
       const auth = {
-        path: 'https://asia-east-public.poizon.com/api/v1/h5/adapter/center/oversea/get-index-spu-share-detail',
+        path: url,
         query: req.query,
         body,
         headers
@@ -34,12 +36,11 @@ export default async function handle(req, res) {
 
       const isExist = await ProductV5.findOne({spuId});
 
-      const productData = await axios({
-        method: "POST",
-        url: 'https://asia-east-public.poizon.com/api/v1/h5/adapter/center/oversea/get-index-spu-share-detail',
-        body,
-        headers,
-      }).catch((err) => {
+      console.log('url',url);
+      console.log('data',data);
+      console.log('headers',headers);
+
+      const productData = await axios.post(url,data,{headers}).catch((err) => {
         console.log('err',err)
       })
 

@@ -43,7 +43,9 @@ export default async function handle(req, res) {
       console.log('data',data);
       console.log('headers',headers);
 
-      const skuData = await axios.post(url,data,{headers});
+      const skuData = await axios.post(url,data,{headers}).catch((err) => {
+        console.log('err',err)
+      });
       console.log('skuData=',skuData);
       const detail = skuData?.data;
 
