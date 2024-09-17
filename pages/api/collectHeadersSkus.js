@@ -25,6 +25,7 @@ export default async function handle(req, res) {
       delete req.headers['content-length'];
 
       const body = req.body;
+      const data = req.body;
       const headers = {...req.headers, host: 'asia-east-public.poizon.com'};
 
       const auth = {
@@ -36,13 +37,10 @@ export default async function handle(req, res) {
 
       const isExist = await Skus.findOne({skuId: skuId});
 
-      const skuData = await axios({
-        method: "POST",
-        url: 'https://asia-east-public.poizon.com/api/v1/app/adapter/oversea/seller/queryBiddingTradeTrendInfo',
-        body,
-        headers,
-      })
+      const url = 'https://asia-east-public.poizon.com/api/v1/app/adapter/oversea/seller/queryBiddingTradeTrendInfo';
 
+      const skuData = await axios.post(url,data,{headers});
+      console.log('skuData=',skuData);
       const detail = skuData?.data;
 
       await Log.create({skuId});
