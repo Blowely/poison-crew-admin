@@ -39,6 +39,10 @@ export default async function handle(req, res) {
 
       const url = 'https://asia-east-public.poizon.com/api/v1/app/adapter/oversea/seller/queryBiddingTradeTrendInfo';
 
+      console.log('url',url);
+      console.log('data',data);
+      console.log('headers',headers);
+
       const skuData = await axios.post(url,data,{headers});
       console.log('skuData=',skuData);
       const detail = skuData?.data;
