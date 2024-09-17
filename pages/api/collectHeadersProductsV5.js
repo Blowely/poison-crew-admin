@@ -41,6 +41,8 @@ export default async function handle(req, res) {
         headers,
       })
 
+      console.log('productData',productData)
+
       const detail = productData?.data;
 
       await Log.create({spuId});
