@@ -23,7 +23,7 @@ export default async function handle(req, res) {
       delete req.headers['content-length'];
 
       const body = req.body;
-      const data = req.data;
+      const data = req.body;
       const url = 'https://asia-east-public.poizon.com/api/v1/h5/adapter/center/oversea/get-index-spu-share-detail';
       const headers = {...req.headers, host: 'asia-east-public.poizon.com'};
 
