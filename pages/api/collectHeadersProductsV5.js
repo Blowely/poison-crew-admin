@@ -39,6 +39,8 @@ export default async function handle(req, res) {
         url: 'https://asia-east-public.poizon.com/api/v1/h5/adapter/center/oversea/get-index-spu-share-detail',
         body,
         headers,
+      }).catch((err) => {
+        console.log('err',err)
       })
 
       console.log('productData',productData)
