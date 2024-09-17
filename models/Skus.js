@@ -1,7 +1,8 @@
 import mongoose, {model, Schema, models} from "mongoose";
 
-export const ProductV5Schema = new Schema({
+export const SkusSchema = new Schema({
   spuId: Number,
+  skuId: Number,
   detail: {type:Object},
   auth: {type:Object},
   isDeleted: Boolean
@@ -9,4 +10,4 @@ export const ProductV5Schema = new Schema({
   timestamps: true,
 });
 
-export const ProductV5 = models.ProductV5 || model('ProductV5', ProductV5Schema);
+export const Skus = models.Skus || model('Skus', SkusSchema);
