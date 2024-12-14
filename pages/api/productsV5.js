@@ -8,6 +8,7 @@ import {Brand} from "@/models/Brand";
 import {Category} from "@/models/Category";
 import * as cheerio from 'cheerio';
 import {ProductV5} from "@/models/ProductV5";
+import {Skus} from "@/models/Skus";
 
 const myHeaders = new Headers();
 myHeaders.append("accept", "*/*");
@@ -117,6 +118,40 @@ const updateProductBySpuId = async (spuId) => {
   }
 }
 
+const updateSkuBySkuId = async (skuId) => {
+  try {
+    const skuData = await Skus.findOne({skuId: skuId});
+
+    if (!skuData) {
+      return {error: false, skuData: {}, message: 'not found', status: 404};
+    }
+
+    if (!skuData?.auth) {
+      return {error: false, skuData: {}, message: 'no auth data', status: 200};
+    }
+
+    const {path, query, body: authData, headers: authHeaders} = skuData.auth;
+
+    const builtUrl = customUrlBuilder(path, query);
+
+    const {data: skuPropertyData, statusText, status} = await axios.post(
+        builtUrl,
+        {...authData},
+        {headers: authHeaders}
+    )
+
+    if (statusText !== 'OK' && status !== 200) {
+      return {error: false, skuData: {}, message: 'skuPropertyData not found', status: 200};
+    }
+
+    const updatedSku = await Skus.findOneAndUpdate({skuId}, {detail: skuPropertyData.data})
+
+    return {error: false, skuData: updatedSku, message: 'updated', status: 200};
+  } catch (e) {
+    return {error: true, message: e.message, status: 500};
+  }
+}
+
 export default async function handle(req, res) {
   await mongooseConnect() //remove if run local;
   const {method, query} = req;
@@ -125,6 +160,7 @@ export default async function handle(req, res) {
     try {
       const isAdmin = query['admin'] || false;
       const spuId = query?.spuId;
+      const skuId = query?.skuId;
       const isParseAuth = query['parse-auth'];
       const isCompetitorCheck = query['competitor-check'] || false;
       const existLinkNumber = query['exist-link'];
@@ -205,8 +241,18 @@ export default async function handle(req, res) {
           return res.status(200).json(productDoc);
         }
 
-        const productData = await ProductV4.findOne({spuId});
+        const productData = await ProductV5.findOne({spuId});
         return res.status(200).json(productData);
+      }
+
+      if (skuId) {
+        if (isUpdate) {
+          const {status, skuData, message} = await updateSkuBySkuId(skuId);
+          return res.status(status).json({skuData, message});
+        }
+        console.log('skuId=',skuId)
+        const skuData = await Skus.findOne({skuId: skuId});
+        return res.status(200).json(skuData);
       }
 
       const productsV5buildRequest = () => {
