@@ -353,37 +353,17 @@ export default async function handle(req, res) {
 
   if (method === 'PUT') {
     try {
-      const {
-        title,
-        description,
-        price,
-        src,
-        images,
-        category,
-        properties,
-        sizesAndPrices,
-        cheapestPrice,
-        sizeInfoList,
-        _id,
-        spuId,
-        isDeleted
-      } = req.body;
+      console.log('req.body=', JSON.parse(req.body));
 
-      const filter = !!_id ? {_id} : {spuId}
-      const response = await ProductV4.updateOne({spuId}, {
+      const {
         spuId,
-        title,
-        description,
-        price,
-        src,
-        images,
-        category,
-        properties,
         sizesAndPrices,
-        cheapestPrice,
-        sizeInfoList,
-        isDeleted
-      },{upsert:true});
+      } = JSON.parse(req.body);
+      console.log('spuId=',spuId);
+
+      const response = await ProductV5.updateOne({spuId}, {
+        sizesAndPrices,
+      });
 
       res.status(200);
       res.json({answer: response.data});
