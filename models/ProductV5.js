@@ -4,7 +4,6 @@ export const ProductV5Schema = new Schema({
   spuId: Number,
   detail: {type:Object},
   auth: {type:Object},
-  sizesAndPrices: Array,
   isDeleted: Boolean
 }, {
   timestamps: true,

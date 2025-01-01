@@ -64,6 +64,90 @@ const parseAuthProductDataBySpuId = async (spuId, isCompetitorCheck) => {
   return true;
 }
 
+const getPrice = async (skuId) => {
+  try {
+    const response = await fetch(`http://localhost:3001/api/productsV5?skuId=${skuId}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch price:", error);
+    throw error;
+  }
+};
+
+async function fetchSkuPrices(skus) {
+  const prices = await Promise.all(
+      skus?.map(async (sku) => {
+        try {
+          // Псевдозапрос к бэку для получения цены
+          const response = await getPrice(sku.skuId);
+
+          if (!response?.spuId) throw new Error(`Error fetching price for skuId ${sku.skuId}`);
+          const {detail} = response;
+          console.log('response',response);
+          return { ...sku, price: detail.data.verticals[detail.data.verticals.length - 1] };
+        } catch (error) {
+          console.error(error);
+          return { ...sku, price: null }; // Если произошла ошибка, цена будет null
+        }
+      })
+  );
+  return prices;
+}
+
+const updateProductPricesBySpuId = async (spuId) => {
+  try {
+    const product = await ProductV5.findOne({spuId: spuId});
+
+    if (!product) {
+      return {error: false, product: {}, message: 'not found', status: 404};
+    }
+
+    const data = product.detail.data || {};
+    const sizeMap = {};
+
+    data.saleProperties?.list?.forEach((property) => {
+      if (property.name === "尺碼" && property.propertyValueId) {
+        sizeMap[property.propertyValueId] = property.value;
+      }
+    });
+
+    const mappedSkus = data.skus?.map((sku) => {
+      const sizeProperty = sku.properties?.find(
+          (prop) => sizeMap[prop.propertyValueId]
+      );
+
+      return {
+        skuId: sku.skuId,
+        spuId: sku.spuId,
+        propertyValueId: sizeProperty?.propertyValueId || null,
+        size: sizeProperty ? sizeMap[sizeProperty.propertyValueId] : null
+      };
+    }) || [];
+
+    const prices = await fetchSkuPrices(mappedSkus);
+
+    const options = {
+      method: 'PUT',
+      body: JSON.stringify({spuId: product.spuId, sizesAndPrices: prices || []}),
+    }
+
+    const response = await fetch(`http://localhost:3001/api/productsV5`, options);
+    const updatedProduct = await ProductV5.findOne({spuId: product.spuId});
+
+    return {error: false, product: updatedProduct, message: response.statusText, status: response.status};
+  } catch (e) {
+    console.log('e =', e?.message)
+  }
+}
+
 const updateProductBySpuId = async (spuId) => {
   try {
     const product = await ProductV4.findOne({spuId: spuId})
@@ -166,6 +250,7 @@ export default async function handle(req, res) {
       const existLinkNumber = query['exist-link'];
       const existProductNumber = query['exist-product'];
       const isUpdate = query?.update;
+      const isUpdatePrices = query?.updatePrices;
       const search = query?.search;
       const brandId = query?.brandId || null;
       const brandIds = query?.brandIds || null;
@@ -227,6 +312,11 @@ export default async function handle(req, res) {
         if (isUpdate) {
           const {status, product, message} = await updateProductBySpuId(spuId);
           return res.status(status).json({product, message});
+        }
+
+        if (isUpdatePrices) {
+          const {status, product, message} = await updateProductPricesBySpuId(spuId);
+          return res.status(status).json({status, product, message});
         }
 
         if (isCompetitorCheck) {
@@ -362,7 +452,9 @@ export default async function handle(req, res) {
       console.log('spuId=',spuId);
 
       const response = await ProductV5.updateOne({spuId}, {
-        sizesAndPrices,
+        $set: {
+          "detail.data.sizesAndPrices": sizesAndPrices,
+        },
       });
 
       res.status(200);
