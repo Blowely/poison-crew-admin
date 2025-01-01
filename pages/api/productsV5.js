@@ -66,7 +66,7 @@ const parseAuthProductDataBySpuId = async (spuId, isCompetitorCheck) => {
 
 const getPrice = async (skuId) => {
   try {
-    const response = await fetch(`http://localhost:3001/api/productsV5?skuId=${skuId}`, {
+    const response = await fetch(`https://api.re-poizon.ru/api/productsV5?skuId=${skuId}`, {
       method: "GET",
     });
 
@@ -139,7 +139,7 @@ const updateProductPricesBySpuId = async (spuId) => {
       body: JSON.stringify({spuId: product.spuId, sizesAndPrices: prices || []}),
     }
 
-    const response = await fetch(`http://localhost:3001/api/productsV5`, options);
+    const response = await fetch(`https://api.re-poizon.ru/api/productsV5`, options);
     const updatedProduct = await ProductV5.findOne({spuId: product.spuId});
 
     return {error: false, product: updatedProduct, message: response.statusText, status: response.status};
@@ -443,13 +443,10 @@ export default async function handle(req, res) {
 
   if (method === 'PUT') {
     try {
-      console.log('req.body=', JSON.parse(req.body));
-
       const {
         spuId,
         sizesAndPrices,
       } = JSON.parse(req.body);
-      console.log('spuId=',spuId);
 
       const response = await ProductV5.updateOne({spuId}, {
         $set: {
