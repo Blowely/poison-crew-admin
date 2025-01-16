@@ -285,7 +285,7 @@ export default async function handle(req, res) {
     }
   }*/
 
-  if (method === 'PATCH') {
+  /*if (method === 'PATCH') {
     await updateProducts(req, res)
-  }
+  }*/
 }
