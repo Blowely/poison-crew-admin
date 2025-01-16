@@ -9,7 +9,6 @@ export default async function handler(req,res) {
 
     if (method === 'POST') {
         try {
-            console.log('req.body=',req.body);
             const { message, text } = req.body;
             console.log('text=',text);
             const messageText = message?.text;
