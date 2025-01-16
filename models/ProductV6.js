@@ -13,6 +13,8 @@ export const ProductV6Schema = new Schema({
   images: { type: [String] },
   brand: { type: String },
   name: { type: String },
+  article: String,
+  brandId: Number,
   availability: { type: String, enum: ['AVAILABLE', 'UNAVAILABLE'] },
   skuId: { type: Number },
   category: {
@@ -20,6 +22,16 @@ export const ProductV6Schema = new Schema({
     category2: { type: String },
     category3: { type: String }
   },
+  category1: { type: Number },
+  category2: { type: Number },
+  category3: { type: Number },
+  colorTheme: String,
+  description: String,
+  primarySizeType: String,
+  productProperties: { type: Array },
+  properties: { type: Object },
+  sizeTable: { type: Array },
+  skus: { type: Array },
   series: {
     id: { type: Number },
     name: { type: String }
