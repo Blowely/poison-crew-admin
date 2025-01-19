@@ -53,6 +53,28 @@ async function fetchAndStoreProducts(req, res) {
   }
 }
 
+async function findProductsBySize(req, res) {
+  const size = req.query.size; // Получаем размер из параметров запроса
+
+  if (!size) {
+    return res.status(400).json({ message: 'Size parameter is required.' });
+  }
+
+  try {
+    // Ищем товары, где любой элемент массива skus содержит переданный размер в поле size.eu
+    const products = await ProductV6.find({
+      skus: {
+        $elemMatch: { 'size.eu': size }
+      }
+    });
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while fetching products.', error: error.message });
+  }
+}
+
 export default async function handle(req, res) {
   await mongooseConnect() //remove if run local;
   const {method, query} = req;
@@ -74,7 +96,7 @@ export default async function handle(req, res) {
       const categoryId = query?.categoryId || null;
       const level1CategoryId = query?.level1CategoryId || null;
       const level2CategoryId = query?.level2CategoryId || null;
-      const offset = (query?.page * query?.limit) || 0;
+      const offset = query?.page > 1 ? query?.page * query?.limit - 20 : 0;
       const limit = query?.limit || "20";
       const minPrice = query?.minPrice;
       const maxPrice = query?.maxPrice;
@@ -183,6 +205,12 @@ export default async function handle(req, res) {
           obj.categoryId = Number(categoryId);
         }
 
+        if (size) {
+          obj.skus = {
+            $elemMatch: { 'size.eu': size, price: { $gt: 0 }  }
+          }
+        }
+
         if (level1CategoryId) {
           obj.level1CategoryId = Number(level1CategoryId);
         }
@@ -193,24 +221,6 @@ export default async function handle(req, res) {
 
         if (sizeType) {
           obj.sizeType = new RegExp('.*' + sizeType + '.*');
-        }
-
-        if (size) {
-          // Формируем запрос для фильтрации по размеру
-          obj.sizesAndPrices = {
-            $elemMatch: {
-              size: size,
-              ...(minPrice !== undefined && { price: { $gte: parseFloat(minPrice)  } }),
-              ...(maxPrice !== undefined && { price: { $lte: parseFloat(maxPrice)  } })
-            }
-          }
-        } else {
-          // Формируем запрос для фильтрации по полю cheapestPrice
-          obj = {
-            ...obj,
-            ...(minPrice !== undefined &&  { cheapestPrice: { $gte: parseFloat(minPrice) } }),
-            ...(maxPrice !== undefined && { cheapestPrice: { $lte: parseFloat(maxPrice) } })
-          };
         }
 
         // if (queryType !== 'admin') {
@@ -226,8 +236,10 @@ export default async function handle(req, res) {
 
       const sortOrder = sortDirection === 'asc' ? 1 : sortDirection === 'desc' ? -1 : null;
 
+      console.log('offset',offset)
+
       const items = await ProductV6.find(productsV6buildRequest())
-        .skip(offset)
+        .skip(0)
         .limit(limit)
       //console.log('items',items);
 
