@@ -205,9 +205,23 @@ export default async function handle(req, res) {
           obj.categoryId = Number(categoryId);
         }
 
+        const getPrice = () => {
+          let obj =  { $gt: 0 };
+
+          if (minPrice) {
+            obj = { $gte: Number(minPrice)};
+          }
+
+          if (maxPrice) {
+            obj = {...obj, $lte: Number(maxPrice)};
+          }
+
+          return obj;
+        }
+
         if (size) {
           obj.skus = {
-            $elemMatch: { 'size.eu': size, price: { $gt: 0 }  }
+            $elemMatch: { 'size.eu': size, price: getPrice() }
           }
         }
 
@@ -221,6 +235,14 @@ export default async function handle(req, res) {
 
         if (sizeType) {
           obj.sizeType = new RegExp('.*' + sizeType + '.*');
+        }
+
+        if (minPrice && !size) {
+          obj.price = { $gte: Number(minPrice)};
+        }
+
+        if (maxPrice && !size) {
+          obj.price = { $lte: Number(maxPrice)};
         }
 
         // if (queryType !== 'admin') {
