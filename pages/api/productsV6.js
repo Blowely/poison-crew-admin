@@ -190,7 +190,7 @@ export default async function handle(req, res) {
         let obj = {};
 
         if (search) {
-          obj.clearTitle = new RegExp(search, "i");
+          obj.name = new RegExp(search, "i");
         }
 
         if (brandId) {
@@ -236,10 +236,8 @@ export default async function handle(req, res) {
 
       const sortOrder = sortDirection === 'asc' ? 1 : sortDirection === 'desc' ? -1 : null;
 
-      console.log('offset',offset)
-
       const items = await ProductV6.find(productsV6buildRequest())
-        .skip(0)
+        .skip(offset)
         .limit(limit)
       //console.log('items',items);
 
