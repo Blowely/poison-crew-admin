@@ -4,7 +4,9 @@ import {OrderedProductSchema} from "@/models/OrderedProduct";
 
 const OrderSchema = new Schema({
   clientId: {type: String, required: true},
-  products: [OrderedProductSchema],
+  products: Array,
+  price: Number,
+  size: String,
   address: {type: AddressSchema, required: true},
   email: String,
   paid: Boolean,

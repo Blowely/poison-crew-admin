@@ -2,8 +2,7 @@ import {mongooseConnect} from "@/lib/mongoose";
 import {Order} from "@/models/Order";
 import {Client} from "@/models/Client";
 import axios from "axios";
-import {getCurrentPriceOfSize} from "@/common/utils";
-import {ProductV3} from "@/models/ProductV3";
+import {ProductV6} from "@/models/ProductV6";
 
 export default async function handler(req,res) {
   const {method, query} = req;
@@ -35,28 +34,29 @@ export default async function handler(req,res) {
     try {
       const {clientId, products, address} = JSON.parse(req.body);
 
+      const spuId = products[0].spuId;
       const client = await Client.findOne({_id: clientId});
-      const selectedProducts = await ProductV3.find({
-        _id: {
-          $in: products.map(el => el._id)
-        }}
-      );
-
+      const selectedProduct = await ProductV6.findOne({spuId});
 
       if (!client) {
         res.status(404);
         return res.json({status: 'clientNotFoundOrDeleted', message: 'Клент не найден или удален'});
       }
 
-      if (!selectedProducts.length || selectedProducts?.length !== products?.length) {
+      if (!selectedProduct) {
         res.status(404);
         return res.json({status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
       }
 
+      const selectedSizeIndex = selectedProduct?.skus.findIndex(sku => sku.size?.eu === products[0]?.selectedSize);
+      const selectedSize = selectedProduct.skus[selectedSizeIndex];
+
       const postData = {
         clientId,
-        products,
+        products: [selectedProduct],
         address,
+        price: selectedSize?.price,
+        size: selectedSize?.size?.eu,
         email: '',
         paid: true,
         status: 'created',
@@ -64,10 +64,8 @@ export default async function handler(req,res) {
       }
 
       const response = await Order.create(postData);
-      console.log('response=', response);
-      let totalPrice = 0;
+      const price = selectedSize?.price;
 
-      const deliveryCost = 1700 * (products?.length || 1)
 
       axios.post('https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage', {
         chat_id: 664687823,
@@ -75,13 +73,11 @@ export default async function handler(req,res) {
         ---NEW ORDER---\n
         id: ${response._id}\n
         ${products.map(el => {
-          const price = el?.price?.toString().substring(0, el?.price?.length - 2);
-          totalPrice += Number(price);
-          return `${el?.title} (${el?.size}) - ${price} RUB;\n
-            ${el?.src}\n
+          return `${el?.name} (${el?.selectedSize}) - ${price} RUB;\n
+            ${el?.images[0]}\n
           `;
         })} 
-        totalPrice(RUB): ${totalPrice + deliveryCost}\n
+        totalPrice(RUB): ${price}\n
         https://api.re-poizon.ru/orders\n`
       });
 
@@ -100,7 +96,7 @@ export default async function handler(req,res) {
 
       const order = await Order.findOne({_id});
       const products = order?.products;
-      const newProduct = await ProductV3.findOne({_id: products[0]._id});
+      const newProduct = await ProductV6.findOne({_id: products[0]._id});
       const copyNewProduct = JSON.parse(JSON.stringify(newProduct));
       copyNewProduct.size = products[0]?.size
 
