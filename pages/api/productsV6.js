@@ -7,7 +7,7 @@ import {Skus} from "@/models/Skus";
 
 async function fetchAndStoreProducts(req, res) {
   const baseUrl = 'https://unicorngo.ru/api/catalog/product';
-  const headers = {
+  const menHeaders = {
     'Accept': '*/*',
     'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7,zh-CN;q=0.6,zh;q=0.5',
     'Cache-Control': 'no-cache',
@@ -21,17 +21,37 @@ async function fetchAndStoreProducts(req, res) {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36'
   };
 
+  const womenHeaders = {
+    'Accept': '*/*',
+    'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7,zh-CN;q=0.6,zh;q=0.5',
+    'Connection': 'keep-alive',
+    'Cookie': '_ym_uid=1733236184663775395; _ym_d=1733236184; _ga=GA1.1.1011185662.1733236185; _ym_isad=1; _ym_visorc=w; gender=women; _ga_KDREW63Q0N=GS1.1.1737318975.7.1.1737320285.51.0.836369742; ph_phc_hDXjOarYgxpEWNaBeHLnG9xnOcDoOq3ghdXldbJsX81_posthog=%7B%22distinct_id%22%3A%2201938ced-538d-78b9-887a-2567e48f6f06%22%2C%22%24sesid%22%3A%5B1737320527949%2C%2201948047-c5cf-743e-868a-d8c1fd95d013%22%2C1737318974927%5D%7D; _dd_s=rum=2&id=ec563305-b507-4fe1-bd5c-eec321549792&created=1737318974389&expire=1737321440108',
+    'Referer': 'https://unicorngo.ru/women/footwear/sneakers',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-origin',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+    'baggage': 'sentry-environment=production,sentry-release=mUJbfSHAo6vLL7nTWP_CS,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=88f2e43d8849473eb4b03c09d44c7b63,sentry-sample_rate=1,sentry-sampled=true',
+    'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"macOS"',
+    'sentry-trace': '128204acae9e49e797e29a3f8e0fd798-9a7eb728df64365a-1',
+  };
+
+
   try {
     for (let page = 1; page <= 26; page++) {
       const response = await axios.get(baseUrl, {
-        headers,
+        menHeaders,
         params: {
+          //brands: 'Lee',
+          //search: '定制球鞋',
           sizeType: 'EU',
           sort: 'by-relevance',
-          fit: ['MALE', 'UNISEX'],
-          categorySlug: 'footwear/casual',
+          fit: ['MALE', 'UNISEX'], // Массив для нескольких значений
+          categorySlug: 'footwear/boots/boots',
           page,
-          perPage: 40
+          perPage: 40,
         }
       });
 
@@ -47,28 +67,6 @@ async function fetchAndStoreProducts(req, res) {
     }
 
     res.status(200).json({ message: 'Products fetched and stored successfully!' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'An error occurred while fetching products.', error: error.message });
-  }
-}
-
-async function findProductsBySize(req, res) {
-  const size = req.query.size; // Получаем размер из параметров запроса
-
-  if (!size) {
-    return res.status(400).json({ message: 'Size parameter is required.' });
-  }
-
-  try {
-    // Ищем товары, где любой элемент массива skus содержит переданный размер в поле size.eu
-    const products = await ProductV6.find({
-      skus: {
-        $elemMatch: { 'size.eu': size }
-      }
-    });
-
-    res.status(200).json(products);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while fetching products.', error: error.message });
@@ -289,9 +287,13 @@ export default async function handle(req, res) {
     };
 
     try {
-      const products = await ProductV6.find({}, 'spuId');
+      const products = await ProductV6.find({ 'skus': { $size: 0 } }, 'spuId');
+      console.log(products.length);
+      let i = 0;
 
       for (const product of products) {
+        i++
+        console.log(i);
         const response = await axios.get(`${baseUrl}/${product.spuId}`, { headers });
         const updatedData = response.data;
 
@@ -310,14 +312,14 @@ export default async function handle(req, res) {
 
   /*if (method === 'POST') {
     try {
-      await fetchAndStoreProducts(req, res);
+      return await fetchAndStoreProducts(req, res);
     } catch (e) {
       res.status(500);
       res.json({status: 'internalServerError', message: 'Ошибка сервера'});
     }
-  }*/
+  }
 
-  /*if (method === 'PATCH') {
-    await updateProducts(req, res)
+  if (method === 'PATCH') {
+    return await updateProducts(req, res)
   }*/
 }
