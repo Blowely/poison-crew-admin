@@ -38,18 +38,46 @@ async function fetchAndStoreProducts(req, res) {
     'sentry-trace': '128204acae9e49e797e29a3f8e0fd798-9a7eb728df64365a-1',
   };
 
+  const tShirtHeaders = {
+    'sentry-trace': '83e0601822834b03af163e4f8998590f-a24b1512f8425873-1',
+    'Referer': 'https://unicorngo.ru/women/apparel/t_shirt',
+    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+    'baggage': 'sentry-environment=production,sentry-release=mUJbfSHAo6vLL7nTWP_CS,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=83e0601822834b03af163e4f8998590f,sentry-sample_rate=1,sentry-sampled=true',
+  };
+
+  const glassesHeaders = {
+    'sentry-trace': '71e93119bde0402a9a2cdf9f5a4446f0-b345d0d4b1e7cd98-1',
+    'sec-ch-ua-platform': '"macOS"',
+    'Referer': 'https://unicorngo.ru/women/accessories/glasses',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+    'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+    'sec-ch-ua-mobile': '?0',
+    'baggage': 'sentry-environment=production,sentry-release=mUJbfSHAo6vLL7nTWP_CS,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=71e93119bde0402a9a2cdf9f5a4446f0,sentry-sample_rate=1,sentry-sampled=true',
+  };
+
+  const bagsHeaders = {
+    'sentry-trace': '914fda47e8e041788790fd624a5d0b40-94036b279dff5e2e-1',
+    'sec-ch-ua-platform': '"macOS"',
+    'Referer': 'https://unicorngo.ru/women/accessories/bags',
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+    'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+    'sec-ch-ua-mobile': '?0',
+    'baggage': 'sentry-environment=production,sentry-release=mUJbfSHAo6vLL7nTWP_CS,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=914fda47e8e041788790fd624a5d0b40,sentry-sample_rate=1,sentry-sampled=true',
+  };
+
 
   try {
     for (let page = 1; page <= 26; page++) {
       const response = await axios.get(baseUrl, {
-        menHeaders,
+        bagsHeaders,
         params: {
           //brands: 'Lee',
           //search: '定制球鞋',
-          sizeType: 'EU',
+          //sizeType: 'EU',
           sort: 'by-relevance',
-          fit: ['MALE', 'UNISEX'], // Массив для нескольких значений
-          categorySlug: 'footwear/boots/boots',
+          fit: ['FEMALE', 'UNISEX'], // Массив для нескольких значений
+          //categorySlug: 'apparel/featured_tops/t_shirt',
+          categorySlug: 'accessories/bags',
           page,
           perPage: 40,
         }
@@ -200,7 +228,7 @@ export default async function handle(req, res) {
         }
 
         if (categoryId) {
-          obj.categoryId = Number(categoryId);
+          obj.category3 = Number(categoryId);
         }
 
         const getPrice = () => {
@@ -310,7 +338,7 @@ export default async function handle(req, res) {
     }
   }
 
-  /*if (method === 'POST') {
+  if (method === 'POST') {
     try {
       return await fetchAndStoreProducts(req, res);
     } catch (e) {
@@ -321,5 +349,5 @@ export default async function handle(req, res) {
 
   if (method === 'PATCH') {
     return await updateProducts(req, res)
-  }*/
+  }
 }
