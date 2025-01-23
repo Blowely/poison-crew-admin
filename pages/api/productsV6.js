@@ -128,7 +128,7 @@ export default async function handle(req, res) {
       const maxPrice = query?.maxPrice;
       const sizeType = query?.sizeType;
       const size = query?.size;
-      const sortDirection = query?.sortDirection;
+      const sortDirection = query?.sort;
       const fit = query?.fit;
       const page = query?.page || '1';
       const url = query?.url;
@@ -287,11 +287,12 @@ export default async function handle(req, res) {
         ...(isAdmin === false && { auth: 0 })
       };
 
-      const sortOrder = sortDirection === 'asc' ? 1 : sortDirection === 'desc' ? -1 : null;
+      const sortOrder = sortDirection === 'cheap-first' ? 1 : sortDirection === 'expensive-first' ? -1 : null;
 
       const items = await ProductV6.find(productsV6buildRequest())
-        .skip(offset)
-        .limit(limit)
+          .sort(sortOrder !== null ? { price: sortOrder } : {})
+          .skip(offset)
+          .limit(limit)
       //console.log('items',items);
 
 
