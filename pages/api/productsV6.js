@@ -129,6 +129,7 @@ export default async function handle(req, res) {
       const sizeType = query?.sizeType;
       const size = query?.size;
       const sortDirection = query?.sortDirection;
+      const fit = query?.fit;
       const page = query?.page || '1';
       const url = query?.url;
 
@@ -269,6 +270,10 @@ export default async function handle(req, res) {
 
         if (maxPrice && !size) {
           obj.price = { $lte: Number(maxPrice)};
+        }
+
+        if (fit) {
+          obj.fit = { $in: [fit, "UNISEX"] };
         }
 
         // if (queryType !== 'admin') {
