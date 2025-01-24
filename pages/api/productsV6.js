@@ -4,6 +4,7 @@ import {Link} from "@/models/Link";
 import {setTimeout} from "timers/promises";
 import {ProductV6} from "@/models/ProductV6";
 import {Skus} from "@/models/Skus";
+import {COLOR_LIST} from "@/common/constants";
 
 async function fetchAndStoreProducts(req, res) {
   const baseUrl = 'https://unicorngo.ru/api/catalog/product';
@@ -132,6 +133,8 @@ export default async function handle(req, res) {
       const fit = query?.fit;
       const page = query?.page || '1';
       const url = query?.url;
+      const colors = query?.colors;
+
 
       const reqObj = {
         search,
@@ -274,6 +277,22 @@ export default async function handle(req, res) {
 
         if (fit) {
           obj.fit = { $in: [fit, "UNISEX"] };
+        }
+
+        if (colors) {
+          const getColors = () => {
+            return colors.split(',').map((el) => {
+              const hexIndex = COLOR_LIST.findIndex(c => c.hex === el);
+              return COLOR_LIST[hexIndex].name.toLowerCase();
+            })
+          }
+
+          obj.productProperties = {
+            $elemMatch: {
+              definitionId: "PRIMARY_COLOR",
+                  translatedValue: { $in: getColors() }
+            }
+          }
         }
 
         // if (queryType !== 'admin') {
