@@ -320,7 +320,7 @@ export default async function handle(req, res) {
       res.status(200).json(result);
     } catch (e) {
       console.log('e =', e.message);
-      res.status(500).json({status: 'internalServerError', message: 'Ошибка сервера'});
+      res.status(500).json({status: 'internalServerError', items: [], message: 'Ошибка сервера'});
     }
   }
 
