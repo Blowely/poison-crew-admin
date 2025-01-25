@@ -301,7 +301,6 @@ export default async function handle(req, res) {
 
         return obj;
       }
-      console.log('obj=', productsV6buildRequest());
 
       const projection = {
         ...(isAdmin === false && { auth: 0 })
