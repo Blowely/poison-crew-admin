@@ -128,7 +128,7 @@ export default async function handle(req, res) {
       const minPrice = query?.minPrice;
       const maxPrice = query?.maxPrice;
       const sizeType = query?.sizeType;
-      const size = query?.size;
+      const sizes = query?.sizes;
       const sortDirection = query?.sort;
       const fit = query?.fit;
       const page = query?.page || '1';
@@ -139,7 +139,7 @@ export default async function handle(req, res) {
       const reqObj = {
         search,
         sizeType,
-        size,
+        sizes,
         minPrice,
         maxPrice,
       }
@@ -215,7 +215,7 @@ export default async function handle(req, res) {
       }
 
       const productsV6buildRequest = () => {
-        const {search, minPrice, maxPrice, sizeType, size} = reqObj;
+        const {search, minPrice, maxPrice, sizeType, sizes} = reqObj;
 
         let obj = {};
 
@@ -249,9 +249,9 @@ export default async function handle(req, res) {
           return obj;
         }
 
-        if (size) {
+        if (sizes) {
           obj.skus = {
-            $elemMatch: { 'size.eu': size, price: getPrice() }
+            $elemMatch: { 'size.eu':  { $in: sizes?.split(',') }, price: getPrice() }
           }
         }
 
@@ -267,11 +267,11 @@ export default async function handle(req, res) {
           obj.sizeType = new RegExp('.*' + sizeType + '.*');
         }
 
-        if (minPrice && !size) {
+        if (minPrice && !sizes) {
           obj.price = { $gte: Number(minPrice)};
         }
 
-        if (maxPrice && !size) {
+        if (maxPrice && !sizes) {
           obj.price = { $lte: Number(maxPrice)};
         }
 
@@ -301,6 +301,7 @@ export default async function handle(req, res) {
 
         return obj;
       }
+      console.log('obj=', productsV6buildRequest());
 
       const projection = {
         ...(isAdmin === false && { auth: 0 })
