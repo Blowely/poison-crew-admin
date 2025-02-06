@@ -58,12 +58,22 @@ export default async function handler(req,res) {
 
       const selectedSize = selectedProduct.skus[selectedSizeIndex];
 
+      const isStandardCheck = () => {
+        if (selectedSize?.size?.eu || sizeProperty?.values[selectedSizeIndex]?.value) {
+          return null;
+        }
+
+        return selectedProduct?.skus?.length === 1 && selectedProduct?.skus[0].price ? 'Стандарт' : null;
+      }
+
       const postData = {
         clientId,
         products: [selectedProduct],
         address,
         price: selectedSize?.price,
-        size: selectedSize?.size?.eu || sizeProperty?.values[selectedSizeIndex]?.value,
+        size: selectedSize?.size?.eu
+            || sizeProperty?.values[selectedSizeIndex]?.value
+            || isStandardCheck(),
         email: '',
         paid: true,
         status: 'created',
