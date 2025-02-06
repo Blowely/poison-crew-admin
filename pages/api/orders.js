@@ -48,15 +48,22 @@ export default async function handler(req,res) {
         return res.json({status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
       }
 
-      const selectedSizeIndex = selectedProduct?.skus.findIndex(sku => sku.size?.eu === products[0]?.selectedSize);
+      let selectedSizeIndex = selectedProduct?.skus.findIndex(sku => sku.size?.eu === products[0]?.selectedSize);
+
+      if (!selectedSizeIndex) {
+         const sizeProperty = selectedProduct.properties.propertyTypes.find(el => el.name === 'Размер');
+         selectedSizeIndex = sizeProperty.values.findIndex(p => p.value === products[0]?.selectedSize);
+      }
+
       const selectedSize = selectedProduct.skus[selectedSizeIndex];
+
 
       const postData = {
         clientId,
         products: [selectedProduct],
         address,
         price: selectedSize?.price,
-        size: selectedSize?.size?.eu || products[0].selectedSize,
+        size: selectedSize?.size?.eu || selectedProduct.properties.propertyTypes[1].values[selectedSizeIndex].value,
         email: '',
         paid: true,
         status: 'created',
