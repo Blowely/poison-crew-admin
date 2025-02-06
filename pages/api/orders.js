@@ -56,7 +56,7 @@ export default async function handler(req,res) {
         products: [selectedProduct],
         address,
         price: selectedSize?.price,
-        size: selectedSize?.size?.eu,
+        size: selectedSize?.size?.eu || products[0].selectedSize,
         email: '',
         paid: true,
         status: 'created',
