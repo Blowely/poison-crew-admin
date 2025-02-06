@@ -5,8 +5,8 @@ import axios from "axios";
 import {ProductV6} from "@/models/ProductV6";
 
 export default async function handler(req,res) {
-  const {method, query} = req;
   await mongooseConnect();
+  const {method, query} = req;
 
   if (method === 'GET') {
     try {
@@ -50,9 +50,10 @@ export default async function handler(req,res) {
 
       let selectedSizeIndex = selectedProduct?.skus.findIndex(sku => sku.size?.eu === products[0]?.selectedSize);
 
-      if (!selectedSizeIndex) {
-         const sizeProperty = selectedProduct.properties.propertyTypes.find(el => el.name === 'Размер');
-         selectedSizeIndex = sizeProperty.values.findIndex(p => p.value === products[0]?.selectedSize);
+      const sizeProperty = selectedProduct?.properties?.propertyTypes?.find(el => el?.name === 'Размер');
+
+      if (selectedSizeIndex < 0) {
+        selectedSizeIndex = sizeProperty?.values?.findIndex(p => p?.value === products[0]?.selectedSize);
       }
 
       const selectedSize = selectedProduct.skus[selectedSizeIndex];
@@ -62,7 +63,7 @@ export default async function handler(req,res) {
         products: [selectedProduct],
         address,
         price: selectedSize?.price,
-        size: selectedSize?.size?.eu || selectedProduct.properties.propertyTypes[1].values[selectedSizeIndex].value,
+        size: selectedSize?.size?.eu || sizeProperty?.values[selectedSizeIndex]?.value,
         email: '',
         paid: true,
         status: 'created',
