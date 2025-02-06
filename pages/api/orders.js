@@ -57,7 +57,6 @@ export default async function handler(req,res) {
 
       const selectedSize = selectedProduct.skus[selectedSizeIndex];
 
-
       const postData = {
         clientId,
         products: [selectedProduct],
