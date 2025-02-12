@@ -152,7 +152,7 @@ export default async function handle(req, res) {
       const search = query?.search;
       const brandId = query?.brandId || null;
       const brandIds = query?.brandIds || null;
-      const categoryId = query?.categoryId || null;
+      const categoryId = query?.category1Id || null;
       const category2Id = query?.category2Id || null;
       const category3Id = query?.category3Id || null;
       const level1CategoryId = query?.level1CategoryId || null;
