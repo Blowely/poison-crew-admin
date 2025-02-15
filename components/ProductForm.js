@@ -253,7 +253,7 @@ export default function ProductForm({
       >
         <img src={modalImageOpen} alt=""/>
       </Modal>
-      <Link className="btn-primary" href={'/products/new'}>Add new product</Link>
+      {/*<Link className="btn-primary" href={'/products/new'}>Add new product</Link>*/}
       {isLoading &&
         <div className="w-screen h-screen flex justify-center items-center absolute">
           Sizes and costs recognizing... <LoadingOutlined style={{fontSize: '24px'}} spin />
