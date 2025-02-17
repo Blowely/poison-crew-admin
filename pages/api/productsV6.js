@@ -352,9 +352,10 @@ export default async function handle(req, res) {
 
       let items = [];
 
-      if (sortOrder === null && !spuId) {
+      if (!search && sortOrder === null && !spuId && !categoryId && !category2Id
+          && !category3Id && !sizes && !minPrice && !maxPrice && !colors && !brandId && !brandIds) {
         items = await ProductV6.aggregate([
-          { $match: productsV6buildRequest() }, // Фильтр товаров
+          { $match: { ...productsV6buildRequest(), price: { $gt: 0 } } },
           { $sample: { size: Number(limit) } } // Случайный выбор `limit` товаров
         ]);
       } else {
