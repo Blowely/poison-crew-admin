@@ -350,10 +350,19 @@ export default async function handle(req, res) {
 
       const sortOrder = sortDirection === 'cheap-first' ? 1 : sortDirection === 'expensive-first' ? -1 : null;
 
-      const items = await ProductV6.find(productsV6buildRequest())
-          .sort(sortOrder !== null ? { price: sortOrder } : {})
-          .skip(offset)
-          .limit(limit)
+      let items = [];
+
+      if (sortOrder === null && !spuId) {
+        items = await ProductV6.aggregate([
+          { $match: productsV6buildRequest() }, // Фильтр товаров
+          { $sample: { size: Number(limit) } } // Случайный выбор `limit` товаров
+        ]);
+      } else {
+        items = await ProductV6.find(productsV6buildRequest())
+            .sort(sortOrder !== null ? { price: sortOrder } : {})
+            .skip(offset)
+            .limit(limit);
+      }
       //console.log('items',items);
 
 
