@@ -307,8 +307,6 @@ export default async function handle(req, res) {
           }
         }
 
-        console.log('obj=',JSON.stringify(obj));
-
         if (level1CategoryId) {
           obj.level1CategoryId = Number(level1CategoryId);
         }
