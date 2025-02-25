@@ -4,7 +4,7 @@ import {Link} from "@/models/Link";
 import {setTimeout} from "timers/promises";
 import {ProductV6} from "@/models/ProductV6";
 import {Skus} from "@/models/Skus";
-import {COLOR_LIST} from "@/common/constants";
+import {APPAREL_SIZES, APPAREL_SIZES_MATCHES, COLOR_LIST} from "@/common/constants";
 
 async function fetchAndStoreProducts(req, res) {
   const baseUrl = 'https://unicorngo.ru/api/catalog/product';
@@ -292,10 +292,22 @@ export default async function handle(req, res) {
         }
 
         if (sizes) {
-          obj.skus = {
-            $elemMatch: { 'size.eu':  { $in: sizes?.split(',') }, price: getPrice() }
+          const sizesArr = sizes.split(',');
+
+          if (APPAREL_SIZES.includes(sizesArr[0])) {
+            obj['properties.propertyValues'] = {
+              $elemMatch: {
+                value: { $in: [...sizesArr, ...sizesArr.map((el) => APPAREL_SIZES_MATCHES[el] || null)].filter(el => el) },
+              },
+            };
+          } else {
+            obj.skus = {
+              $elemMatch: { 'size.eu': { $in: sizesArr }, price: getPrice() },
+            };
           }
         }
+
+        console.log('obj=',JSON.stringify(obj));
 
         if (level1CategoryId) {
           obj.level1CategoryId = Number(level1CategoryId);
@@ -351,6 +363,7 @@ export default async function handle(req, res) {
       const sortOrder = sortDirection === 'cheap-first' ? 1 : sortDirection === 'expensive-first' ? -1 : null;
 
       let items = [];
+
 
       if (!search && sortOrder === null && !spuId && !categoryId && !category2Id
           && !category3Id && !sizes && !minPrice && !maxPrice && !colors && !brandId && !brandIds) {

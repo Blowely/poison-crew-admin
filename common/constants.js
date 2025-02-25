@@ -43,3 +43,26 @@ export const COLOR_LIST = [
     { name: "Хаки", color: "#808000", hex: "808000" },
     { name: "Черный", color: "#000000", hex: "000000" }
 ];
+
+export const APPAREL_SIZES = [
+    '4XS',
+    '3XS',
+    '2XS',
+    'XS',
+    'S',
+    'M',
+    'L',
+    'XL',
+    '2XL',
+    '3XL',
+    '4XL',
+]
+
+export const APPAREL_SIZES_MATCHES = {
+    '4XS': 'XXXXS',
+    '3XS': 'XXXS',
+    '2XS': 'XXS',
+    '2XL': 'XXL',
+    '3XL': 'XXXL',
+    '4XL': 'XXXXL',
+}
