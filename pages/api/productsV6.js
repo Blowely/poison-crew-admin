@@ -97,8 +97,49 @@ async function fetchAndStoreProducts(req, res) {
   }
 
 
+  //const l = ${page};
+
   try {
     for (let page = 1; page <= 26; page++) {
+      console.log(page);
+      const res = await fetch(`https://unicorngo.ru/api/catalog/product?sort=by-relevance&fit=MALE&fit=UNISEX&categorySlug=apparel%2Ffeatured_jacket%2Fdown_jacket&page=${page}&perPage=40`, {
+        "headers": {
+          "accept": "*/*",
+          "accept-language": "en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7,zh-CN;q=0.6,zh;q=0.5",
+          "baggage": "sentry-environment=production,sentry-release=QAk96-yyjjqvvtIIdqgHS,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=5018c906dc8a4469842ae0645ff9c22b,sentry-sample_rate=1,sentry-sampled=true",
+          "if-none-match": "W/\"bb50-8UhV/xJa1HQyj+UGVi60Z4GM0yY\"",
+          "sec-ch-ua": "\"Not(A:Brand\";v=\"99\", \"Google Chrome\";v=\"133\", \"Chromium\";v=\"133\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"macOS\"",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "same-origin",
+          "sentry-trace": "5018c906dc8a4469842ae0645ff9c22b-afb7f3cda7ffc569-1"
+        },
+        "referrer": "https://unicorngo.ru/men/apparel/featured_jacket/down_jacket?gender=man&sort=by-relevance",
+        "referrerPolicy": "strict-origin-when-cross-origin",
+        "body": null,
+        "method": "GET",
+        "mode": "cors",
+        "credentials": "include"
+      });
+
+
+
+      const response = await res.json();
+
+      const items = response.items || [];
+
+      for (const item of items) {
+        await ProductV6.updateOne(
+            { spuId: item.spuId },
+            { $set: item },
+            { upsert: true }
+        );
+      }
+    }
+
+    /*for (let page = 1; page <= 26; page++) {
       console.log(page);
       const response = await axios.get(baseUrl, {
         accessoriesMenHeaders,
@@ -125,7 +166,7 @@ async function fetchAndStoreProducts(req, res) {
           { upsert: true }
         );
       }
-    }
+    }*/
 
     res.status(200).json({ message: 'Products fetched and stored successfully!' });
   } catch (error) {
