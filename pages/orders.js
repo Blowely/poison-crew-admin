@@ -56,6 +56,12 @@ export default function OrdersPage() {
     }).catch(err => console.log('err=',err));
   }
 
+
+  const getLink = (spuId) => {
+      return `https://api.re-poizon.ru/links?dewulink=dewulink://cdn-m.dewu.com/router/product/ProductDetail?spuId=${spuId}&sourceName=shareDetail&outside_channel_type=0&share_platform_title=7&fromUserId=d58f7d439f7c3698b497be3abca93169`
+
+  }
+
   return (
     <Layout>
       <h1>Orders</h1>
@@ -91,18 +97,18 @@ export default function OrdersPage() {
                   <div>
                     <img src={p.images[0]} style={{width: '100px'}} alt=""/>{p.title}
                     <br/>
-                    {p.size} размер
+                    {order?.size} размер
                     <br/>
-                    {p.price} руб
+                    {order.price} руб
                     <br/>
                   </div>
-                  <Link className="btn-default" href={`/products/edit/${p._id}?orderId=${order._id}`}>
+                  {/*<Link className="btn-default" href={`/products/edit/${p._id}?orderId=${order._id}`}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                     </svg>
                     Edit
-                  </Link>
-                  <a href={p?.src}>poizon</a>
+                  </Link>*/}
+                  <a href={getLink(p.spuId)}>poizon</a>
                   <br/>
                 </div>
               ))}

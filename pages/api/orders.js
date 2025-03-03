@@ -75,7 +75,7 @@ export default async function handler(req,res) {
             || sizeProperty?.values[selectedSizeIndex]?.value
             || isStandardCheck(),
         email: '',
-        paid: true,
+        paid: false,
         status: 'created',
         delivery_status: '',
       }
