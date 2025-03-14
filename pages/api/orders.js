@@ -3,6 +3,79 @@ import {Order} from "@/models/Order";
 import {Client} from "@/models/Client";
 import axios from "axios";
 import {ProductV6} from "@/models/ProductV6";
+import {generateUniqueId} from "@/common/utils";
+
+const login = async () => {
+  try {
+    const response = await axios.post('https://identity.authpoint.pro/api/v1/public/login', {
+      login: 'repoizonstore@gmail.com',
+      password: 'aZ4G8MnF'
+    });
+    return response.data.accessToken;
+  } catch (error) {
+    console.error('Authorization error:', error);
+  }
+};
+
+const createOrder = async (amount, token) => {
+  try {
+    const response = await axios.post('https://pay.advancedpay.net/api/v1/order', {
+      merchantOrderId: `order_${Date.now()}`,
+      orderAmount: amount,
+      orderCurrency: 'RUB',
+      tspId: 483,
+      description: 'Оплата через СБП',
+      callbackUrl: 'https://re-poizon.ru/callback'
+    }, {
+      headers: {
+        'Authorization-Token': token,
+        'x-req-id': generateUniqueId()
+      }
+    });
+    console.log('response.data.order.id',response.data.order.id);
+    return response.data.order.id;
+  } catch (error) {
+    console.error('Order creation error:', error);
+  }
+};
+
+const generateQR = async (orderId, token, phone) => {
+  try {
+    const response = await axios.post(`https://pay.advancedpay.net/api/v1/order/qrcData/${orderId}`, {
+      phoneNumber: phone
+    }, {
+      headers: {
+        'Authorization-Token': token,
+        'x-req-id': generateUniqueId()
+      }
+    });
+
+    //startStatusPolling(orderId, token);
+    return response.data.order.payload;
+  } catch (error) {
+    console.error('QR generation error:', error);
+  }
+};
+
+const startStatusPolling = (orderId, token) => {
+  const interval = setInterval(async () => {
+    try {
+      const response = await axios.get(`/status/${orderId}`, {
+        headers: {
+          'Authorization-Token': token
+        }
+      });
+
+      if (['IPS_ACCEPTED', 'DECLINED', 'EXPIRED'].includes(response.data.order.status)) {
+        clearInterval(interval);
+      }
+
+      return response.data.order.status;
+    } catch (error) {
+      console.error('Status check error:', error);
+    }
+  }, 5000);
+};
 
 export default async function handler(req,res) {
   await mongooseConnect();
@@ -80,9 +153,13 @@ export default async function handler(req,res) {
         delivery_status: '',
       }
 
-      const response = await Order.create(postData);
       const price = selectedSize?.price;
 
+      const token = await login();
+      const orderId = await createOrder(price, token);
+      const qrCode = await generateQR(orderId, token, address?.phoneNumber || '');
+
+      const response = await Order.create(postData);
 
       axios.post('https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage', {
         chat_id: 664687823,
@@ -99,7 +176,7 @@ export default async function handler(req,res) {
       });
 
       res.status(200);
-      res.json({status: 'ok', message: 'заказ оформлен', orderId: response._id});
+      res.json({status: 'ok', message: 'заказ оформлен', orderId: response._id, qrCode});
     } catch (e) {
       console.log('e =', e);
       res.status(500);
