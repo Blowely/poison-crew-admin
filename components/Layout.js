@@ -31,7 +31,7 @@ export default function Layout({children}) {
           <Logo />
         </div>
       </div>
-      <div className="flex">
+      <div className="flex overflow-auto">
         <Nav show={showNav} />
         <div className="flex-grow p-4">
           {children}
