@@ -21,7 +21,7 @@ const createOrder = async (amount, token) => {
   try {
     const response = await axios.post('https://pay.advancedpay.net/api/v1/order', {
       merchantOrderId: `order_${Date.now()}`,
-      orderAmount: amount,
+      orderAmount: Number(`${amount}00`),
       orderCurrency: 'RUB',
       tspId: 483,
       description: 'Оплата через СБП',
