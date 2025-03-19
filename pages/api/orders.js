@@ -11,16 +11,17 @@ const login = async () => {
       login: 'repoizonstore@gmail.com',
       password: 'aZ4G8MnF'
     });
+
     return response.data.accessToken;
   } catch (error) {
-    console.error('Authorization error:', error);
+    console.error('Authorization error:', error.message);
   }
 };
 
-const createOrder = async (amount, token) => {
+const createOrder = async (amount, localOrderId, token) => {
   try {
     const response = await axios.post('https://pay.advancedpay.net/api/v1/order', {
-      merchantOrderId: `order_${Date.now()}`,
+      merchantOrderId: localOrderId,
       orderAmount: Number(`${amount}00`),
       orderCurrency: 'RUB',
       tspId: 483,
@@ -32,10 +33,15 @@ const createOrder = async (amount, token) => {
         'x-req-id': generateUniqueId()
       }
     });
-    console.log('response.data.order.id',response.data.order.id);
+
+    //console.log('response.data.order.id',response.data.order.id);
+    if (!response?.data?.order?.id) {
+      throw new Error('Ошибка создания заказа')
+    }
+
     return response.data.order.id;
   } catch (error) {
-    console.error('Order creation error:', error);
+    console.error('Order creation error:', JSON.stringify(error));
   }
 };
 
@@ -53,7 +59,7 @@ const generateQR = async (orderId, token, phone) => {
     //startStatusPolling(orderId, token);
     return response.data.order.payload;
   } catch (error) {
-    console.error('QR generation error:', error);
+    console.error('QR generation error:', error.message);
   }
 };
 
@@ -155,11 +161,11 @@ export default async function handler(req,res) {
 
       const price = selectedSize?.price;
 
-      const token = await login();
-      const orderId = await createOrder(price, token);
-      const qrCode = await generateQR(orderId, token, address?.phoneNumber || '');
-
       const response = await Order.create(postData);
+
+      const token = await login();
+      const orderId = await createOrder(price, response._id, token);
+      const qrCode = await generateQR(orderId, token, address?.phoneNumber || '');
 
       axios.post('https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage', {
         chat_id: 664687823,
