@@ -7,124 +7,29 @@ import {Skus} from "@/models/Skus";
 import {APPAREL_SIZES, APPAREL_SIZES_MATCHES, COLOR_LIST} from "@/common/constants";
 
 async function fetchAndStoreProducts(req, res) {
-  const baseUrl = 'https://unicorngo.ru/api/catalog/product';
-  const menHeaders = {
-    'Accept': '*/*',
-    'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7,zh-CN;q=0.6,zh;q=0.5',
-    'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive',
-    'Cookie': '_ga=GA1.1.151431174.1710783172; _ym_uid=1710783173642692711; _userGUID=0:ltx84otz:7FkwrkzJ0dTXKwPVhz3zJ9fcB~kbop84;',
-    'Pragma': 'no-cache',
-    'Referer': 'https://unicorngo.ru/men/footwear/sneakers?gender=man&sizeType=EU&sizeValue=44.5&sort=by-relevance',
-    'Sec-Fetch-Dest': 'empty',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': 'same-origin',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36'
-  };
-
-  const womenHeaders = {
-    'Accept': '*/*',
-    'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7,zh-CN;q=0.6,zh;q=0.5',
-    'Connection': 'keep-alive',
-    'Cookie': '_ym_uid=1733236184663775395; _ym_d=1733236184; _ga=GA1.1.1011185662.1733236185; _ym_isad=1; _ym_visorc=w; gender=women; _ga_KDREW63Q0N=GS1.1.1737318975.7.1.1737320285.51.0.836369742; ph_phc_hDXjOarYgxpEWNaBeHLnG9xnOcDoOq3ghdXldbJsX81_posthog=%7B%22distinct_id%22%3A%2201938ced-538d-78b9-887a-2567e48f6f06%22%2C%22%24sesid%22%3A%5B1737320527949%2C%2201948047-c5cf-743e-868a-d8c1fd95d013%22%2C1737318974927%5D%7D; _dd_s=rum=2&id=ec563305-b507-4fe1-bd5c-eec321549792&created=1737318974389&expire=1737321440108',
-    'Referer': 'https://unicorngo.ru/women/footwear/sneakers',
-    'Sec-Fetch-Dest': 'empty',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': 'same-origin',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-    'baggage': 'sentry-environment=production,sentry-release=mUJbfSHAo6vLL7nTWP_CS,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=88f2e43d8849473eb4b03c09d44c7b63,sentry-sample_rate=1,sentry-sampled=true',
-    'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-    'sec-ch-ua-mobile': '?0',
-    'sec-ch-ua-platform': '"macOS"',
-    'sentry-trace': '128204acae9e49e797e29a3f8e0fd798-9a7eb728df64365a-1',
-  };
-
-  const tShirtHeaders = {
-    'sentry-trace': '83e0601822834b03af163e4f8998590f-a24b1512f8425873-1',
-    'Referer': 'https://unicorngo.ru/women/apparel/t_shirt',
-    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
-    'baggage': 'sentry-environment=production,sentry-release=mUJbfSHAo6vLL7nTWP_CS,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=83e0601822834b03af163e4f8998590f,sentry-sample_rate=1,sentry-sampled=true',
-  };
-
-  const glassesHeaders = {
-    'sentry-trace': '71e93119bde0402a9a2cdf9f5a4446f0-b345d0d4b1e7cd98-1',
-    'sec-ch-ua-platform': '"macOS"',
-    'Referer': 'https://unicorngo.ru/women/accessories/glasses',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-    'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-    'sec-ch-ua-mobile': '?0',
-    'baggage': 'sentry-environment=production,sentry-release=mUJbfSHAo6vLL7nTWP_CS,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=71e93119bde0402a9a2cdf9f5a4446f0,sentry-sample_rate=1,sentry-sampled=true',
-  };
-
-  const bagsHeaders = {
-    'sentry-trace': '914fda47e8e041788790fd624a5d0b40-94036b279dff5e2e-1',
-    'sec-ch-ua-platform': '"macOS"',
-    'Referer': 'https://unicorngo.ru/women/accessories/bags',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-    'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-    'sec-ch-ua-mobile': '?0',
-    'baggage': 'sentry-environment=production,sentry-release=mUJbfSHAo6vLL7nTWP_CS,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=914fda47e8e041788790fd624a5d0b40,sentry-sample_rate=1,sentry-sampled=true',
-  };
-
-  const appearelMenHeaders = {
-       'Accept': '*/*',
-        'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7,zh-CN;q=0.6,zh;q=0.5',
-        'Connection': 'keep-alive',
-        'Cookie': '_ym_uid=1733236184663775395; _ym_d=1733236184; _ga=GA1.1.1011185662.1733236185; gender=men; _ym_isad=1; _ym_visorc=w; _ga_KDREW63Q0N=GS1.1.1737893964.27.0.1737894061.60.0.929029935; ph_phc_hDXjOarYgxpEWNaBeHLnG9xnOcDoOq3ghdXldbJsX81_posthog=%7B%22distinct_id%22%3A%2201938ced-538d-78b9-887a-2567e48f6f06%22%2C%22%24sesid%22%3A%5B1737894280708%2C%220194a28d-1087-7e7f-9971-8a942e9b3665%22%2C1737893941383%5D%7D; _dd_s=rum=2&id=188d57ac-baa5-4566-bd70-2ddd774221d1&created=1737893941308&expire=1737895180702',
-        'If-None-Match': 'W/"afec-8JDeFanGeq1DcYVCc7A62rcif18"',
-        'Referer': 'https://unicorngo.ru/men/apparel',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'same-origin',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
-        'baggage': 'sentry-environment=production,sentry-release=OVN5nci_e59dfYK60RAEn,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=ea0505b7e8d94649acf8ab07c2e0943e,sentry-sample_rate=1,sentry-sampled=true',
-        'sentry-trace': 'ea0505b7e8d94649acf8ab07c2e0943e-ab1f71a57b21e8de-1',
-  }
-
-  const accessoriesMenHeaders = {
-       'Accept': '*/*',
-        'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7,zh-CN;q=0.6,zh;q=0.5',
-        'Connection': 'keep-alive',
-        'Cookie': '_ym_uid=1733236184663775395; _ym_d=1733236184; _ga=GA1.1.1011185662.1733236185; gender=men; _ym_isad=1; _ym_visorc=w; _ga_KDREW63Q0N=GS1.1.1737893964.27.0.1737894061.60.0.929029935; ph_phc_hDXjOarYgxpEWNaBeHLnG9xnOcDoOq3ghdXldbJsX81_posthog=%7B%22distinct_id%22%3A%2201938ced-538d-78b9-887a-2567e48f6f06%22%2C%22%24sesid%22%3A%5B1737894280708%2C%220194a28d-1087-7e7f-9971-8a942e9b3665%22%2C1737893941383%5D%7D; _dd_s=rum=2&id=188d57ac-baa5-4566-bd70-2ddd774221d1&created=1737893941308&expire=1737895180702',
-        'If-None-Match': 'W/"afec-8JDeFanGeq1DcYVCc7A62rcif18"',
-        'Referer': 'https://unicorngo.ru/men/accessories',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'same-origin',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
-        'baggage': 'sentry-environment=production,sentry-release=OVN5nci_e59dfYK60RAEn,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=ea0505b7e8d94649acf8ab07c2e0943e,sentry-sample_rate=1,sentry-sampled=true',
-        'sentry-trace': 'ea0505b7e8d94649acf8ab07c2e0943e-ab1f71a57b21e8de-1',
-  }
-
-
-  //const l = ${page};
-
   try {
     for (let page = 1; page <= 26; page++) {
       console.log(page);
-      const res = await fetch(`https://unicorngo.ru/api/catalog/product?sort=by-relevance&fit=MALE&fit=UNISEX&categorySlug=apparel%2Ffeatured_jacket%2Fdown_jacket&page=${page}&perPage=40`, {
+      const res = await fetch(`https://unicorngo.ru/api/catalog/product?sizeType=EU&sort=by-relevance&fit=MALE&fit=UNISEX&brands=Nike&sizeValue=38&categorySlug=footwear&page=${page}&perPage=40`, {
         "headers": {
           "accept": "*/*",
           "accept-language": "en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7,zh-CN;q=0.6,zh;q=0.5",
-          "baggage": "sentry-environment=production,sentry-release=QAk96-yyjjqvvtIIdqgHS,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=5018c906dc8a4469842ae0645ff9c22b,sentry-sample_rate=1,sentry-sampled=true",
-          "if-none-match": "W/\"bb50-8UhV/xJa1HQyj+UGVi60Z4GM0yY\"",
-          "sec-ch-ua": "\"Not(A:Brand\";v=\"99\", \"Google Chrome\";v=\"133\", \"Chromium\";v=\"133\"",
+          "baggage": "sentry-environment=production,sentry-release=TCsba-7ogayNOjH4rVyBv,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=31fed827725a4b2e8789b4588cc8b2d0,sentry-sample_rate=1,sentry-sampled=true",
+          "sec-ch-ua": "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\", \"Google Chrome\";v=\"134\"",
           "sec-ch-ua-mobile": "?0",
           "sec-ch-ua-platform": "\"macOS\"",
           "sec-fetch-dest": "empty",
           "sec-fetch-mode": "cors",
           "sec-fetch-site": "same-origin",
-          "sentry-trace": "5018c906dc8a4469842ae0645ff9c22b-afb7f3cda7ffc569-1"
+          "sentry-trace": "31fed827725a4b2e8789b4588cc8b2d0-adbf23a4d1455dc0-1"
         },
-        "referrer": "https://unicorngo.ru/men/apparel/featured_jacket/down_jacket?gender=man&sort=by-relevance",
+        "referrer": "https://unicorngo.ru/men/footwear?brands=Nike&gender=man&page=1&perPage=40&sizeType=EU&sizeValue=38&sort=by-relevance",
         "referrerPolicy": "strict-origin-when-cross-origin",
         "body": null,
         "method": "GET",
         "mode": "cors",
         "credentials": "include"
       });
-
-
 
       const response = await res.json();
 

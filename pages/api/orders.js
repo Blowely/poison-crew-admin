@@ -113,78 +113,125 @@ export default async function handler(req,res) {
     try {
       const {clientId, products, address} = JSON.parse(req.body);
 
-      const spuId = products[0].spuId;
-      const client = await Client.findOne({_id: clientId});
-      const selectedProduct = await ProductV6.findOne({spuId});
+      // Проверяем наличие товаров
+      if (!products || !products.length) {
+        res.status(400);
+        return res.json({status: 'emptyCart', message: 'Корзина пуста'});
+      }
 
+      const client = await Client.findOne({_id: clientId});
       if (!client) {
         res.status(404);
-        return res.json({status: 'clientNotFoundOrDeleted', message: 'Клент не найден или удален'});
+        return res.json({status: 'clientNotFoundOrDeleted', message: 'Клиент не найден или удален'});
       }
 
-      if (!selectedProduct) {
-        res.status(404);
-        return res.json({status: 'productNotFoundOrDeleted', message: 'Товар не найден или удален'});
-      }
+      // Обрабатываем все товары
+      const processedProducts = [];
+      let totalPrice = 0;
 
-      let selectedSizeIndex = selectedProduct?.skus.findIndex(sku => sku.size?.eu === products[0]?.selectedSize);
-
-      const sizeProperty = selectedProduct?.properties?.propertyTypes?.find(el => el?.name === 'Размер');
-
-      if (selectedSizeIndex < 0) {
-        selectedSizeIndex = sizeProperty?.values?.findIndex(p => p?.value === products[0]?.selectedSize);
-      }
-
-      const selectedSize = selectedProduct.skus[selectedSizeIndex];
-
-      const isStandardCheck = () => {
-        if (selectedSize?.size?.eu || sizeProperty?.values[selectedSizeIndex]?.value) {
-          return null;
+      for (const product of products) {
+        const selectedProduct = await ProductV6.findOne({spuId: product.spuId});
+        if (!selectedProduct) {
+          res.status(404);
+          return res.json({
+            status: 'productNotFoundOrDeleted',
+            message: `Товар ${product.spuId} не найден или удален`
+          });
         }
 
-        return selectedProduct?.skus?.length === 1 && selectedProduct?.skus[0].price ? 'Стандарт' : null;
+        let selectedSizeIndex = selectedProduct.skus.findIndex(
+            sku => sku.size?.eu === product.selectedSize
+        );
+
+        const sizeProperty = selectedProduct.properties?.propertyTypes?.find(
+            el => el?.name === 'Размер'
+        );
+
+        if (selectedSizeIndex < 0) {
+          selectedSizeIndex = sizeProperty?.values?.findIndex(
+              p => p?.value === product.selectedSize
+          );
+        }
+
+        const selectedSize = selectedProduct.skus[selectedSizeIndex];
+        const isStandardCheck = () => {
+          if (selectedSize?.size?.eu || sizeProperty?.values[selectedSizeIndex]?.value) {
+            return null;
+          }
+          return selectedProduct.skus?.length === 1 && selectedProduct.skus[0].price
+              ? 'Стандарт'
+              : null;
+        }
+
+        const price = selectedSize?.price;
+        if (!price) {
+          res.status(400);
+          return res.json({
+            status: 'invalidPrice',
+            message: `Неверная цена для товара ${product.spuId}`
+          });
+        }
+
+        processedProducts.push({
+          product: selectedProduct,
+          price,
+          size: selectedSize?.size?.eu
+              || sizeProperty?.values[selectedSizeIndex]?.value
+              || isStandardCheck()
+        });
+
+        totalPrice += price;
       }
 
+      // Создаем заказ
       const postData = {
         clientId,
-        products: [selectedProduct],
+        products: processedProducts.map(p => p.product),
         address,
-        price: selectedSize?.price,
-        size: selectedSize?.size?.eu
-            || sizeProperty?.values[selectedSizeIndex]?.value
-            || isStandardCheck(),
+        prices: processedProducts.map(p => p.price),
+        sizes: processedProducts.map(p => p.size),
+        totalPrice,
         email: '',
         paid: false,
         status: 'created',
         delivery_status: '',
       }
 
-      const price = selectedSize?.price;
-
       const response = await Order.create(postData);
 
+      // Платежная система
       const token = await login();
-      const orderId = await createOrder(price, response._id, token);
+      const orderId = await createOrder(totalPrice, response._id, token);
       const qrCode = await generateQR(orderId, token, address?.phoneNumber || '');
 
-      axios.post('https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage', {
+      // Уведомление в Telegram
+      const productList = processedProducts.map(p =>
+          `${p.product.name} (${p.size}) - ${p.price} RUB;\n${p.product.images[0]}\n`
+      ).join('\n');
+
+      await axios.post('https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage', {
         chat_id: 664687823,
-        text:`
-        ---NEW ORDER---\n
-        id: ${response._id}\n
-        ${products.map(el => {
-          return `${el?.name} (${el?.selectedSize}) - ${price} RUB;\n
-            ${el?.images[0]}\n
-          `;
-        })} 
-        totalPrice(RUB): ${price}\n
-        https://api.re-poizon.ru/orders\n`
+        text: `
+          ---NEW ORDER---
+          ID: ${response._id}
+          Товары:
+          ${productList}
+          Общая сумма: ${totalPrice} RUB
+          https://api.re-poizon.ru/orders
+        `.trim()
       });
 
       res.status(200);
-      res.json({status: 'ok', message: 'заказ оформлен', orderId: response._id, qrCode});
+      res.json({
+        status: 'ok',
+        message: 'Заказ оформлен',
+        orderId: response._id,
+        qrCode,
+        totalPrice
+      });
+
     } catch (e) {
-      console.log('e =', e);
+      console.error('Ошибка создания заказа:', e);
       res.status(500);
       res.json({status: 'internalServerError', message: 'Ошибка сервера'});
     }
