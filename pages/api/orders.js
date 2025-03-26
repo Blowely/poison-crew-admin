@@ -198,9 +198,9 @@ export default async function handler(req,res) {
       const response = await Order.create(postData);
 
       // Платежная система
-      /*const token = await login();
+      const token = await login();
       const orderId = await createOrder(totalPrice, response._id, token);
-      const qrCode = await generateQR(orderId, token, address?.phoneNumber || '');*/
+      const qrCode = await generateQR(orderId, token, address?.phoneNumber || '');
 
       // Уведомление в Telegram
       const productList = processedProducts.map(p =>
@@ -224,7 +224,7 @@ export default async function handler(req,res) {
         status: 'ok',
         message: 'Заказ оформлен',
         orderId: response._id,
-        qrCode: '',
+        qrCode,
         totalPrice
       });
 
