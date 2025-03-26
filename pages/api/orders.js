@@ -186,10 +186,8 @@ export default async function handler(req,res) {
       // Создаем заказ
       const postData = {
         clientId,
-        products: processedProducts.map(p => p.product),
+        products: processedProducts,
         address,
-        prices: processedProducts.map(p => p.price),
-        sizes: processedProducts.map(p => p.size),
         totalPrice,
         email: '',
         paid: false,
