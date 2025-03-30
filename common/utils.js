@@ -207,3 +207,7 @@ export const handlePoizonProductResponse = (poizonProduct) => {
 export const generateUniqueId = () => {
   return Math.random().toString(36).substr(2, 9);
 };
+
+export function isValidStringWithSpaces(text) {
+  return /^[A-Za-zА-Яа-яЁё\d\s]+$/.test(text);
+}

@@ -7,6 +7,7 @@ import {Skus} from "@/models/Skus";
 import {APPAREL_SIZES, APPAREL_SIZES_MATCHES, COLOR_LIST} from "@/common/constants";
 import fs from "fs";
 import {Synonym} from "@/models/Synonym";
+import {isValidStringWithSpaces} from "@/common/utils";
 
 async function fetchAndStoreProducts(req, res) {
   try {
@@ -335,6 +336,9 @@ export default async function handle(req, res) {
           }
         ]);
       } else if (search) {
+        if (!isValidStringWithSpaces(search)) {
+          return res.status(200).json({ items });
+        }
         // Используем MongoDB Atlas Search
         // Собираем конвейер для aggregate
         const pipeline = [];
