@@ -342,14 +342,23 @@ export default async function handle(req, res) {
         pipeline.push({
           "$search": {
             "index": "default2",
-            "compound": {
-              "should": [
+              "compound": {
+              "must": [ // Основные фильтры (И)
                 {
                   "text": {
-                    "query": search,
-                    "path": "category.category3",
+                    "query": search.trim().split(" "),
+                    "path": ["category.category3", "brand"],
                     "synonyms": "ru_en_synonyms",
-                    "score": { "boost": { "value": 5 } }
+                  }
+                }
+              ],
+              "should": [ // Дополнительные поля (ИЛИ)
+                {
+                  "text": {
+                    "query": "nike",
+                    "path": "name",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 2 } }
                   }
                 },
                 {
@@ -374,14 +383,6 @@ export default async function handle(req, res) {
                     "path": "name",
                     "synonyms": "ru_en_synonyms",
                     "score": { "boost": { "value": 2 } }
-                  }
-                },
-                {
-                  "text": {
-                    "query": search,
-                    "path": "brand",
-                    "synonyms": "ru_en_synonyms",
-                    "score": { "boost": { "value": 1 } }
                   }
                 }
               ]
