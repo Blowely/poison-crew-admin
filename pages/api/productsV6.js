@@ -10,20 +10,18 @@ async function fetchAndStoreProducts(req, res) {
   try {
     for (let page = 1; page <= 26; page++) {
       console.log(page);
-      const res = await fetch(`https://unicorngo.ru/api/catalog/product?sizeType=EU&sort=by-relevance&fit=MALE&fit=UNISEX&brands=Nike&sizeValue=38&categorySlug=footwear&page=${page}&perPage=40`, {
+      const res = await fetch(`https://unicorngo.ru/api/catalog/product?sort=cheap-first&search=Air%20Force&brands=Nike&categorySlug=footwear&page=${page}&perPage=40`, {
         "headers": {
           "accept": "*/*",
           "accept-language": "en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7,zh-CN;q=0.6,zh;q=0.5",
-          "baggage": "sentry-environment=production,sentry-release=TCsba-7ogayNOjH4rVyBv,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=31fed827725a4b2e8789b4588cc8b2d0,sentry-sample_rate=1,sentry-sampled=true",
-          "sec-ch-ua": "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\", \"Google Chrome\";v=\"134\"",
-          "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-platform": "\"macOS\"",
+          "baggage": "sentry-environment=vercel-production,sentry-release=2969582cd32145f70ac41c590da967a96e52b600,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=6aed8baf9c43414fbc16054954267e1c,sentry-sample_rate=1,sentry-sampled=true",
+          "priority": "u=1, i",
           "sec-fetch-dest": "empty",
           "sec-fetch-mode": "cors",
           "sec-fetch-site": "same-origin",
-          "sentry-trace": "31fed827725a4b2e8789b4588cc8b2d0-adbf23a4d1455dc0-1"
+          "sentry-trace": "6aed8baf9c43414fbc16054954267e1c-b6032d54b2139675-1"
         },
-        "referrer": "https://unicorngo.ru/men/footwear?brands=Nike&gender=man&page=1&perPage=40&sizeType=EU&sizeValue=38&sort=by-relevance",
+        "referrer": "https://unicorngo.ru/footwear?brands=Nike&page=1&perPage=40&search=Air%20Force&sort=cheap-first",
         "referrerPolicy": "strict-origin-when-cross-origin",
         "body": null,
         "method": "GET",
@@ -199,10 +197,6 @@ export default async function handle(req, res) {
 
         let obj = {};
 
-        if (search) {
-          obj.name = new RegExp(search, "i");
-        }
-
         if (brandId) {
           obj.brandId = Number(brandId);
         }
@@ -304,26 +298,132 @@ export default async function handle(req, res) {
         ...(isAdmin === false && { auth: 0 })
       };
 
-      const sortOrder = sortDirection === 'cheap-first' ? 1 : sortDirection === 'expensive-first' ? -1 : null;
+      const sortOrder =
+          sortDirection === "cheap-first" ? 1 :
+              sortDirection === "expensive-first" ? -1 :
+                  null;
 
       let items = [];
 
-
-      if (!search && sortOrder === null && !spuId && !category2Id
-          && !category3Id && !sizes && !minPrice && !maxPrice && !colors && !brandId && !brandIds) {
+// Если нет поискового запроса и других фильтров, делаем случайную выборку
+      if (
+          !search &&
+          sortOrder === null &&
+          !spuId &&
+          !category2Id &&
+          !category3Id &&
+          !sizes &&
+          !minPrice &&
+          !maxPrice &&
+          !colors &&
+          !brandId &&
+          !brandIds
+      ) {
         items = await ProductV6.aggregate([
-          { $match: { ...productsV6buildRequest(), price: { $gt: 0 } } },
-          { $sample: { size: Number(limit) } } // Случайный выбор `limit` товаров
+          {
+            $match: {
+              ...productsV6buildRequest(),
+              price: { $gt: 0 }
+            }
+          },
+          {
+            $sample: {
+              size: Number(limit)
+            }
+          }
         ]);
+      } else if (search) {
+        // Используем MongoDB Atlas Search
+        // Собираем конвейер для aggregate
+        const pipeline = [];
+
+        pipeline.push({
+          "$search": {
+            "index": "default2",
+            "compound": {
+              "should": [
+                {
+                  "text": {
+                    "query": search,
+                    "path": "category.category3",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 5 } }
+                  }
+                },
+                {
+                  "text": {
+                    "query": search,
+                    "path": "category.category2",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 4 } }
+                  }
+                },
+                {
+                  "text": {
+                    "query": search,
+                    "path": "category.category1",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 3 } }
+                  }
+                },
+                {
+                  "text": {
+                    "query": search,
+                    "path": "name",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 2 } }
+                  }
+                },
+                {
+                  "text": {
+                    "query": search,
+                    "path": "brand",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 1 } }
+                  }
+                }
+              ]
+            }
+          }
+        });
+
+
+        // 2) Накладываем остальные фильтры
+        const matchObj = productsV6buildRequest();
+        // Если в matchObj осталось поле name с RegExp (для обычного поиска), удалим его,
+        // чтобы не мешать Atlas Search.
+        if (matchObj.name) {
+          delete matchObj.name;
+        }
+
+        // Применяем match только если там реально есть что матчить (кроме name).
+        if (Object.keys(matchObj).length > 0) {
+          pipeline.push({ $match: matchObj });
+        }
+
+        // 3) Сортировка, если есть sortOrder
+        if (sortOrder !== null) {
+          pipeline.push({ $sort: { price: sortOrder } });
+        }
+
+        // 4) Прочие шаги
+        if (offset) {
+          pipeline.push({ $skip: offset });
+        }
+        if (limit) {
+          pipeline.push({ $limit: Number(limit) });
+        }
+
+        items = await ProductV6.aggregate(pipeline);
       } else {
+        // Если search нет, но есть другие фильтры или сортировка
         items = await ProductV6.find(productsV6buildRequest())
             .sort(sortOrder !== null ? { price: sortOrder } : {})
             .skip(offset)
             .limit(limit);
       }
-      //console.log('items',items);
 
-      const result = {items: items }
+      const result = { items };
 
       res.status(200).json(result);
     } catch (e) {
