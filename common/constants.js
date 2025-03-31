@@ -9,6 +9,7 @@ export const PRODUCT_STATUS = {
 
 export const PRODUCT_DELIVERY_STATUS = {
     CREATED: 'created',
+    PROCESSING: 'processing',
     POIZON_BOUGHT: 'poizon_bought',
     DELIVERY_TO_CHI_DEL_STR: 'delivery_to_chi_del_str',
     SORT_CHI_DEL_STR: 'sort_chi_del_str',

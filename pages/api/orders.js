@@ -45,7 +45,7 @@ const createOrder = async (amount, localOrderId, token) => {
   }
 };
 
-const generateQR = async (orderId, token, phone) => {
+const generateQR = async (orderId, token, phone, dbOrderId) => {
   try {
     const response = await axios.post(`https://pay.advancedpay.net/api/v1/order/qrcData/${orderId}`, {
       phoneNumber: phone
@@ -56,27 +56,49 @@ const generateQR = async (orderId, token, phone) => {
       }
     });
 
-    //startStatusPolling(orderId, token);
+    startStatusPolling(orderId, token, dbOrderId);
     return response.data.order.payload;
   } catch (error) {
     console.error('QR generation error:', error.message);
   }
 };
 
-const startStatusPolling = (orderId, token) => {
+const startStatusPolling = (orderId, token, dbOrderId) => {
   const interval = setInterval(async () => {
     try {
-      const response = await axios.get(`/status/${orderId}`, {
+      const response = await axios.get(`https://pay.advancedpay.net/api/v1/status/${orderId}`, {
         headers: {
           'Authorization-Token': token
         }
       });
 
-      if (['IPS_ACCEPTED', 'DECLINED', 'EXPIRED'].includes(response.data.order.status)) {
+      const status = response.data.order.status;
+
+      if (['IPS_ACCEPTED', 'DECLINED', 'EXPIRED'].includes(status)) {
         clearInterval(interval);
+
+        // Обновляем статус заказа в базе данных
+        await Order.updateOne(
+            { _id: dbOrderId },
+            {
+              $set: {
+                status: status === 'IPS_ACCEPTED' ? 'paid' : 'canceled',
+                paid: status === 'IPS_ACCEPTED',
+                delivery_status: status === 'IPS_ACCEPTED' ? 'processing' : ''
+              }
+            }
+        );
+
+        // Можно добавить уведомление в Telegram о изменении статуса
+        if (status === 'IPS_ACCEPTED') {
+          await axios.post('https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage', {
+            chat_id: 664687823,
+            text: `Заказ #${dbOrderId} успешно оплачен`
+          });
+        }
       }
 
-      return response.data.order.status;
+      return status;
     } catch (error) {
       console.error('Status check error:', error);
     }
@@ -192,7 +214,7 @@ export default async function handler(req,res) {
         email: '',
         paid: false,
         status: 'created',
-        delivery_status: '',
+        delivery_status: 'created',
       }
 
       const response = await Order.create(postData);
@@ -200,7 +222,7 @@ export default async function handler(req,res) {
       // Платежная система
       const token = await login();
       const orderId = await createOrder(totalPrice, response._id, token);
-      const qrCode = await generateQR(orderId, token, address?.phoneNumber || '');
+      const qrCode = await generateQR(orderId, token, address?.phoneNumber || '', response._id);
 
       // Уведомление в Telegram
       const productList = processedProducts.map(p =>
