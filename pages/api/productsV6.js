@@ -13,23 +13,20 @@ async function fetchAndStoreProducts(req, res) {
   try {
     for (let page = 1; page <= 26; page++) {
       console.log(page);
-      const res = await fetch(`https://unicorngo.ru/api/catalog/product?sort=cheap-first&search=Air%20Force&brands=Nike&categorySlug=footwear&page=${page}&perPage=40`, {
+      const res = await fetch(`https://unicorngo.ru/api/catalog/product-v2?sort=search-relevance&search=nike%20dunk&brands=Nike&page=${page}&perPage=40`, {
         "headers": {
-          "accept": "*/*",
-          "accept-language": "en-GB,en-US;q=0.9,en;q=0.8,ru;q=0.7,zh-CN;q=0.6,zh;q=0.5",
-          "baggage": "sentry-environment=vercel-production,sentry-release=2969582cd32145f70ac41c590da967a96e52b600,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=6aed8baf9c43414fbc16054954267e1c,sentry-sample_rate=1,sentry-sampled=true",
-          "priority": "u=1, i",
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "same-origin",
-          "sentry-trace": "6aed8baf9c43414fbc16054954267e1c-b6032d54b2139675-1"
+          "baggage": "sentry-environment=vercel-production,sentry-release=9d23f3dd566206a035acac60e2b287c2c7e1f9a8,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=14758f2bd74945348a9350bb5b945d5c,sentry-sample_rate=1,sentry-sampled=true",
+          "sec-ch-ua": "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\", \"Google Chrome\";v=\"134\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"macOS\"",
+          "sentry-trace": "2c5857b2003f47678d702618ad1480ed-be3c4c86fd71be44-1"
         },
-        "referrer": "https://unicorngo.ru/footwear?brands=Nike&page=1&perPage=40&search=Air%20Force&sort=cheap-first",
+        "referrer": "https://unicorngo.ru/search-page?sort=search-relevance&search=nike%20dunk",
         "referrerPolicy": "strict-origin-when-cross-origin",
         "body": null,
         "method": "GET",
         "mode": "cors",
-        "credentials": "include"
+        "credentials": "omit"
       });
 
       const response = await res.json();
