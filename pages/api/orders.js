@@ -203,7 +203,7 @@ export default async function handler(req,res) {
           count: product?.count || "1"
         });
 
-        totalPrice += price;
+        totalPrice += price * product?.count || "1";
       }
 
       // Создаем заказ
@@ -227,7 +227,7 @@ export default async function handler(req,res) {
 
       // Уведомление в Telegram
       const productList = processedProducts.map(p =>
-          `${p.product.name} (${p.size}) - ${p.price} RUB;\n${p.product.images[0]}\n`
+          `${p.product.name} (${p.size}) - ${p.price * p?.count} (${p?.count}) RUB;\n${p.product.images[0]}\n`
       ).join('\n');
 
       await axios.post('https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage', {
