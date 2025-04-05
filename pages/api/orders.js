@@ -27,7 +27,7 @@ const createOrder = async (amount, localOrderId, token) => {
       orderCurrency: 'RUB',
       tspId: 483,
       description: 'Оплата через СБП',
-      callbackUrl: 'https://re-poizon.ru/callback'
+      callbackUrl: 'https://re-poizon.ru/orders'
     }, {
       headers: {
         'Authorization-Token': token,
@@ -210,7 +210,7 @@ export default async function handler(req,res) {
          if (discountedPrice !== product?.discountedPrice) {
            res.status(400);
            return res.json({
-             status: 'invalidPrice',
+             status: 'invalidDiscountPrice',
              message: `Неверная цена для товара ${product.spuId}`
            });
          }
