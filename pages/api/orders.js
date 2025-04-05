@@ -4,6 +4,7 @@ import {Client} from "@/models/Client";
 import axios from "axios";
 import {ProductV6} from "@/models/ProductV6";
 import {generateUniqueId} from "@/common/utils";
+import {Promo} from "@/models/Promo";
 
 const login = async () => {
   try {
@@ -62,6 +63,13 @@ const generateQR = async (orderId, token, phone, dbOrderId) => {
     console.error('QR generation error:', error.message);
   }
 };
+
+const getRemoteDiscount = async (code) => {
+  const promo = await Promo.findOne({value: code.toUpperCase()})
+  if (!promo?.value) return null;
+
+  return promo.discount;
+}
 
 const startStatusPolling = (orderId, token, dbOrderId) => {
   const interval = setInterval(async () => {
@@ -133,7 +141,7 @@ export default async function handler(req,res) {
 
   if (method === 'POST') {
     try {
-      const {clientId, products, address} = JSON.parse(req.body);
+      const {clientId, products, address, promo} = JSON.parse(req.body);
 
       // Проверяем наличие товаров
       if (!products || !products.length) {
@@ -186,13 +194,28 @@ export default async function handler(req,res) {
         }
 
         const price = selectedSize?.price;
-        if (!price) {
+
+        if (promo) {
+         const remoteDiscount = await getRemoteDiscount(promo);
+         const discountedPrice = Math.trunc(price * (1 - `0.${remoteDiscount}`));
+
+         if (discountedPrice !== product?.discountedPrice) {
+           res.status(400);
+           return res.json({
+             status: 'invalidPrice',
+             message: `Неверная цена для товара ${product.spuId}`
+           });
+         }
+        }
+
+        if (!price && !promo) {
           res.status(400);
           return res.json({
             status: 'invalidPrice',
             message: `Неверная цена для товара ${product.spuId}`
           });
         }
+
 
         processedProducts.push({
           product: selectedProduct,
@@ -221,9 +244,9 @@ export default async function handler(req,res) {
       const response = await Order.create(postData);
 
       // Платежная система
-      const token = await login();
+     /* const token = await login();
       const orderId = await createOrder(totalPrice, response._id, token);
-      const qrCode = await generateQR(orderId, token, address?.phoneNumber || '', response._id);
+      const qrCode = await generateQR(orderId, token, address?.phoneNumber || '', response._id);*/
 
       // Уведомление в Telegram
       const productList = processedProducts.map(p =>
@@ -247,7 +270,7 @@ export default async function handler(req,res) {
         status: 'ok',
         message: 'Заказ оформлен',
         orderId: response._id,
-        qrCode,
+        qrCode: "",
         totalPrice
       });
 
