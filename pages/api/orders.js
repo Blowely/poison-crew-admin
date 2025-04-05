@@ -193,7 +193,15 @@ export default async function handler(req,res) {
               : null;
         }
 
-        const price = selectedSize?.price;
+        let price = selectedSize?.price;
+
+        if (!price && !promo) {
+          res.status(400);
+          return res.json({
+            status: 'invalidPrice',
+            message: `Неверная цена для товара ${product.spuId}`
+          });
+        }
 
         if (promo) {
          const remoteDiscount = await getRemoteDiscount(promo);
@@ -206,16 +214,9 @@ export default async function handler(req,res) {
              message: `Неверная цена для товара ${product.spuId}`
            });
          }
-        }
 
-        if (!price && !promo) {
-          res.status(400);
-          return res.json({
-            status: 'invalidPrice',
-            message: `Неверная цена для товара ${product.spuId}`
-          });
+          price = discountedPrice;
         }
-
 
         processedProducts.push({
           product: selectedProduct,
