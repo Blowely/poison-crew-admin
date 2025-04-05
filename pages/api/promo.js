@@ -11,9 +11,9 @@ export default async function handle(req, res) {
       const remoteCode = await Promo.findOne({value: code})
 
       if (remoteCode?.value) {
-        return res.status(200).json({status: true});
+        return res.status(200).json({status: true, discount: remoteCode?.discount || ""});
       } else {
-        return res.status(200).json({status: false});
+        return res.status(200).json({status: false, discount: remoteCode?.discount || ""});
       }
     } catch (e) {
       console.log('e =', e.message);
