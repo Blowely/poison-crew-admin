@@ -900,7 +900,6 @@ export default async function handle(req, res) {
 
       if (req.query?.spuId) {
         products = [{spuId: req.query?.spuId}]
-        console.log('products',products);
       }
 
 
@@ -911,7 +910,6 @@ export default async function handle(req, res) {
         console.log(i);
         const response = await axios.get(`${baseUrl}/${product.spuId}`, { headers });
         const updatedData = response.data;
-        console.log('response',response.data);
 
         await ProductV6.updateOne(
           { spuId: product.spuId },
