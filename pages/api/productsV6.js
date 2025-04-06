@@ -902,7 +902,6 @@ export default async function handle(req, res) {
         products = [{spuId: req.query?.spuId}]
       }
 
-
       let i = 0;
 
       for (const product of products) {
