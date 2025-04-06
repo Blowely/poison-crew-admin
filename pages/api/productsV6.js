@@ -893,8 +893,17 @@ export default async function handle(req, res) {
     };
 
     try {
-      const products = await ProductV6.find({ 'skus': { $size: 0 } }, 'spuId');
-      console.log(products.length);
+      let products = []
+      if (!req.query?.spuId) {
+        products = await ProductV6.find({ 'skus': { $size: 0 } }, 'spuId');
+      }
+
+      if (req.query?.spuId) {
+        products = [{spuId: req.query?.spuId}]
+        console.log('products',products);
+      }
+
+
       let i = 0;
 
       for (const product of products) {
@@ -902,10 +911,11 @@ export default async function handle(req, res) {
         console.log(i);
         const response = await axios.get(`${baseUrl}/${product.spuId}`, { headers });
         const updatedData = response.data;
+        console.log('response',response.data);
 
         await ProductV6.updateOne(
           { spuId: product.spuId },
-          { $set: updatedData }
+          { $set: updatedData }, {upsert: true },
         );
       }
 
