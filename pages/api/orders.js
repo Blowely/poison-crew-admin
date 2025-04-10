@@ -170,37 +170,21 @@ export default async function handler(req,res) {
         }
 
         let selectedSizeIndex = selectedProduct.skus.findIndex(
-            sku => sku.size?.eu === product.selectedSize
+            sku => sku.skuId === product.skuId
         );
-
-        const sizeProperty = selectedProduct.properties?.propertyTypes?.find(
-            el => el?.name === 'Размер'
-        );
-
-        if (selectedSizeIndex < 0) {
-          selectedSizeIndex = sizeProperty?.values?.findIndex(
-              p => p?.value === product.selectedSize
-          );
-        }
 
         const selectedSize = selectedProduct.skus[selectedSizeIndex];
-        const isStandardCheck = () => {
-          if (selectedSize?.size?.eu || sizeProperty?.values[selectedSizeIndex]?.value) {
-            return null;
-          }
-          return selectedProduct.skus?.length === 1 && selectedProduct.skus[0].price
-              ? 'Стандарт'
-              : null;
-        }
 
         let price = selectedSize?.price;
 
-        if (!price && !promo) {
-          res.status(400);
-          return res.json({
-            status: 'invalidPrice',
-            message: `Неверная цена для товара ${product.spuId}`
-          });
+        if (!price || price !== product.price) {
+          if (!promo) {
+            res.status(400);
+            return res.json({
+              status: 'invalidPrice',
+              message: `Неверная цена для товара ${product.spuId}`
+            });
+          }
         }
 
         if (promo) {
@@ -211,7 +195,7 @@ export default async function handler(req,res) {
            res.status(400);
            return res.json({
              status: 'invalidDiscountPrice',
-             message: `Неверная цена для товара ${product.spuId}`
+             message: `Неверная цена для товара ${product.spuId} discountedPrice`
            });
          }
 
@@ -221,9 +205,8 @@ export default async function handler(req,res) {
         processedProducts.push({
           product: selectedProduct,
           price,
-          size: selectedSize?.size?.eu
-              || sizeProperty?.values[selectedSizeIndex]?.value
-              || isStandardCheck(),
+          size: product?.selectedSize || null,
+          skuId: product?.skuId || null,
           count: product?.count || "1"
         });
 
