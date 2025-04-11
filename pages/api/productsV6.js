@@ -356,7 +356,7 @@ export default async function handle(req, res) {
               "should": [ // Дополнительные поля (ИЛИ)
                 {
                   "text": {
-                    "query": "nike",
+                    "query": search,
                     "path": "name",
                     "synonyms": "ru_en_synonyms",
                     "score": { "boost": { "value": 2 } }
