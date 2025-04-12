@@ -39,7 +39,8 @@ export default async function handle(req, res) {
             index: "autocomplete",
             autocomplete: {
               query: search.toString(),
-              path: "name"
+              path: "name",
+              //fuzzy: { maxEdits: 2 },
             },
             highlight: {
               path: ["name"]
@@ -47,10 +48,16 @@ export default async function handle(req, res) {
           }
         });
 
-        pipeline.push({ $limit: Number(10) });
+        pipeline.push({ $limit: Number(13) });
 
-        allSuggestions = await ProductV6.aggregate(pipeline);
-        allSuggestions = allSuggestions.map(el => el?.name);
+        const remoteSuggestions = await ProductV6.aggregate(pipeline);
+        allSuggestions = remoteSuggestions.map(el => el?.name);
+
+        if (remoteSuggestions[0]?.brand && remoteSuggestions[1]?.brand) {
+          allSuggestions = [remoteSuggestions[0]?.brand, remoteSuggestions[2]?.brand, ...allSuggestions];
+        }
+
+        allSuggestions = [...new Set(allSuggestions.map(el => el))];
       }
 
       res.status(200).json({suggested: allSuggestions});
