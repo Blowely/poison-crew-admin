@@ -25,11 +25,33 @@ export default async function handle(req, res) {
       }).limit(10);
 
       // Собираем все подходящие синонимы из найденных документов
-      const allSuggestions = synonymsDocuments
+      let allSuggestions = synonymsDocuments
           .flatMap(doc => doc.synonyms)
           .filter(synonym => regex.test(synonym.toLowerCase()))
           .filter((value, index, self) => self.indexOf(value) === index) // Убираем дубликаты
           .slice(0, 8);
+
+      if (allSuggestions?.length === 0 && search) {
+        const pipeline = [];
+
+        pipeline.push({
+          $search: {
+            index: "autocomplete",
+            autocomplete: {
+              query: search.toString(),
+              path: "name"
+            },
+            highlight: {
+              path: ["name"]
+            }
+          }
+        });
+
+        pipeline.push({ $limit: Number(10) });
+
+        allSuggestions = await ProductV6.aggregate(pipeline);
+        allSuggestions = allSuggestions.map(el => el?.name);
+      }
 
       res.status(200).json({suggested: allSuggestions});
     } catch (e) {
