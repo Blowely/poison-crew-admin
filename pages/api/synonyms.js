@@ -29,7 +29,7 @@ export default async function handle(req, res) {
           .flatMap(doc => doc.synonyms)
           .filter(synonym => regex.test(synonym.toLowerCase()))
           .filter((value, index, self) => self.indexOf(value) === index) // Убираем дубликаты
-          .slice(0, 8);
+          .slice(0, 8).map(el => ({value: el}));
 
       if (allSuggestions?.length === 0 && search) {
         const pipeline = [];
@@ -51,13 +51,26 @@ export default async function handle(req, res) {
         pipeline.push({ $limit: Number(13) });
 
         const remoteSuggestions = await ProductV6.aggregate(pipeline);
-        allSuggestions = remoteSuggestions.map(el => el?.name);
+
+        const searchParts = search?.split(" ");
+        const firstSearchPart = searchParts?.length > 1 ? searchParts[0] : "";
+
+        allSuggestions = remoteSuggestions.map((el, i) => {
+
+          return {value: `${firstSearchPart} ${el?.name}`.trim()}
+        });
 
         if (remoteSuggestions[0]?.brand && remoteSuggestions[1]?.brand) {
-          allSuggestions = [remoteSuggestions[0]?.brand, remoteSuggestions[2]?.brand, ...allSuggestions];
+          allSuggestions = [
+              {value: `${firstSearchPart} ${remoteSuggestions[0]?.brand}`.trim()},
+              {value: `${firstSearchPart} ${remoteSuggestions[1]?.brand}`.trim()},
+              ...allSuggestions
+          ];
         }
 
-        allSuggestions = [...new Set(allSuggestions.map(el => el))];
+        allSuggestions = [
+          ...new Map(allSuggestions.map(item => [item.value, item])).values()
+        ];
       }
 
       res.status(200).json({suggested: allSuggestions});
