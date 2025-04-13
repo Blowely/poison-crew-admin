@@ -31,6 +31,8 @@ export default async function handle(req, res) {
           .filter((value, index, self) => self.indexOf(value) === index) // Убираем дубликаты
           .slice(0, 8).map(el => ({value: el}));
 
+      const isJustOneSuggestion = () => allSuggestions?.length === 1 && allSuggestions[0]?.value === search.trim()
+
       if (allSuggestions?.length === 0 && search) {
         const pipeline = [];
 
@@ -40,7 +42,7 @@ export default async function handle(req, res) {
             autocomplete: {
               query: search.toString(),
               path: "name",
-              //fuzzy: { maxEdits: 2 },
+              fuzzy: { maxEdits: 2 },
             },
             highlight: {
               path: ["name"]
@@ -71,7 +73,74 @@ export default async function handle(req, res) {
         allSuggestions = [
           ...new Map(allSuggestions.map(item => [item.value, item])).values()
         ];
+      } else if (isJustOneSuggestion()) {
+        // products
+        const pipeline = [];
+
+        pipeline.push({
+          "$search": {
+            "index": "default2",
+            "compound": {
+              "must": [ // Основные фильтры (И)
+                {
+                  "text": {
+                    "query": search.trim().split(" "),
+                    "path": ["category.category3", "brand"],
+                    "synonyms": "ru_en_synonyms",
+                  }
+                }
+              ],
+              "should": [ // Дополнительные поля (ИЛИ)
+                {
+                  "text": {
+                    "query": search,
+                    "path": "name",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 2 } }
+                  }
+                },
+                {
+                  "text": {
+                    "query": search,
+                    "path": "category.category2",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 4 } }
+                  }
+                },
+                {
+                  "text": {
+                    "query": search,
+                    "path": "category.category1",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 3 } }
+                  }
+                },
+                {
+                  "text": {
+                    "query": search,
+                    "path": "name",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 2 } }
+                  }
+                }
+              ]
+            }
+          }
+        });
+
+        pipeline.push({ $limit: 10 });
+
+        const remoteProducts = await ProductV6.aggregate(pipeline);
+
+        allSuggestions = remoteProducts.map((el, i) => {
+          return {value: `${search.trim()} ${el?.brand}`.trim()}
+        });
+
+        allSuggestions = [
+          ...new Map(allSuggestions.map(item => [item.value, item])).values()
+        ];
       }
+
 
       res.status(200).json({suggested: allSuggestions});
     } catch (e) {
