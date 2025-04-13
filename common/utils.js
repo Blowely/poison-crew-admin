@@ -211,3 +211,8 @@ export const generateUniqueId = () => {
 export function isValidStringWithSpaces(text) {
   return /^[A-Za-zА-Яа-яЁё\d\s]+$/.test(text);
 }
+
+export function replaceSpecialCharsWithSpaces(str) {
+  // Заменяем все не-буквенно-цифровые символы на пробелы
+  return str.replace(/[^a-zA-Z0-9а-яА-ЯёЁ\s]/g, ' ');
+}

@@ -7,7 +7,7 @@ import {Skus} from "@/models/Skus";
 import {APPAREL_SIZES, APPAREL_SIZES_MATCHES, COLOR_LIST} from "@/common/constants";
 import fs from "fs";
 import {Synonym} from "@/models/Synonym";
-import {isValidStringWithSpaces} from "@/common/utils";
+import {isValidStringWithSpaces, replaceSpecialCharsWithSpaces} from "@/common/utils";
 
 async function fetchAndStoreProducts(req, res) {
   try {
@@ -93,7 +93,7 @@ export default async function handle(req, res) {
       const existProductNumber = query['exist-product'];
       const isUpdate = query?.update;
       const isUpdatePrices = query?.updatePrices;
-      const search = query?.search;
+      let search = query?.search;
       const brandId = query?.brandId || null;
       const brandIds = query?.brandIds || null;
       const categoryId = query?.category1Id || null;
@@ -334,8 +334,9 @@ export default async function handle(req, res) {
         ]);
       } else if (search) {
         if (!isValidStringWithSpaces(search)) {
-          return res.status(200).json({ items });
+          search = replaceSpecialCharsWithSpaces(search);
         }
+
         // Используем MongoDB Atlas Search
         // Собираем конвейер для aggregate
         const pipeline = [];
