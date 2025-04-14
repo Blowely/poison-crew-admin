@@ -25,13 +25,17 @@ export default async function handle(req, res) {
       }).limit(10);
 
       // Собираем все подходящие синонимы из найденных документов
-      let allSuggestions = synonymsDocuments
+      let remoteSuggestions = synonymsDocuments
           .flatMap(doc => doc.synonyms)
           .filter(synonym => regex.test(synonym.toLowerCase()))
           .filter((value, index, self) => self.indexOf(value) === index) // Убираем дубликаты
-          .slice(0, 8).map(el => ({value: el}));
+          .slice(0, 8)
 
-      const isJustOneSuggestion = () => allSuggestions?.length === 1 && allSuggestions[0]?.value === search.trim()
+      const isSuggestionsIncludesSearch = () => remoteSuggestions?.includes(search?.trim())
+
+      let allSuggestions = remoteSuggestions;
+
+      allSuggestions = allSuggestions.map(el => ({value: el}));
 
       if (allSuggestions?.length === 0 && search) {
         const pipeline = [];
@@ -73,7 +77,7 @@ export default async function handle(req, res) {
         allSuggestions = [
           ...new Map(allSuggestions.map(item => [item.value, item])).values()
         ];
-      } else if (isJustOneSuggestion()) {
+      } else if (isSuggestionsIncludesSearch()) {
         // products
         const pipeline = [];
 
@@ -128,7 +132,7 @@ export default async function handle(req, res) {
           }
         });
 
-        pipeline.push({ $limit: 10 });
+        pipeline.push({ $limit: 20 });
 
         const remoteProducts = await ProductV6.aggregate(pipeline);
 
