@@ -143,6 +143,72 @@ export default async function handle(req, res) {
         allSuggestions = [
           ...new Map(allSuggestions.map(item => [item.value, item])).values()
         ];
+      } else if (allSuggestions?.length > 0) {
+        const pipeline = [];
+        const suggestedItemValue = allSuggestions[0]?.value;
+
+        pipeline.push({
+          "$search": {
+            "index": "default2",
+            "compound": {
+              "must": [ // Основные фильтры (И)
+                {
+                  "text": {
+                    "query": suggestedItemValue.trim().split(" "),
+                    "path": ["category.category3", "brand"],
+                    "synonyms": "ru_en_synonyms",
+                  }
+                }
+              ],
+              "should": [ // Дополнительные поля (ИЛИ)
+                {
+                  "text": {
+                    "query": suggestedItemValue,
+                    "path": "name",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 2 } }
+                  }
+                },
+                {
+                  "text": {
+                    "query": suggestedItemValue,
+                    "path": "category.category2",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 4 } }
+                  }
+                },
+                {
+                  "text": {
+                    "query": suggestedItemValue,
+                    "path": "category.category1",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 3 } }
+                  }
+                },
+                {
+                  "text": {
+                    "query": suggestedItemValue,
+                    "path": "name",
+                    "synonyms": "ru_en_synonyms",
+                    "score": { "boost": { "value": 2 } }
+                  }
+                }
+              ]
+            }
+          }
+        });
+
+        pipeline.push({ $limit: 20 });
+
+        const remoteProducts = await ProductV6.aggregate(pipeline);
+
+        allSuggestions = [...allSuggestions, ...(remoteProducts.map((el, i) => {
+          return {value: `${suggestedItemValue.trim()} ${el?.brand}`.trim()}
+        }))];
+
+        allSuggestions = [
+          ...new Map(allSuggestions.map(item => [item.value, item])).values()
+        ];
       }
 
 
