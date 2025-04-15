@@ -348,7 +348,7 @@ export default async function handle(req, res) {
               "must": [ // Основные фильтры (И)
                 {
                   "text": {
-                    "query": search.trim().split(" "),
+                    "query": search.trim().split(" ").filter((el) => el),
                     "path": ["category.category3", "brand"],
                     "synonyms": "ru_en_synonyms",
                   }

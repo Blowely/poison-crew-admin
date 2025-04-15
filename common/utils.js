@@ -216,3 +216,19 @@ export function replaceSpecialCharsWithSpaces(str) {
   // Заменяем все не-буквенно-цифровые символы на пробелы
   return str.replace(/[^a-zA-Z0-9а-яА-ЯёЁ\s]/g, ' ');
 }
+
+export const getValue = (search, brand) => {
+  return !search?.toLowerCase()?.includes(brand?.toLowerCase()) ? `${search} ${brand}`.trim() : search?.trim()
+}
+
+export const getNameValue = (search, name) => {
+  if (!name) {
+    return search.trim();
+  }
+
+  if (!search) {
+    return name.trim();
+  }
+
+  return !name?.toLowerCase()?.includes(search?.toLowerCase()) ? `${search} ${name}`.trim() : name?.trim()
+}

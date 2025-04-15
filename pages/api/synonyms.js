@@ -6,6 +6,7 @@ import {ProductV6} from "@/models/ProductV6";
 import {Skus} from "@/models/Skus";
 import {APPAREL_SIZES, APPAREL_SIZES_MATCHES, COLOR_LIST} from "@/common/constants";
 import {Synonym} from "@/models/Synonym";
+import {getNameValue, getValue} from "@/common/utils";
 
 
 export default async function handle(req, res) {
@@ -63,13 +64,14 @@ export default async function handle(req, res) {
 
         allSuggestions = remoteSuggestions.map((el, i) => {
 
-          return {value: `${firstSearchPart} ${el?.name}`.trim()}
+          //return {value: `${firstSearchPart} ${el?.name}`.trim()}
+          return {value: getNameValue(firstSearchPart, el?.name)}
         });
 
         if (remoteSuggestions[0]?.brand && remoteSuggestions[1]?.brand) {
           allSuggestions = [
-              {value: `${firstSearchPart} ${remoteSuggestions[0]?.brand}`.trim()},
-              {value: `${firstSearchPart} ${remoteSuggestions[1]?.brand}`.trim()},
+              {value: getValue(firstSearchPart, remoteSuggestions[0]?.brand)},
+              {value: getValue(firstSearchPart, remoteSuggestions[1]?.brand)},
               ...allSuggestions
           ];
         }
@@ -137,7 +139,7 @@ export default async function handle(req, res) {
         const remoteProducts = await ProductV6.aggregate(pipeline);
 
         allSuggestions = remoteProducts.map((el, i) => {
-          return {value: `${search.trim()} ${el?.brand}`.trim()}
+          return {value: getValue(search.trim(), el?.brand)}
         });
 
         allSuggestions = [
@@ -203,12 +205,13 @@ export default async function handle(req, res) {
         const remoteProducts = await ProductV6.aggregate(pipeline);
 
         allSuggestions = [...allSuggestions, ...(remoteProducts.map((el, i) => {
-          return {value: `${suggestedItemValue.trim()} ${el?.brand}`.trim()}
+          return {value: getValue(suggestedItemValue.trim(), el?.brand)}
         }))];
 
         allSuggestions = [
           ...new Map(allSuggestions.map(item => [item.value, item])).values()
         ];
+        //console.log('allSuggestions=',allSuggestions)
       }
 
 
