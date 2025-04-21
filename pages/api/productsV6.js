@@ -293,6 +293,7 @@ export default async function handle(req, res) {
           !search &&
           sortOrder === null &&
           !spuId &&
+          !categoryId &&
           !category2Id &&
           !category3Id &&
           !sizes &&
