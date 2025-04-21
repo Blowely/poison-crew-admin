@@ -5,71 +5,54 @@ import {setTimeout} from "timers/promises";
 import {ProductV6} from "@/models/ProductV6";
 import {Skus} from "@/models/Skus";
 import {APPAREL_SIZES, APPAREL_SIZES_MATCHES, COLOR_LIST} from "@/common/constants";
-import fs from "fs";
-import {Synonym} from "@/models/Synonym";
 import {isValidStringWithSpaces, replaceSpecialCharsWithSpaces} from "@/common/utils";
+import {getFetch} from "@/fetchs";
+import {getFetchV2} from "@/fetchesV2";
 
 async function fetchAndStoreProducts(req, res) {
   try {
-    for (let page = 1; page <= 26; page++) {
+    for (let page = Number(req?.query?.page) || 1; page <= 26; page++) {
+      console.log('s',req?.query?.f || req?.query?.fv);
       console.log(page);
-      const res = await fetch(`https://unicorngo.ru/api/catalog/product-v2?sort=search-relevance&search=nike%20dunk&brands=Nike&page=${page}&perPage=40`, {
-        "headers": {
-          "baggage": "sentry-environment=vercel-production,sentry-release=9d23f3dd566206a035acac60e2b287c2c7e1f9a8,sentry-public_key=8df192a0bb4eb5268bff2576d9a1ffee,sentry-trace_id=14758f2bd74945348a9350bb5b945d5c,sentry-sample_rate=1,sentry-sampled=true",
-          "sec-ch-ua": "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\", \"Google Chrome\";v=\"134\"",
-          "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-platform": "\"macOS\"",
-          "sentry-trace": "2c5857b2003f47678d702618ad1480ed-be3c4c86fd71be44-1"
-        },
-        "referrer": "https://unicorngo.ru/search-page?sort=search-relevance&search=nike%20dunk",
-        "referrerPolicy": "strict-origin-when-cross-origin",
-        "body": null,
-        "method": "GET",
-        "mode": "cors",
-        "credentials": "omit"
-      });
+
+      let res = undefined;
+
+      if (req?.query?.f) {
+        res = await getFetch(Number(req?.query?.f), page);
+      }
+
+      if (req?.query?.fv) {
+        console.log('req?.query?.sizeValue',req?.query?.sizeValue)
+        res = await getFetchV2(
+            Number(req?.query?.fv),
+            page,
+            req?.query?.sizeValue,
+            req?.query?.sort,
+            req?.query?.ga,
+            req?.query?.gb,
+            req?.query?.gc,
+            req?.query?.pa,
+            req?.query?.pb,
+        );
+      }
 
       const response = await res.json();
 
       const items = response.items || [];
 
       for (const item of items) {
-        await ProductV6.updateOne(
+        const result = await ProductV6.findOne({ spuId: item.spuId });
+        console.log('result.spuId', result?.spuId);
+        if (!result) {
+          await ProductV6.create(item);
+        }
+        /*await ProductV6.updateOne(
             { spuId: item.spuId },
             { $set: item },
             { upsert: true }
-        );
+        );*/
       }
     }
-
-    /*for (let page = 1; page <= 26; page++) {
-      console.log(page);
-      const response = await axios.get(baseUrl, {
-        accessoriesMenHeaders,
-        params: {
-          //brands: 'Lee',
-          //search: '定制球鞋',
-          //sizeType: 'EU',
-          sort: 'by-relevance',
-          fit: ['MALE', 'UNISEX'], // Массив для нескольких значений
-          //categorySlug: 'apparel/featured_tops/t_shirt',
-          categorySlug: 'accessories',
-          //categorySlug: 'apparel',
-          page,
-          perPage: 40,
-        }
-      });
-
-      const items = response.data.items || [];
-
-      for (const item of items) {
-        await ProductV6.updateOne(
-          { spuId: item.spuId },
-          { $set: item },
-          { upsert: true }
-        );
-      }
-    }*/
 
     res.status(200).json({ message: 'Products fetched and stored successfully!' });
   } catch (error) {
@@ -320,12 +303,12 @@ export default async function handle(req, res) {
           !brandIds
       ) {
         items = await ProductV6.aggregate([
-          {
+          /*{
             $match: {
               ...productsV6buildRequest(),
               price: { $gt: 0 }
             }
-          },
+          },*/
           {
             $sample: {
               size: Number(limit)
@@ -904,7 +887,7 @@ export default async function handle(req, res) {
       }
 
       let i = 0;
-
+      console.log('products.length',products.length);
       for (const product of products) {
         i++
         console.log(i);
