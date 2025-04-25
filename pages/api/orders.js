@@ -64,14 +64,78 @@ const generateQR = async (orderId, token, phone, dbOrderId) => {
   }
 };
 
-const cardPayment = async (orderId, token, phone, dbOrderId)=>{
+/*
+ * Запрос на создание заказа по форме оплаты
+ */
+const cardPayment = async (orderId, tspCode, token)=>{
   try{
-
+    const response =  await axios.post(`https://pay.advancedpay.net/api/v1/public/order/form/${tspCode}/${orderId}`,
+        {},
+        {
+          headers: {
+            'Authorization-Token': token,
+            'x-req-id': generateUniqueId()
+          }
+        });
+    // Подправить ретюрн. есть сомнения.доразбораться
+    return response.data.externalOrderId;
   } catch(error){
-    console.error('Сard payment error:', error.message);
+    console.error('Payment form creation error:', error.message);
   }
-
 };
+
+/*
+ * authorize - Холдирование средств
+ */
+const authorizePayment = async (orderId, cardData, token) => {
+  try{
+    const requestData = {
+      OrderId: orderId,
+      Card: {
+        Pan: cardData.pan,
+        ExpiryMonth: cardData.expiryMonth,
+        ExpiryYear: cardData.expiryYear,
+        cvv: cardData.cvv,
+        Holder: cardData.holder,
+        Phone: cardData.phone
+      }
+    }
+
+    const response  = await axios.post(`https://pay.advancedpay.net/api/v1/payments/cards/authorize`,
+        requestData,
+        {
+          headers: {
+            'Authorization-Token': token,
+            'x-req-id': generateUniqueId()
+          }
+        }
+    );
+
+    return response.data;
+  } catch(error){
+    console.error('Payment authorization error:', error.message);
+  }
+};
+
+/*
+ * charge - Списание средств
+ */
+const chargePayment = async (orderId, token) => {
+  try{
+    const response = await axios.post(`https://pay.advancedpay.net/api/v1/payments/cards/charge`,
+        { OrderId: orderId },
+        {
+          headers: {
+            'Authorization-Token': token,
+            'x-req-id': generateUniqueId()
+          }
+        });
+
+    return response.data;
+  } catch(error){
+    console.error('Payment charge error:', error.message);
+  }
+}
 
 const getRemoteDiscount = async (code) => {
   const promo = await Promo.findOne({value: code.toUpperCase()})
@@ -150,7 +214,16 @@ export default async function handler(req,res) {
 
   if (method === 'POST') {
     try {
-      const {clientId, products, address, promo} = JSON.parse(req.body);
+      const {clientId, products, address, promo, paymentMethod} = JSON.parse(req.body);
+      const tspCode = 'repoizon';
+
+      if (!['qr', 'card'].includes(paymentMethod)) {
+        return res.status(400).json({
+          status: 'invalidPaymentMethod',
+          message: 'Указан неверный способ оплаты. Доступно: qr или card'
+        });
+      }
+
 
       // Проверяем наличие товаров
       if (!products || !products.length) {
@@ -239,7 +312,21 @@ export default async function handler(req,res) {
       // Платежная система
       const token = await login();
       const orderId = await createOrder(totalPrice, response._id, token);
-      const qrCode = await generateQR(orderId, token, address?.phoneNumber || '', response._id);
+
+      let paymentPayload = null;
+      if (paymentMethod === 'qr'){
+        paymentPayload = await generateQR(orderId, token, address?.phoneNumber || '', response._id);
+      } else if (paymentMethod === 'card'){
+        const externalOrderId = await cardPayment(orderId, tspCode, token);
+        paymentPayload = {
+          externalOrderId,
+          paymentFormUrl: `https://payment.pay.advancedpay.net/${externalOrderId}`
+        };
+      }
+
+      //const qrCode = await generateQR(orderId, token, address?.phoneNumber || '', response._id);
+      //const cardPay = await cardPayment(orderId,tspCode, token);
+
 
       // Уведомление в Telegram
       const productList = processedProducts.map(p =>
@@ -263,7 +350,8 @@ export default async function handler(req,res) {
         status: 'ok',
         message: 'Заказ оформлен',
         orderId: response._id,
-        qrCode,
+        paymentMethod,
+        paymentPayload,
         totalPrice
       });
 
