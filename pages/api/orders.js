@@ -64,6 +64,15 @@ const generateQR = async (orderId, token, phone, dbOrderId) => {
   }
 };
 
+const cardPayment = async (orderId, token, phone, dbOrderId)=>{
+  try{
+
+  } catch(error){
+    console.error('Сard payment error:', error.message);
+  }
+
+};
+
 const getRemoteDiscount = async (code) => {
   const promo = await Promo.findOne({value: code.toUpperCase()})
   if (!promo?.value) return null;
