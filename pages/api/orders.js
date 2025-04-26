@@ -70,7 +70,7 @@ const generateQR = async (orderId, token, phone, dbOrderId) => {
 const payoutToCard = async (payoutData, token) => {
   try {
     const response = await axios.post(
-        `https://pay.advancedpay.net/api/v1/payments/cards/payout`,
+        `https://pay.advancedpay.net/api/v1/order/cardPayout/${orderId}`,
         payoutData,
         {
           headers: {
@@ -100,7 +100,7 @@ const cardPayment = async (orderId, tspCode, token)=>{
             'x-req-id': generateUniqueId()
           }
         });
-    // Подправить ретюрн. есть сомнения.доразбораться
+
     return response.data.externalOrderId;
   } catch(error){
     console.error('Payment form creation error:', error.message);
@@ -181,6 +181,72 @@ const voidPayment = async (orderId, token) => {
   }
 };
 
+/**
+ * Валидация данных карты
+ */
+const validateCardData = (cardData) => {
+  const errors = {};
+
+  if (!cardData.pan) {
+    errors.pan = "Номер карты обязателен";
+  } else {
+    const cleanPan = cardData.pan.replace(/\D/g, '');
+
+    let sum = 0;
+    let even = false;
+    for (let i = cleanPan.length - 1; i >= 0; i--) {
+      let digit = parseInt(cleanPan.charAt(i), 10);
+      if (even) {
+        digit *= 2;
+        if (digit > 9) digit -= 9;
+      }
+      sum += digit;
+      even = !even;
+    }
+
+    if (cleanPan.length < 13 || cleanPan.length > 19) {
+      errors.pan = "Неверная длина номера карты";
+    } else if (sum % 10 !== 0) {
+      errors.pan = "Неверный номер карты";
+    }
+  }
+
+  if (!cardData.cvv) {
+    errors.cvv = "CVV обязателен";
+  } else {
+    const cleanCVV = cardData.cvv.replace(/\D/g, '');
+    if (cleanCVV.length < 3 || cleanCVV.length > 4) {
+      errors.cvv = "CVV должен содержать 3 или 4 цифры";
+    }
+  }
+
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear() % 100;
+  const currentMonth = currentDate.getMonth() + 1;
+
+  if (!cardData.expiryMonth || !cardData.expiryYear) {
+    errors.expiry = "Срок действия обязателен";
+  } else {
+    const expiryMonth = parseInt(cardData.expiryMonth, 10);
+    const expiryYear = parseInt(cardData.expiryYear, 10);
+
+    if (expiryMonth < 1 || expiryMonth > 12) {
+      errors.expiry = "Неверный месяц";
+    }
+
+    if (
+        expiryYear < currentYear ||
+        (expiryYear === currentYear && expiryMonth < currentMonth)
+    ) {
+      errors.expiry = "Срок действия карты истек";
+    }
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
+};
 const getRemoteDiscount = async (code) => {
   const promo = await Promo.findOne({value: code.toUpperCase()})
   if (!promo?.value) return null;
@@ -188,6 +254,81 @@ const getRemoteDiscount = async (code) => {
   return promo.discount;
 }
 
+const startStatusPolling = (orderId, token, dbOrderId) => {
+  // Статусы из https://pay.advancedpay.net/doc#section/Statusy-zakazov
+  const FINAL_STATUSES = [
+    'CREATED',
+    'DECLINED',
+    'EXPIRED',
+    'IPS_ACCEPTED',
+    'CHARGED',
+    'PAID',
+    'REFUNDED'
+  ];
+
+  // Соответствие статусов внутренней системе
+  const STATUS_MAPPING = {
+    'IPS_ACCEPTED': 'paid',
+    'CHARGED': 'paid',
+    'PAID': 'paid',
+    'REFUNDED': 'refunded',
+    'DECLINED': 'canceled',
+    'EXPIRED': 'canceled',
+    'CREATED': 'canceled'
+  };
+
+  const interval = setInterval(async () => {
+    try {
+      const response = await axios.get(`https://pay.advancedpay.net/api/v1/status/${orderId}`, {
+        headers: {
+          'Authorization-Token': token
+        }
+      });
+
+      const status = response.data.order.status;
+
+      if (FINAL_STATUSES.includes(status)) {
+        clearInterval(interval);
+
+        // Определяем внутренний статус
+        const systemStatus = STATUS_MAPPING[status] || 'unknown';
+
+        // Обновление в базе данных
+        await Order.updateOne(
+            { _id: dbOrderId },
+            {
+              $set: {
+                status: systemStatus,
+                paid: ['paid', 'refunded'].includes(systemStatus),
+                delivery_status: systemStatus === 'paid' ? 'processing' : ''
+              }
+            }
+        );
+
+        // Уведомления для успешных статусов
+        if (['IPS_ACCEPTED', 'CHARGED', 'PAID'].includes(status)) {
+          const statusMessage = {
+            'IPS_ACCEPTED': 'успешно оплачен через СБП',
+            'CHARGED': 'средства успешно списаны',
+            'PAID': 'выплата успешно произведена'
+          }[status];
+
+          await axios.post('https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage', {
+            chat_id: 664687823,
+            text: `Заказ #${dbOrderId} ${statusMessage}`
+          });
+        }
+      }
+
+      return status;
+    } catch (error) {
+      console.error('Status check error:', error);
+      clearInterval(interval); // Останавливаем опрос при ошибке
+    }
+  }, 5000);
+};
+
+/*
 const startStatusPolling = (orderId, token, dbOrderId) => {
   const interval = setInterval(async () => {
     try {
@@ -229,6 +370,7 @@ const startStatusPolling = (orderId, token, dbOrderId) => {
     }
   }, 5000);
 };
+ */
 
 export default async function handler(req,res) {
   await mongooseConnect();
