@@ -64,6 +64,210 @@ const generateQR = async (orderId, token, phone, dbOrderId) => {
   }
 };
 
+/**
+ * SberPay
+ */
+const sberPayMethod = async (orderId, backUrl, phoneNumber, token) => {
+  try {
+    const response = await axios.post(`https://pay.advancedpay.net/api/v1/order/sberPay/${orderId}`, {
+      BackUrl: backUrl,
+      phoneNumber: phoneNumber
+    }, {
+      headers: {
+        'Authorization-Token': token,
+        'x-req-id': generateUniqueId()
+      }
+    });
+
+    return response.data.order;
+  } catch(error){
+    console.error ('SberPay error', error.message);
+  }
+};
+
+/**
+ * Выплата на карту
+ */
+const payoutToCard = async (payoutData, token) => {
+  try {
+    const response = await axios.post(
+        `https://pay.advancedpay.net/api/v1/order/cardPayout/${orderId}`,
+        payoutData,
+        {
+          headers: {
+            'Authorization-Token': token,
+            'x-req-id': generateUniqueId()
+          }
+        }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error('Payout error:', error.message);
+    throw error;
+  }
+};
+
+/**
+ * Запрос на создание заказа по форме оплаты
+ */
+const cardPayment = async (orderId, tspCode, token)=>{
+  try{
+    const response =  await axios.post(`https://pay.advancedpay.net/api/v1/public/order/form/${tspCode}/${orderId}`,
+        {},
+        {
+          headers: {
+            'Authorization-Token': token,
+            'x-req-id': generateUniqueId()
+          }
+        });
+
+    return response.data.externalOrderId;
+  } catch(error){
+    console.error('Payment form creation error:', error.message);
+  }
+};
+
+/**
+ * authorize - Холдирование средств
+ */
+const  authorizePayment = async (orderId, cardData, token) => {
+  try{
+    const requestData = {
+      OrderId: orderId,
+      Card: {
+        Pan: cardData.pan,
+        ExpiryMonth: cardData.expiryMonth,
+        ExpiryYear: cardData.expiryYear,
+        cvv: cardData.cvv,
+        Holder: cardData.holder,
+        Phone: cardData.phone
+      }
+    }
+
+    const response  = await axios.post(`https://pay.advancedpay.net/api/v1/payments/cards/authorize`,
+        requestData,
+        {
+          headers: {
+            'Authorization-Token': token,
+            'x-req-id': generateUniqueId()
+          }
+        }
+    );
+
+    return response.data;
+  } catch(error){
+    console.error('Payment authorization error:', error.message);
+  }
+};
+
+/**
+ * charge - Списание средств
+ */
+const chargePayment = async (orderId, token) => {
+  try{
+    const response = await axios.post(`https://pay.advancedpay.net/api/v1/payments/cards/charge`,
+        { OrderId: orderId },
+        {
+          headers: {
+            'Authorization-Token': token,
+            'x-req-id': generateUniqueId()
+          }
+        });
+
+    return response.data;
+  } catch(error){
+    console.error('Payment charge error:', error.message);
+  }
+}
+
+/**
+ * Отмена холдирования средств
+ */
+const voidPayment = async (orderId, token) => {
+  try {
+    const response = await axios.post(`https://pay.advancedpay.net/api/v1/payments/cards/void`,
+        { OrderId: orderId },
+        {
+          headers: {
+            'Authorization-Token': token,
+            'x-req-id': generateUniqueId()
+          }
+        }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error('Void payment error:', error.message);
+  }
+};
+
+/**
+ * Валидация данных карты
+ */
+const validateCardData = (cardData) => {
+  const errors = {};
+
+  if (!cardData.pan) {
+    errors.pan = "Номер карты обязателен";
+  } else {
+    const cleanPan = cardData.pan.replace(/\D/g, '');
+
+    let sum = 0;
+    let even = false;
+    for (let i = cleanPan.length - 1; i >= 0; i--) {
+      let digit = parseInt(cleanPan.charAt(i), 10);
+      if (even) {
+        digit *= 2;
+        if (digit > 9) digit -= 9;
+      }
+      sum += digit;
+      even = !even;
+    }
+
+    if (cleanPan.length < 13 || cleanPan.length > 19) {
+      errors.pan = "Неверная длина номера карты";
+    } else if (sum % 10 !== 0) {
+      errors.pan = "Неверный номер карты";
+    }
+  }
+
+  if (!cardData.cvv) {
+    errors.cvv = "CVV обязателен";
+  } else {
+    const cleanCVV = cardData.cvv.replace(/\D/g, '');
+    if (cleanCVV.length < 3 || cleanCVV.length > 4) {
+      errors.cvv = "CVV должен содержать 3 или 4 цифры";
+    }
+  }
+
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear() % 100;
+  const currentMonth = currentDate.getMonth() + 1;
+
+  if (!cardData.expiryMonth || !cardData.expiryYear) {
+    errors.expiry = "Срок действия обязателен";
+  } else {
+    const expiryMonth = parseInt(cardData.expiryMonth, 10);
+    const expiryYear = parseInt(cardData.expiryYear, 10);
+
+    if (expiryMonth < 1 || expiryMonth > 12) {
+      errors.expiry = "Неверный месяц";
+    }
+
+    if (
+        expiryYear < currentYear ||
+        (expiryYear === currentYear && expiryMonth < currentMonth)
+    ) {
+      errors.expiry = "Срок действия карты истек";
+    }
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
+};
 const getRemoteDiscount = async (code) => {
   const promo = await Promo.findOne({value: code.toUpperCase()})
   if (!promo?.value) return null;
@@ -71,6 +275,81 @@ const getRemoteDiscount = async (code) => {
   return promo.discount;
 }
 
+const startStatusPolling = (orderId, token, dbOrderId) => {
+  // Статусы из https://pay.advancedpay.net/doc#section/Statusy-zakazov
+  const FINAL_STATUSES = [
+    'CREATED',
+    'DECLINED',
+    'EXPIRED',
+    'IPS_ACCEPTED',
+    'CHARGED',
+    'PAID',
+    'REFUNDED'
+  ];
+
+  // Соответствие статусов внутренней системе
+  const STATUS_MAPPING = {
+    'IPS_ACCEPTED': 'paid',
+    'CHARGED': 'paid',
+    'PAID': 'paid',
+    'REFUNDED': 'refunded',
+    'DECLINED': 'canceled',
+    'EXPIRED': 'canceled',
+    'CREATED': 'canceled'
+  };
+
+  const interval = setInterval(async () => {
+    try {
+      const response = await axios.get(`https://pay.advancedpay.net/api/v1/status/${orderId}`, {
+        headers: {
+          'Authorization-Token': token
+        }
+      });
+
+      const status = response.data.order.status;
+
+      if (FINAL_STATUSES.includes(status)) {
+        clearInterval(interval);
+
+        // Определяем внутренний статус
+        const systemStatus = STATUS_MAPPING[status] || 'unknown';
+
+        // Обновление в базе данных
+        await Order.updateOne(
+            { _id: dbOrderId },
+            {
+              $set: {
+                status: systemStatus,
+                paid: ['paid', 'refunded'].includes(systemStatus),
+                delivery_status: systemStatus === 'paid' ? 'processing' : ''
+              }
+            }
+        );
+
+        // Уведомления для успешных статусов
+        if (['IPS_ACCEPTED', 'CHARGED', 'PAID'].includes(status)) {
+          const statusMessage = {
+            'IPS_ACCEPTED': 'успешно оплачен через СБП',
+            'CHARGED': 'средства успешно списаны',
+            'PAID': 'выплата успешно произведена'
+          }[status];
+
+          await axios.post('https://api.telegram.org/bot5815209672:AAGETufx2DfZxIdsm1q18GSn_bLpB-2-3Sg/sendMessage', {
+            chat_id: 664687823,
+            text: `Заказ #${dbOrderId} ${statusMessage}`
+          });
+        }
+      }
+
+      return status;
+    } catch (error) {
+      console.error('Status check error:', error);
+      clearInterval(interval); // Останавливаем опрос при ошибке
+    }
+  }, 5000);
+};
+
+/*
 const startStatusPolling = (orderId, token, dbOrderId) => {
   const interval = setInterval(async () => {
     try {
@@ -112,6 +391,7 @@ const startStatusPolling = (orderId, token, dbOrderId) => {
     }
   }, 5000);
 };
+ */
 
 export default async function handler(req,res) {
   await mongooseConnect();
@@ -141,7 +421,16 @@ export default async function handler(req,res) {
 
   if (method === 'POST') {
     try {
-      const {clientId, products, address, promo} = JSON.parse(req.body);
+      const {clientId, products, address, promo, paymentMethod} = JSON.parse(req.body);
+      const tspCode = 483;
+
+      if (!['qr', 'card', 'payout', 'sberpay'].includes(paymentMethod)) {
+        return res.status(400).json({
+          status: 'invalidPaymentMethod',
+          message: 'Указан неверный способ оплаты. Доступно: QR, CardPay, Payout, SberPay'
+        });
+      }
+
 
       // Проверяем наличие товаров
       if (!products || !products.length) {
@@ -230,7 +519,154 @@ export default async function handler(req,res) {
       // Платежная система
       const token = await login();
       const orderId = await createOrder(totalPrice, response._id, token);
-      const qrCode = await generateQR(orderId, token, address?.phoneNumber || '', response._id);
+
+      let paymentPayload = null;
+      let authResult = null;
+
+      if (paymentMethod === 'qr'){
+        paymentPayload = await generateQR(orderId, token, address?.phoneNumber || '', response._id);
+      }
+      else if (paymentMethod === 'card'){
+        const externalOrderId = await cardPayment(orderId, tspCode, token);
+
+        const cardData = {
+          pan: address?.cardNumber,       // Номер карты (из запроса или формы)
+          expiryMonth: address?.expiryMonth, // Месяц окончания карты
+          expiryYear: address?.expiryYear,   // Год окончания карты
+          cvv: address?.cvv,              // CVV карты
+          holder: address?.holderName,    // Имя держателя карты
+          phone: address?.phoneNumber     // Телефон клиента
+        };
+
+        if (!cardData.pan || !cardData.expiryMonth || !cardData.expiryYear || !cardData.cvv || !cardData.holder) {
+          return res.status(400).json({
+            status: 'cardDataIncomplete',
+            message: 'Не все данные карты предоставлены для оплаты'
+          });
+        }
+
+        // Холдирование
+        const authResult = await authorizePayment(externalOrderId, cardData, token);
+
+        if (!authResult.Response?.Success) {
+          return res.status(400).json({
+            status: 'authorization_failed',
+            message: 'Ошибка авторизации платежа',
+            details: authResult?.Response
+          });
+        }
+
+        // Списание
+        const chargeResult = await chargePayment(externalOrderId, token);
+
+        if (!chargeResult?.Response?.Success) {
+          await voidPayment(externalOrderId, token);
+          return res.status(400).json({
+            status: 'charge_failed',
+            message: 'Ошибка списания средств. Холдирование отменено.',
+            details: chargeResult?.Response
+          });
+        }
+
+        // Успешно списано
+        paymentPayload = {
+          externalOrderId,
+          paymentFormUrl: `https://payment.pay.advancedpay.net/${externalOrderId}`
+        };
+      }
+      else if (paymentMethod === 'payout') {
+        const cardData = {
+          pan: address?.cardNumber,
+          expiryMonth: address?.expiryMonth,
+          expiryYear: address?.expiryYear,
+          holder: address?.holderName,
+          phone: address?.phoneNumber
+        };
+
+        if (!cardData.pan || !cardData.expiryMonth || !cardData.expiryYear || !cardData.holder) {
+          return res.status(400).json({
+            status: 'cardDataIncomplete',
+            message: 'Не все данные карты предоставлены для выплаты'
+          });
+        }
+
+        const payoutAmount = Number(`${totalPrice}00`); // Сумма в копейках
+
+        const payoutData = {
+          OrderId: generateUniqueId(), // Уникальный ID для выплаты
+          Amount: payoutAmount,
+          Card: cardData,
+          Description: `Выплата за заказ ${response._id}`
+        };
+
+        const payoutResult = await payoutToCard(payoutData, token);
+
+        if (!payoutResult?.Response?.Success) {
+          return res.status(400).json({
+            status: 'payout_failed',
+            message: 'Ошибка выплаты на карту',
+            details: payoutResult?.Response
+          });
+        }
+
+        paymentPayload = {
+          payoutId: payoutData.OrderId,
+          status: 'payout_successful'
+        };
+
+        // Можно обновить статус заказа в БД, например как "refunded" или "payout_done"
+        await Order.updateOne(
+            { _id: response._id },
+            {
+              $set: {
+                status: 'payout_done',
+                paid: true,
+                delivery_status: 'completed'
+              }
+            }
+        );
+      }
+      else if (paymentMethod === 'sberpay'){
+        try {
+          const sberPayData = await sberPayMethod(
+              orderId,
+              `https://re-poizon.ru/orders/callback`,
+              address?.phoneNumber || '',
+              token
+          )
+          if (!address?.phoneNumber) {
+            return res.status(400).json({
+              status: 'phone_required',
+              message: 'Для оплаты через SberPay требуется номер телефона'
+            });
+          }
+
+          if (!sberPayData.deepLink && !sberPayData.formUrl) {
+            console.error('Не удалось получить платежную ссылку SberPay');
+          }
+
+          paymentPayload = {
+            deepLink: sberPayData.deepLink,
+            formUrl: sberPayData.formUrl,
+            externalOrderId: sberPayData.externalOrderId
+          };
+
+          startStatusPolling(orderId, token, response._id);
+
+        } catch (error){
+          console.error('SberPay error:' , error);
+
+          await Order.updateOne(
+              { _id: response._id },
+              { $set: { status: 'failed', delivery_status: 'payment_failed' }}
+          );
+
+          return res.status(500).json({
+            status: 'sberpay_error',
+            message: 'Ошибка при инициализации SberPay'
+          });
+        }
+      }
 
       // Уведомление в Telegram
       const productList = processedProducts.map(p =>
@@ -254,7 +690,11 @@ export default async function handler(req,res) {
         status: 'ok',
         message: 'Заказ оформлен',
         orderId: response._id,
-        qrCode,
+        paymentMethod,
+        paymentPayload: paymentMethod === 'sberpay' ? {
+          ...paymentPayload,
+          paymentInstructions: 'Используйте deepLink для мобильного приложения или formUrl для веб-платежа'
+        } : paymentPayload,
         totalPrice
       });
 
