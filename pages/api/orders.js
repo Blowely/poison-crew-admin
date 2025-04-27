@@ -65,6 +65,27 @@ const generateQR = async (orderId, token, phone, dbOrderId) => {
 };
 
 /**
+ * SberPay
+ */
+const sberPayMethod = async (orderId, backUrl, phoneNumber, token) => {
+  try {
+    const response = await axios.post(`https://pay.advancedpay.net/api/v1/order/sberPay/${orderId}`, {
+      BackUrl: backUrl,
+      phoneNumber: phoneNumber
+    }, {
+      headers: {
+        'Authorization-Token': token,
+        'x-req-id': generateUniqueId()
+      }
+    });
+
+    return response.data.order;
+  } catch(error){
+    console.error ('SberPay error', error.message);
+  }
+};
+
+/**
  * Выплата на карту
  */
 const payoutToCard = async (payoutData, token) => {
@@ -110,7 +131,7 @@ const cardPayment = async (orderId, tspCode, token)=>{
 /**
  * authorize - Холдирование средств
  */
-const authorizePayment = async (orderId, cardData, token) => {
+const  authorizePayment = async (orderId, cardData, token) => {
   try{
     const requestData = {
       OrderId: orderId,
@@ -403,10 +424,10 @@ export default async function handler(req,res) {
       const {clientId, products, address, promo, paymentMethod} = JSON.parse(req.body);
       const tspCode = 483;
 
-      if (!['qr', 'card', 'payout'].includes(paymentMethod)) {
+      if (!['qr', 'card', 'payout', 'sberpay'].includes(paymentMethod)) {
         return res.status(400).json({
           status: 'invalidPaymentMethod',
-          message: 'Указан неверный способ оплаты. Доступно: qr, card, payout'
+          message: 'Указан неверный способ оплаты. Доступно: QR, CardPay, Payout, SberPay'
         });
       }
 
@@ -605,6 +626,47 @@ export default async function handler(req,res) {
             }
         );
       }
+      else if (paymentMethod === 'sberpay'){
+        try {
+          const sberPayData = await sberPayMethod(
+              orderId,
+              `https://re-poizon.ru/orders/callback`,
+              address?.phoneNumber || '',
+              token
+          )
+          if (!address?.phoneNumber) {
+            return res.status(400).json({
+              status: 'phone_required',
+              message: 'Для оплаты через SberPay требуется номер телефона'
+            });
+          }
+
+          if (!sberPayData.deepLink && !sberPayData.formUrl) {
+            console.error('Не удалось получить платежную ссылку SberPay');
+          }
+
+          paymentPayload = {
+            deepLink: sberPayData.deepLink,
+            formUrl: sberPayData.formUrl,
+            externalOrderId: sberPayData.externalOrderId
+          };
+
+          startStatusPolling(orderId, token, response._id);
+
+        } catch (error){
+          console.error('SberPay error:' , error);
+
+          await Order.updateOne(
+              { _id: response._id },
+              { $set: { status: 'failed', delivery_status: 'payment_failed' }}
+          );
+
+          return res.status(500).json({
+            status: 'sberpay_error',
+            message: 'Ошибка при инициализации SberPay'
+          });
+        }
+      }
 
       // Уведомление в Telegram
       const productList = processedProducts.map(p =>
@@ -629,7 +691,10 @@ export default async function handler(req,res) {
         message: 'Заказ оформлен',
         orderId: response._id,
         paymentMethod,
-        paymentPayload,
+        paymentPayload: paymentMethod === 'sberpay' ? {
+          ...paymentPayload,
+          paymentInstructions: 'Используйте deepLink для мобильного приложения или formUrl для веб-платежа'
+        } : paymentPayload,
         totalPrice
       });
 
