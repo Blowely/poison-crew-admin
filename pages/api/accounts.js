@@ -67,20 +67,4 @@ export default async function handle(req, res) {
       res.json({status: 'internalServerError', message: 'Ошибка сервера', text: e?.message});
     }
   }
-
-  if (method === "DELETE") {
-    try {
-      const { phone } = decryptToken(query?.token);
-
-      const result = await Client.findOneAndDelete({ phone });
-
-      if (result) {
-        return res.status(200).json({ status: "ok", message: "Аккаунт успешно удален" });
-      } else {
-        return res.status(404).json({ status: "notFound", message: "Аккаунт не найден" });
-      }
-    } catch (e) {
-      return res.status(500).json({ status: "internalServerError", message: "Ошибка при удалении", text: e?.message });
-    }
-  }
 }
