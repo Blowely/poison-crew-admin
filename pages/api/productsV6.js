@@ -22,7 +22,7 @@ async function fetchAndStoreProducts(req, res) {
       }
 
       if (req?.query?.fv) {
-        console.log('req?.query?.sizeValue',req?.query?.sizeValue)
+        console.log('req?.query?.sizeValu',req?.query?.sizeValue)
         res = await getFetchV2(
             Number(req?.query?.fv),
             page,
