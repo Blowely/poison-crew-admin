@@ -1,0 +1,426 @@
+[
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48975b" },
+    "mappingType": "equivalent",
+    "synonyms": ["brooch", "брошь", "брошки", "заколка", "украшение"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48975c" },
+    "mappingType": "equivalent",
+    "synonyms": ["key_chain", "брелок", "брелоки", "ключница", "подвеска"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48975d" },
+    "mappingType": "equivalent",
+    "synonyms": ["other", "другое", "прочее", "иное", "разное"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48975e" },
+    "mappingType": "equivalent",
+    "synonyms": ["tie", "галстук", "галстуки", "бабочка", "галстучный аксессуар"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48975f" },
+    "mappingType": "equivalent",
+    "synonyms": ["backpack", "рюкзак", "ранец", "рюкзаки", "ранцы"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489760" },
+    "mappingType": "equivalent",
+    "synonyms": ["brief_case", "портфель", "дипломат", "портфели", "деловая сумка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489761" },
+    "mappingType": "equivalent",
+    "synonyms": ["card_holder", "визитница", "картхолдер", "кошелек для карт", "картодержатель"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489762" },
+    "mappingType": "equivalent",
+    "synonyms": ["chest_bag", "нагрудная сумка", "грудной рюкзак", "нагрудники", "поясная сумка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489763" },
+    "mappingType": "equivalent",
+    "synonyms": ["diagonal_bag", "диагональная сумка", "кросс-боди", "сумка через плечо", "космичка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489764" },
+    "mappingType": "equivalent",
+    "synonyms": ["fanny_pack", "поясная сумка", "бананка", "бельтик", "поясные сумки"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489765" },
+    "mappingType": "equivalent",
+    "synonyms": ["gym_bag", "спортивная сумка", "сумка для спортзала", "спортивные сумки", "экипировочная сумка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489766" },
+    "mappingType": "equivalent",
+    "synonyms": ["headphone_bag", "чехол для наушников", "сумка для наушников", "чехлы для наушников", "аксессуар для наушников"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489767" },
+    "mappingType": "equivalent",
+    "synonyms": ["key_case", "ключница", "футляр для ключей", "ключницы", "органайзер для ключей"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489768" },
+    "mappingType": "equivalent",
+    "synonyms": ["makeup_bag", "косметичка", "сумка для косметики", "косметички", "косметический органайзер"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489769" },
+    "mappingType": "equivalent",
+    "synonyms": ["mobile_phone_bag", "чехол для телефона", "сумка для телефона", "чехлы для телефонов", "телефонный аксессуар"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48976a" },
+    "mappingType": "equivalent",
+    "synonyms": ["passport_sentence", "обложка для паспорта", "паспортная книжка", "паспортные обложки", "кожух для паспорта"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48976b" },
+    "mappingType": "equivalent",
+    "synonyms": ["storage_box", "коробка для хранения", "хранилище", "коробки для хранения", "органайзер"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48976c" },
+    "mappingType": "equivalent",
+    "synonyms": ["tote", "холщовая сумка", "шоппер", "сумки-шопперы", "большая сумка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48976d" },
+    "mappingType": "equivalent",
+    "synonyms": ["underarm_bag", "сумка под мышку", "клатч", "сумки-клатчи", "мини-сумка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48976e" },
+    "mappingType": "equivalent",
+    "synonyms": ["wallet", "кошелек", "бумажник", "кошельки", "портмоне"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48976f" },
+    "mappingType": "equivalent",
+    "synonyms": ["bag_peripheral", "аксессуар для сумки", "декор для сумок", "сумка-аксессуар", "дополнение к сумке"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489770" },
+    "mappingType": "equivalent",
+    "synonyms": ["tape", "лента", "тесьма", "ленты", "декоративная лента"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489771" },
+    "mappingType": "equivalent",
+    "synonyms": ["belt", "ремень", "пояс", "ремни", "пояса"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489772" },
+    "mappingType": "equivalent",
+    "synonyms": ["optical_frame", "оправа для очков", "очковая оправа", "оправы", "рамка для очков"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489773" },
+    "mappingType": "equivalent",
+    "synonyms": ["sunglasses", "солнцезащитные очки", "солнечные очки", "очки от солнца", "темные очки"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489774" },
+    "mappingType": "equivalent",
+    "synonyms": ["headband", "повязка на голову", "ободок", "головные повязки", "бандана"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489775" },
+    "mappingType": "equivalent",
+    "synonyms": ["berets", "берет", "береты", "шляпа-берет", "головной убор"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489776" },
+    "mappingType": "equivalent",
+    "synonyms": ["fisherman", "рыбацкая шляпа", "шляпа рыбака", "рыбацкие шляпы", "панама"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489777" },
+    "mappingType": "equivalent",
+    "synonyms": ["fleece", "флис", "флисовая ткань", "флисовые вещи", "теплый материал"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489778" },
+    "mappingType": "equivalent",
+    "synonyms": ["peaked_cap", "кепка", "бейсболка", "кепки", "головной убор с козырьком"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489779" },
+    "mappingType": "equivalent",
+    "synonyms": ["bracelet", "браслет", "браслеты", "наручный браслет", "украшение на руку"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48977a" },
+    "mappingType": "equivalent",
+    "synonyms": ["bracelet2", "браслет (доп. вариант)", "второй браслет", "дополнительный браслет", "аксессуар на запястье"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48977b" },
+    "mappingType": "equivalent",
+    "synonyms": ["necklace", "ожерелье", "колье", "шейное украшение", "подвеска"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48977c" },
+    "mappingType": "equivalent",
+    "synonyms": ["pendant", "кулон", "подвеска", "кулоны", "украшение на шею"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48977d" },
+    "mappingType": "equivalent",
+    "synonyms": ["ring", "кольцо", "перстень", "кольца", "украшение на палец"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48977e" },
+    "mappingType": "equivalent",
+    "synonyms": ["wristband", "наручники", "браслет-плетенка", "резинка на запястье", "спортивный браслет"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48977f" },
+    "mappingType": "equivalent",
+    "synonyms": ["scarf", "шарф", "платок", "шейный платок", "кашне"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489780" },
+    "mappingType": "equivalent",
+    "synonyms": ["alarm_clock", "будильник", "часы с будильником", "электронный будильник", "механический будильник"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489781" },
+    "mappingType": "equivalent",
+    "synonyms": ["mechanical", "механические часы", "часы с механизмом", "автоматические часы", "механика"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489782" },
+    "mappingType": "equivalent",
+    "synonyms": ["quartz", "кварцевые часы", "часы на батарейке", "электронные часы", "кварц"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489783" },
+    "mappingType": "equivalent",
+    "synonyms": ["baseball_uniform", "бейсбольная форма", "форма для бейсбола", "бейсбольные комплекты", "экипировка бейсболиста"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489784" },
+    "mappingType": "equivalent",
+    "synonyms": ["coat", "пальто", "плащ", "пальто-плащ", "верхняя одежда"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489785" },
+    "mappingType": "equivalent",
+    "synonyms": ["cotton_clothes", "хлопковая одежда", "одежда из хлопка", "хлопковые вещи", "натуральные ткани"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489786" },
+    "mappingType": "equivalent",
+    "synonyms": ["denim_jacket", "джинсовка", "джинсовая куртка", "джинсовые куртки", "косуха"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489787" },
+    "mappingType": "equivalent",
+    "synonyms": ["down_jacket", "пуховик", "пуховая куртка", "зимняя куртка", "утепленная куртка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489788" },
+    "mappingType": "equivalent",
+    "synonyms": ["jacket", "куртка", "пиджак", "жакет", "верхняя одежда"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489789" },
+    "mappingType": "equivalent",
+    "synonyms": ["leather_jacket", "кожаная куртка", "косуха", "кожанка", "кожаный пиджак"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48978a" },
+    "mappingType": "equivalent",
+    "synonyms": ["suit", "костюм", "деловой костюм", "комплект", "тройка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48978b" },
+    "mappingType": "equivalent",
+    "synonyms": ["sun_protection", "защита от солнца", "солнцезащитная одежда", "UPF-одежда", "летняя защита"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48978c" },
+    "mappingType": "equivalent",
+    "synonyms": ["windbreaker", "ветровка", "ветрозащитная куртка", "легкая куртка", "демисезонная куртка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48978d" },
+    "mappingType": "equivalent",
+    "synonyms": ["hoodie", "худи", "толстовка", "худишки", "кофта с капюшоном"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48978e" },
+    "mappingType": "equivalent",
+    "synonyms": ["polo_shirt", "поло", "футболка-поло", "рубашка-поло", "тенниска"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48978f" },
+    "mappingType": "equivalent",
+    "synonyms": ["shirt", "рубашка", "сорочка", "рубахи", "мужская рубашка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489790" },
+    "mappingType": "equivalent",
+    "synonyms": ["sweater", "свитер", "джемпер", "водолазка", "теплый свитер"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489791" },
+    "mappingType": "equivalent",
+    "synonyms": ["t_shirt", "футболка", "тишотка", "майка", "тренч"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489792" },
+    "mappingType": "equivalent",
+    "synonyms": ["vest", "жилет", "безрукавка", "телогрейка", "жилетка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489793" },
+    "mappingType": "equivalent",
+    "synonyms": ["casual_shorts", "повседневные шорты", "обычные шорты", "городские шорты", "шорты-бермуды"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489794" },
+    "mappingType": "equivalent",
+    "synonyms": ["denim_short", "джинсовые шорты", "шорты из денима", "джинсовые бермуды", "короткие джинсы"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489795" },
+    "mappingType": "equivalent",
+    "synonyms": ["jeans", "джинсы", "деним", "брюки-джинсы", "джинсовая ткань"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489796" },
+    "mappingType": "equivalent",
+    "synonyms": ["overalls", "комбинезон", "сарафан-комбинезон", "рабочий комбинезон", "джинсовый комбинезон"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489797" },
+    "mappingType": "equivalent",
+    "synonyms": ["basketball_pants", "баскетбольные штаны", "спортивные брюки", "штаны для баскетбола", "спортивные трусы"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489798" },
+    "mappingType": "equivalent",
+    "synonyms": ["basketball_vest", "баскетбольный жилет", "майка для баскетбола", "спортивный жилет", "тренировочный топ"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee489799" },
+    "mappingType": "equivalent",
+    "synonyms": ["ski_pants", "лыжные штаны", "брюки для катания", "горнолыжные брюки", "термобрюки"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48979a" },
+    "mappingType": "equivalent",
+    "synonyms": ["ski_suit", "лыжный костюм", "комбинезон для катания", "горнолыжный комплект", "зимний спортивный костюм"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48979b" },
+    "mappingType": "equivalent",
+    "synonyms": ["workout_clothes", "спортивная форма", "одежда для тренировок", "тренировочный комплект", "спортивный костюм"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48979c" },
+    "mappingType": "equivalent",
+    "synonyms": ["workout_pants", "спортивные штаны", "штаны для тренировок", "тренировочные брюки", "спортивные брюки"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48979d" },
+    "mappingType": "equivalent",
+    "synonyms": ["boots", "ботинки", "сапоги", "зимняя обувь", "высокие ботинки"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48979e" },
+    "mappingType": "equivalent",
+    "synonyms": ["chelsea", "челси", "ботинки челси", "классические челси", "кожаные челси"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee48979f" },
+    "mappingType": "equivalent",
+    "synonyms": ["martin", "мартинсы", "ботинки доктор мартинс", "грубые ботинки", "ботинки в стиле мартин"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897a0" },
+    "mappingType": "equivalent",
+    "synonyms": ["outdoor", "туристическая обувь", "обувь для трекинга", "походные ботинки", "внедорожная обувь"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897a1" },
+    "mappingType": "equivalent",
+    "synonyms": ["short", "ботинки короткие", "низкие ботинки", "полуботинки", "летние ботинки"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897a2" },
+    "mappingType": "equivalent",
+    "synonyms": ["snow", "снежные ботинки", "зимние ботинки", "обувь для снега", "утепленные ботинки"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897a3" },
+    "mappingType": "equivalent",
+    "synonyms": ["canvas", "кеды", "кроссовки из ткани", "холщовые кеды", "теннисные туфли"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897a4" },
+    "mappingType": "equivalent",
+    "synonyms": ["daddy", "грубые ботинки", "ботинки в стиле гранж", "тяжелая обувь", "рабочие ботинки"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897a5" },
+    "mappingType": "equivalent",
+    "synonyms": ["sneakers", "кроссовки", "кеды", "спортивная обувь", "тенниски"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897a6" },
+    "mappingType": "equivalent",
+    "synonyms": ["sport", "бутсы", "спортивная обувь", "кроссовки для спорта", "тренировочные кеды", "беговые кроссовки"]
+  },
+  {
+    "mappingType": "equivalent",
+    "synonyms": ["бутсы", "soccer"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897a7" },
+    "mappingType": "equivalent",
+    "synonyms": ["vintage_basketball", "винтажные баскетбольные кроссовки", "ретро кеды", "классические кроссовки", "старые школьные кроссовки"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897a8" },
+    "mappingType": "equivalent",
+    "synonyms": ["flip_flops", "вьетнамки", "шлепанцы", "пляжные тапочки", "сланцы"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897a9" },
+    "mappingType": "equivalent",
+    "synonyms": ["sport_sandals", "спортивные сандалии", "треккинговые сандалии", "походные сандалии", "сандалии для активного отдыха"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897aa" },
+    "mappingType": "equivalent",
+    "synonyms": ["badminton", "бадминтон", "игра в бадминтон", "спортивный инвентарь для бадминтона", "ракетки и воланчики"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897ab" },
+    "mappingType": "equivalent",
+    "synonyms": ["basketball", "баскетбол", "игра в баскетбол", "спортивный мяч", "баскетбольная площадка"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897ac" },
+    "mappingType": "equivalent",
+    "synonyms": ["cycling", "велоспорт", "езда на велосипеде", "велогонки", "велосипедный спорт"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897ad" },
+    "mappingType": "equivalent",
+    "synonyms": ["golf", "гольф", "игра в гольф", "гольф-клуб", "спортивное оборудование для гольфа"]
+  },
+  {
+    "_id": { "$oid": "67e5c03315ed1667ee4897ae" },
+    "mappingType": "equivalent",
+    "synonyms": ["running", "бег", "беговой спорт", "легкая атлетика", "беговые тренировки"]
+  }
+]

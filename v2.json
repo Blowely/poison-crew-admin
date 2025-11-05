@@ -1,0 +1,41 @@
+[
+  {
+    "$search": {
+      "index": "default2",
+      "compound": {
+        "must": [
+          {
+            "text": {
+              "query": "штаны",
+              "path": ["category3"],
+              "synonyms": "ru_en_synonyms"
+            }
+          }
+        ]
+      }
+    }
+  }
+]
+
+
+{
+  "mappings": {
+    "dynamic": true,
+    "fields": {
+      "category3": {
+        "analyzer": "lucene.standard",
+        "searchAnalyzer": "lucene.standard",
+        "type": "string"
+      }
+    }
+  },
+  "synonyms": [
+    {
+      "analyzer": "lucene.standard",
+      "name": "ru_en_synonyms",
+      "source": {
+        "collection": "synonyms"
+      }
+    }
+  ]
+}

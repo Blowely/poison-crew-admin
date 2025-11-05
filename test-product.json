@@ -1,0 +1,1334 @@
+{
+  "category": {
+    "category1": "footwear",
+    "category2": "footwear/sport",
+    "category3": "footwear/sport/running"
+  },
+  "series": {
+    "id": 1003358,
+    "name": "Air Max AP"
+  },
+  "metadata": {
+    "shoplaza": false
+  },
+  "_id": "67f2b16ee8adfd8316703dae",
+  "spuId": 5444741,
+  "__v": 0,
+  "article": "CU4826-105",
+  "availability": "NOT_AVAILABLE",
+  "brand": "Nike",
+  "brandId": 144,
+  "category1": 29,
+  "category2": 30,
+  "category3": 33,
+  "colorTheme": "#f7e7cd",
+  "createdAt": "2025-04-06T16:53:01.200Z",
+  "description": "",
+  "fit": "MALE",
+  "fromAvailability": false,
+  "images": [
+    "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+    "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+    "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+    "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+    "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+  ],
+  "name": "Nike Air Max AP",
+  "price": 0,
+  "primarySizeType": "EU",
+  "productProperties": [
+    {
+      "definitionId": "APPLICABLE_SEASON",
+      "key": "适用季节",
+      "translatedKey": "适用季节",
+      "value": [
+        "春",
+        "夏",
+        "秋",
+        "冬"
+      ],
+      "translatedValue": [
+        "春",
+        "夏",
+        "秋",
+        "冬"
+      ]
+    },
+    {
+      "definitionId": "UPPER_MATERIAL",
+      "key": "鞋面材质",
+      "translatedKey": "鞋面材质",
+      "value": [
+        "网布"
+      ],
+      "translatedValue": [
+        "网布"
+      ]
+    },
+    {
+      "definitionId": "FEATURE",
+      "key": "功能性",
+      "translatedKey": "功能性",
+      "value": [
+        "减震"
+      ],
+      "translatedValue": [
+        "减震"
+      ]
+    },
+    {
+      "definitionId": "SECONDARY_COLOR",
+      "key": "辅色",
+      "translatedKey": "辅色",
+      "value": [
+        "棕色"
+      ],
+      "translatedValue": [
+        "棕色"
+      ]
+    },
+    {
+      "definitionId": "CLOSURE",
+      "key": "闭合方式",
+      "translatedKey": "闭合方式",
+      "value": [
+        "系带"
+      ],
+      "translatedValue": [
+        "系带"
+      ]
+    },
+    {
+      "definitionId": "HEEL_TYPE",
+      "key": "鞋跟类型",
+      "translatedKey": "鞋跟类型",
+      "value": [
+        "平跟"
+      ],
+      "translatedValue": [
+        "平跟"
+      ]
+    },
+    {
+      "definitionId": "UPPER_HEIGHT",
+      "key": "鞋帮高度",
+      "translatedKey": "鞋帮高度",
+      "value": [
+        "低帮"
+      ],
+      "translatedValue": [
+        "低帮"
+      ]
+    },
+    {
+      "definitionId": "TOE_STYLE",
+      "key": "鞋头款式",
+      "translatedKey": "鞋头款式",
+      "value": [
+        "圆头"
+      ],
+      "translatedValue": [
+        "圆头"
+      ]
+    },
+    {
+      "definitionId": "PRIMARY_COLOR",
+      "key": "主色",
+      "translatedKey": "主色",
+      "value": [
+        "米色"
+      ],
+      "translatedValue": [
+        "米色"
+      ]
+    },
+    {
+      "definitionId": "MAIN_ARTICLE_NUMBER",
+      "key": "主货号",
+      "translatedKey": "主货号",
+      "value": [
+        "CU4826-105"
+      ],
+      "translatedValue": [
+        "CU4826-105"
+      ]
+    },
+    {
+      "definitionId": "SALE_PRICE",
+      "key": "发售价格",
+      "translatedKey": "发售价格",
+      "value": [
+        "¥757"
+      ],
+      "translatedValue": [
+        "¥757"
+      ]
+    },
+    {
+      "definitionId": "RELEASE_DATE",
+      "key": "发售日期",
+      "translatedKey": "发售日期",
+      "value": [
+        "2023.07"
+      ],
+      "translatedValue": [
+        "2023.07"
+      ]
+    }
+  ],
+  "properties": {
+    "skus": [
+      {
+        "skuId": 627130293,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622578,
+            "typeId": 6,
+            "value": "38.5"
+          }
+        ]
+      },
+      {
+        "skuId": 627130294,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622579,
+            "typeId": 6,
+            "value": "39"
+          }
+        ]
+      },
+      {
+        "skuId": 627130295,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622580,
+            "typeId": 6,
+            "value": "40"
+          }
+        ]
+      },
+      {
+        "skuId": 627130296,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622581,
+            "typeId": 6,
+            "value": "40.5"
+          }
+        ]
+      },
+      {
+        "skuId": 627130297,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622582,
+            "typeId": 6,
+            "value": "41"
+          }
+        ]
+      },
+      {
+        "skuId": 627130298,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622583,
+            "typeId": 6,
+            "value": "42"
+          }
+        ]
+      },
+      {
+        "skuId": 627130299,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622584,
+            "typeId": 6,
+            "value": "42.5"
+          }
+        ]
+      },
+      {
+        "skuId": 627130300,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622585,
+            "typeId": 6,
+            "value": "43"
+          }
+        ]
+      },
+      {
+        "skuId": 627130301,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622586,
+            "typeId": 6,
+            "value": "44"
+          }
+        ]
+      },
+      {
+        "skuId": 627130302,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622587,
+            "typeId": 6,
+            "value": "44.5"
+          }
+        ]
+      },
+      {
+        "skuId": 627130303,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622588,
+            "typeId": 6,
+            "value": "45"
+          }
+        ]
+      },
+      {
+        "skuId": 627130304,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622589,
+            "typeId": 6,
+            "value": "45.5"
+          }
+        ]
+      },
+      {
+        "skuId": 627130305,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622590,
+            "typeId": 6,
+            "value": "46"
+          }
+        ]
+      },
+      {
+        "skuId": 627130306,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622591,
+            "typeId": 6,
+            "value": "47"
+          }
+        ]
+      },
+      {
+        "skuId": 627130307,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622592,
+            "typeId": 6,
+            "value": "47.5"
+          }
+        ]
+      },
+      {
+        "skuId": 627130308,
+        "properties": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          },
+          {
+            "id": 271622593,
+            "typeId": 6,
+            "value": "48"
+          }
+        ]
+      }
+    ],
+    "propertyValues": [
+      {
+        "id": 271622577,
+        "value": "米色",
+        "typeId": 1
+      },
+      {
+        "id": 271622578,
+        "value": "38.5",
+        "typeId": 6
+      },
+      {
+        "id": 271622579,
+        "value": "39",
+        "typeId": 6
+      },
+      {
+        "id": 271622580,
+        "value": "40",
+        "typeId": 6
+      },
+      {
+        "id": 271622581,
+        "value": "40.5",
+        "typeId": 6
+      },
+      {
+        "id": 271622582,
+        "value": "41",
+        "typeId": 6
+      },
+      {
+        "id": 271622583,
+        "value": "42",
+        "typeId": 6
+      },
+      {
+        "id": 271622584,
+        "value": "42.5",
+        "typeId": 6
+      },
+      {
+        "id": 271622585,
+        "value": "43",
+        "typeId": 6
+      },
+      {
+        "id": 271622586,
+        "value": "44",
+        "typeId": 6
+      },
+      {
+        "id": 271622587,
+        "value": "44.5",
+        "typeId": 6
+      },
+      {
+        "id": 271622588,
+        "value": "45",
+        "typeId": 6
+      },
+      {
+        "id": 271622589,
+        "value": "45.5",
+        "typeId": 6
+      },
+      {
+        "id": 271622590,
+        "value": "46",
+        "typeId": 6
+      },
+      {
+        "id": 271622591,
+        "value": "47",
+        "typeId": 6
+      },
+      {
+        "id": 271622592,
+        "value": "47.5",
+        "typeId": 6
+      },
+      {
+        "id": 271622593,
+        "value": "48",
+        "typeId": 6
+      }
+    ],
+    "propertyTypes": [
+      {
+        "id": 1,
+        "name": "Цвет",
+        "values": [
+          {
+            "id": 271622577,
+            "typeId": 1,
+            "value": "米色"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "name": "Размер",
+        "values": [
+          {
+            "id": 271622578,
+            "typeId": 6,
+            "value": "38.5"
+          },
+          {
+            "id": 271622579,
+            "typeId": 6,
+            "value": "39"
+          },
+          {
+            "id": 271622580,
+            "typeId": 6,
+            "value": "40"
+          },
+          {
+            "id": 271622581,
+            "typeId": 6,
+            "value": "40.5"
+          },
+          {
+            "id": 271622582,
+            "typeId": 6,
+            "value": "41"
+          },
+          {
+            "id": 271622583,
+            "typeId": 6,
+            "value": "42"
+          },
+          {
+            "id": 271622584,
+            "typeId": 6,
+            "value": "42.5"
+          },
+          {
+            "id": 271622585,
+            "typeId": 6,
+            "value": "43"
+          },
+          {
+            "id": 271622586,
+            "typeId": 6,
+            "value": "44"
+          },
+          {
+            "id": 271622587,
+            "typeId": 6,
+            "value": "44.5"
+          },
+          {
+            "id": 271622588,
+            "typeId": 6,
+            "value": "45"
+          },
+          {
+            "id": 271622589,
+            "typeId": 6,
+            "value": "45.5"
+          },
+          {
+            "id": 271622590,
+            "typeId": 6,
+            "value": "46"
+          },
+          {
+            "id": 271622591,
+            "typeId": 6,
+            "value": "47"
+          },
+          {
+            "id": 271622592,
+            "typeId": 6,
+            "value": "47.5"
+          },
+          {
+            "id": 271622593,
+            "typeId": 6,
+            "value": "48"
+          }
+        ]
+      }
+    ]
+  },
+  "returnable": false,
+  "sizeTable": [
+    {
+      "type": "EU",
+      "primary": true,
+      "values": [
+        "35",
+        "35.5",
+        "36",
+        "36.5",
+        "37.5",
+        "38",
+        "38.5",
+        "39",
+        "40",
+        "40.5",
+        "41",
+        "42",
+        "42.5",
+        "43",
+        "44",
+        "44.5",
+        "45",
+        "45.5",
+        "46",
+        "47",
+        "47.5",
+        "48",
+        "48.5",
+        "49",
+        "49.5",
+        "50",
+        "50.5",
+        "51",
+        "51.5",
+        "52.5",
+        "53.5"
+      ]
+    },
+    {
+      "type": "CHN",
+      "primary": false,
+      "values": [
+        "220",
+        "225",
+        "230",
+        "235",
+        "235",
+        "240",
+        "240",
+        "245",
+        "250",
+        "255",
+        "260",
+        "265",
+        "270",
+        "275",
+        "280",
+        "285",
+        "290",
+        "295",
+        "300",
+        "305",
+        "310",
+        "315",
+        "320",
+        "325",
+        "330",
+        "335",
+        "340",
+        "345",
+        "350",
+        "360",
+        "370"
+      ]
+    },
+    {
+      "type": "US",
+      "primary": false,
+      "values": [
+        "3",
+        "3.5",
+        "4",
+        "4.5",
+        "5",
+        "5.5",
+        "6",
+        "6.5",
+        "7",
+        "7.5",
+        "8",
+        "8.5",
+        "9",
+        "9.5",
+        "10",
+        "10.5",
+        "11",
+        "11.5",
+        "12",
+        "12.5",
+        "13",
+        "13.5",
+        "14",
+        "14.5",
+        "15",
+        "15.5",
+        "16",
+        "16.5",
+        "17",
+        "18",
+        "19"
+      ]
+    },
+    {
+      "type": "UK",
+      "primary": false,
+      "values": [
+        "2.5",
+        "3",
+        "3.5",
+        "4",
+        "4.5",
+        "5",
+        "5.5",
+        "6",
+        "6",
+        "6.5",
+        "7",
+        "7.5",
+        "8",
+        "8.5",
+        "9",
+        "9.5",
+        "10",
+        "10.5",
+        "11",
+        "11.5",
+        "12",
+        "12.5",
+        "13",
+        "13.5",
+        "14",
+        "14.5",
+        "15",
+        "15.5",
+        "16",
+        "17",
+        "18"
+      ]
+    },
+    {
+      "type": "MM",
+      "primary": false,
+      "values": [
+        "22",
+        "22.5",
+        "23",
+        "23.5",
+        "23.5",
+        "24",
+        "24",
+        "24.5",
+        "25",
+        "25.5",
+        "26",
+        "26.5",
+        "27",
+        "27.5",
+        "28",
+        "28.5",
+        "29",
+        "29.5",
+        "30",
+        "30.5",
+        "31",
+        "31.5",
+        "32",
+        "32.5",
+        "33",
+        "33.5",
+        "34",
+        "34.5",
+        "35",
+        "36",
+        "37"
+      ]
+    },
+    {
+      "type": "RU",
+      "primary": false,
+      "values": [
+        "/",
+        "34.5",
+        "35",
+        "35.5",
+        "36.5",
+        "37",
+        "37.5",
+        "38",
+        "39",
+        "39.5",
+        "40",
+        "41",
+        "41.5",
+        "42",
+        "43",
+        "43.5",
+        "44",
+        "44.5",
+        "45",
+        "/",
+        "46.5",
+        "47",
+        "47.5",
+        "/",
+        "48.5",
+        "/",
+        "49.5",
+        "/",
+        "50.5",
+        "51.5",
+        "/"
+      ]
+    }
+  ],
+  "skus": [
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130293,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "38.5",
+        "us": "6",
+        "uk": "5.5",
+        "eu": "38.5",
+        "ru": "37.5"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130294,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "39",
+        "us": "6.5",
+        "uk": "6",
+        "eu": "39",
+        "ru": "38"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130295,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "40",
+        "us": "7",
+        "uk": "6",
+        "eu": "40",
+        "ru": "39"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130296,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "40.5",
+        "us": "7.5",
+        "uk": "6.5",
+        "eu": "40.5",
+        "ru": "39.5"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130297,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "41",
+        "us": "8",
+        "uk": "7",
+        "eu": "41",
+        "ru": "40"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130298,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "42",
+        "us": "8.5",
+        "uk": "7.5",
+        "eu": "42",
+        "ru": "41"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130299,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "42.5",
+        "us": "9",
+        "uk": "8",
+        "eu": "42.5",
+        "ru": "41.5"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130300,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "43",
+        "us": "9.5",
+        "uk": "8.5",
+        "eu": "43",
+        "ru": "42"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130301,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "44",
+        "us": "10",
+        "uk": "9",
+        "eu": "44",
+        "ru": "43"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130302,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "44.5",
+        "us": "10.5",
+        "uk": "9.5",
+        "eu": "44.5",
+        "ru": "43.5"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130303,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "45",
+        "us": "11",
+        "uk": "10",
+        "eu": "45",
+        "ru": "44"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130304,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "45.5",
+        "us": "11.5",
+        "uk": "10.5",
+        "eu": "45.5",
+        "ru": "44.5"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130305,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "46",
+        "us": "12",
+        "uk": "11",
+        "eu": "46",
+        "ru": "45"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130306,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "47",
+        "us": "12.5",
+        "uk": "11.5",
+        "eu": "47",
+        "ru": "/"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130307,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "47.5",
+        "us": "13",
+        "uk": "12",
+        "eu": "47.5",
+        "ru": "46.5"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    },
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/900716eeb06b382228705ac9ce57c744.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/23a9ff8206f70661241d7a7b58cf7c46.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/13e2805e8bad964c89873830546b41be.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ff563a1d3eb474e01aab8183e96b605d.jpg",
+        "https://cdn.poizon.com/pro-img/origin-img/2025012410/ace28adbbf76ecee179387b9e17cbb36.jpg"
+      ],
+      "skuId": 627130308,
+      "cnyPrice": 0,
+      "price": 0,
+      "size": {
+        "primary": "48",
+        "us": "13.5",
+        "uk": "12.5",
+        "eu": "48",
+        "ru": "47"
+      },
+      "fromAvailability": [],
+      "maxPrice": 0,
+      "priceV2": {
+        "price": 0,
+        "priceWithoutDiscount": 0,
+        "discount": false,
+        "priceWithExpress": 0,
+        "priceWithExpressWithoutDiscount": 0,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    }
+  ],
+  "slug": "nike-air-max-ap",
+  "updatedAt": "2025-04-06T16:53:01.200Z"
+}

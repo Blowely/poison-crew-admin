@@ -1,0 +1,358 @@
+{
+  "category": {
+    "category1": "accessories",
+    "category2": "accessories/glasses",
+    "category3": "accessories/glasses/sunglasses"
+  },
+  "metadata": {
+    "shoplaza": false
+  },
+  "_id": "67f7d9fc01aab99fa487f99c",
+  "spuId": 21437301,
+  "__v": 0,
+  "article": "Aokiji-Artemis（sun）",
+  "availability": "AVAILABLE",
+  "brand": "青雉作",
+  "brandId": 1043691,
+  "category1": 92,
+  "category2": 121,
+  "category3": 122,
+  "createdAt": "2025-04-10T14:47:21.097Z",
+  "description": "",
+  "fit": "UNISEX",
+  "fromAvailability": false,
+  "images": [
+    "https://cdn.poizon.com/pro-img/cut-img/20250326/a2551a2826d840ac873aad5bf4ddb056.jpg",
+    "https://cdn.poizon.com/stark/stark-web/75675453/71319cb7bd6f7fc7b0b827ddab4bb161.jpg",
+    "https://cdn.poizon.com/stark/stark-web/75675453/b8b9aa9722a46f477a705b71c564e90f.jpg",
+    "https://cdn.poizon.com/stark/stark-web/75675453/3fe2bfb2e58da63ac286cbc753dceecb.jpg",
+    "https://cdn.poizon.com/stark/stark-web/75675453/0114a6734303b41c5e3f3066f7548296.jpg",
+    "https://cdn.poizon.com/stark/stark-web/75675453/e69420f5ea3e7bdcab46bafb2c1fa44c.jpg",
+    "https://cdn.poizon.com/stark/stark-web/75675453/8c32cc2d48590fd43f985ff343689a0d.jpg",
+    "https://cdn.poizon.com/stark/stark-web/75675453/3e4dd71592ac450786563f658ccfaa05.jpg"
+  ],
+  "name": "青雉作 日潮工装风格 大码方框浅色墨镜 轻量化细边框150mm大框 宽脸不夹头 进口ACETATE板材 方形 太阳眼镜 男女同款情侣款 玳瑁色 黑色",
+  "price": 8549,
+  "productProperties": [
+    {
+      "key": "镜架材质",
+      "translatedKey": "Материал каркаса",
+      "value": [
+        "进口ACETATE板材"
+      ],
+      "translatedValue": [
+        "进口ACETATE板材"
+      ]
+    },
+    {
+      "key": "镜片材质",
+      "translatedKey": "Материал линзы",
+      "value": [
+        "尼龙"
+      ],
+      "translatedValue": [
+        "нейлон"
+      ]
+    },
+
+    {
+      "key": "外框宽度",
+      "translatedKey": "Ширина рамки",
+      "value": [
+        "150mm"
+      ],
+      "translatedValue": [
+        "150mm"
+      ]
+    },
+    {
+      "key": "镜腿长度",
+      "translatedKey": "Длина ноги от виска",
+      "value": [
+        "145mm"
+      ],
+      "translatedValue": [
+        "145mm"
+      ]
+    },
+    {
+      "key": "镜片宽度",
+      "translatedKey": "Ширина линзы",
+      "value": [
+        "53mm"
+      ],
+      "translatedValue": [
+        "53mm"
+      ]
+    },
+    {
+      "key": "镜片高度",
+      "translatedKey": "Высота линзы",
+      "value": [
+        "42mm"
+      ],
+      "translatedValue": [
+        "42mm"
+      ]
+    },
+    {
+      "key": "鼻梁间距",
+      "translatedKey": "Расстояние между переносицами",
+      "value": [
+        "20mm"
+      ],
+      "translatedValue": [
+        "20mm"
+      ]
+    },
+    {
+      "key": "镜片颜色",
+      "translatedKey": "Цвет линзы",
+      "value": [
+        "蓝色"
+      ],
+      "translatedValue": [
+        "cиний"
+      ]
+    },
+    {
+      "key": "镜框及镜腿颜色",
+      "translatedKey": "Цвет оправы и висков",
+      "value": [
+        "玳瑁色"
+      ],
+      "translatedValue": [
+        "Черепаховый панцирь"
+      ]
+    },
+    {
+      "key": "眼镜形状",
+      "translatedKey": "Форма очков",
+      "value": [
+        "方形"
+      ],
+      "translatedValue": [
+        "Квадрат"
+      ]
+    },
+    {
+      "key": "适用脸型",
+      "translatedKey": "Подходящая форма лица",
+      "value": [
+        "圆脸",
+        "长脸",
+        "椭圆脸"
+      ],
+      "translatedValue": [
+        "Круглое лицо",
+        "Вытянутое лицо",
+        "Овальное лицо"
+      ]
+    },
+    {
+      "key": "功能",
+      "translatedKey": "функция",
+      "value": [
+        "防UVA",
+        "防UVB",
+        "偏光"
+      ],
+      "translatedValue": [
+        "Защита от ультрафиолетового излучения",
+        "Защита от ультрафиолетового излучения",
+        "Поляризованный свет"
+      ]
+    },
+    {
+      "key": "镜架款式",
+      "translatedKey": "Стиль рамки",
+      "value": [
+        "全框"
+      ],
+      "translatedValue": [
+        "Полный кадр"
+      ]
+    },
+    {
+      "definitionId": "STYLE",
+      "key": "风格",
+      "translatedKey": "Стиль",
+      "value": [
+        "日式"
+      ],
+      "translatedValue": [
+        "Японский стиль"
+      ]
+    },
+    {
+      "definitionId": "MAIN_ARTICLE_NUMBER",
+      "key": "主货号",
+      "translatedKey": "Основной номер товара",
+      "value": [
+        "Aokiji-Artemis（sun）"
+      ],
+      "translatedValue": [
+        "Aokiji-Artemis（sun）"
+      ]
+    },
+    {
+      "key": "定制款",
+      "translatedKey": "Индивидуальные модели",
+      "value": [
+        "否"
+      ],
+      "translatedValue": [
+        "нет"
+      ]
+    },
+    {
+      "definitionId": "RELEASE_DATE",
+      "key": "发售日期",
+      "translatedKey": "Дата выхода",
+      "value": [
+        "2025.03.26"
+      ],
+      "translatedValue": [
+        "2025.03.26"
+      ]
+    }
+  ],
+  "properties": {
+    "skus": [
+      {
+        "skuId": 828755042,
+        "properties": [
+          {
+            "id": 631581267,
+            "typeId": 2752,
+            "value": "豆蔻色-尼龙偏光灰"
+          },
+          {
+            "id": 631581271,
+            "typeId": 6,
+            "value": "小码"
+          }
+        ]
+      }
+    ],
+    "propertyValues": [
+      {
+        "id": 631581271,
+        "value": "小码",
+        "typeId": 6
+      },
+      {
+        "id": 631581272,
+        "value": "大码",
+        "typeId": 6
+      },
+      {
+        "id": 631581267,
+        "value": "豆蔻色-尼龙偏光灰",
+        "typeId": 2752
+      },
+      {
+        "id": 631581268,
+        "value": "赭石-尼龙偏光茶",
+        "typeId": 2752
+      },
+      {
+        "id": 631581269,
+        "value": "月魄-尼龙偏光灰",
+        "typeId": 2752
+      },
+      {
+        "id": 631581270,
+        "value": "青姬-尼龙偏光绿",
+        "typeId": 2752
+      }
+    ],
+    "propertyTypes": [
+      {
+        "id": 6,
+        "name": "Размер",
+        "values": [
+          {
+            "id": 631581271,
+            "typeId": 6,
+            "value": "小码"
+          },
+          {
+            "id": 631581272,
+            "typeId": 6,
+            "value": "大码"
+          }
+        ]
+      },
+      {
+        "id": 2752,
+        "name": "Форма",
+        "values": [
+          {
+            "id": 631581267,
+            "typeId": 2752,
+            "value": "豆蔻色-尼龙偏光灰"
+          },
+          {
+            "id": 631581268,
+            "typeId": 2752,
+            "value": "赭石-尼龙偏光茶"
+          },
+          {
+            "id": 631581269,
+            "typeId": 2752,
+            "value": "月魄-尼龙偏光灰"
+          },
+          {
+            "id": 631581270,
+            "typeId": 2752,
+            "value": "青姬-尼龙偏光绿"
+          }
+        ]
+      }
+    ]
+  },
+  "returnable": false,
+  "sizeTable": [],
+  "skus": [
+    {
+      "images": [
+        "https://cdn.poizon.com/pro-img/cut-img/20250326/a2551a2826d840ac873aad5bf4ddb056.jpg",
+        "https://cdn.poizon.com/stark/stark-web/75675453/71319cb7bd6f7fc7b0b827ddab4bb161.jpg",
+        "https://cdn.poizon.com/stark/stark-web/75675453/b8b9aa9722a46f477a705b71c564e90f.jpg",
+        "https://cdn.poizon.com/stark/stark-web/75675453/3fe2bfb2e58da63ac286cbc753dceecb.jpg",
+        "https://cdn.poizon.com/stark/stark-web/75675453/0114a6734303b41c5e3f3066f7548296.jpg",
+        "https://cdn.poizon.com/stark/stark-web/75675453/e69420f5ea3e7bdcab46bafb2c1fa44c.jpg",
+        "https://cdn.poizon.com/stark/stark-web/75675453/8c32cc2d48590fd43f985ff343689a0d.jpg",
+        "https://cdn.poizon.com/stark/stark-web/75675453/3e4dd71592ac450786563f658ccfaa05.jpg"
+      ],
+      "skuId": 828755042,
+      "cnyPrice": 489,
+      "price": 8549,
+      "split": {
+        "first": 4125,
+        "second": 4124
+      },
+      "fromAvailability": [],
+      "maxPrice": 9563,
+      "deliveryTime": {
+        "min": 21,
+        "max": 27,
+        "expressMax": 17,
+        "expressMin": 13
+      },
+      "priceV2": {
+        "price": 8549,
+        "priceWithoutDiscount": 9563,
+        "discount": true,
+        "priceWithExpress": 12349,
+        "priceWithExpressWithoutDiscount": 13663,
+        "priceFromAvailability": 0,
+        "previousPriceFromAvailability": 0,
+        "discountFromAvailability": false
+      }
+    }
+  ],
+  "slug": "6z2s6zuj5l2cioazouwjqmhvaxpeezuwiqomvncdlhrfmt6hpo47nmb3mmi7plzzmoyyg6laf6l276ygu6ziz6ziy57sr5asw57qiowwvommewbjwfieimtuijsue7vijsidmnbmnzdplzzmnryg5qst5zyg5b2iiowkqumysecvomvncdnllflpbplkizmrl7mg4xkvqpmrl4g6ycp5pioioixhuiuuijsg",
+  "updatedAt": "2025-04-10T14:47:21.097Z"
+}
